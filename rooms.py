@@ -288,6 +288,13 @@ class MapTxt:
 
 
 class Connection:
+    DIRECTION_MAP = {
+        0: np.array([1, 0]),  # +x
+        1: np.array([0, 1]),  # +y
+        2: np.array([-1, 0]),  # -x
+        3: np.array([0, -1]),  # -y
+    }
+
     def __init__(
         self,
         room1: Room,
@@ -303,6 +310,29 @@ class Connection:
         self.room2_posi = room2_posi
         self.room1_direct = room1_direct
         self.room2_direct = room2_direct
+
+    @staticmethod
+    def cal_cloest_edge_point(conn_posi: np.array, room: Room):
+        rel_align_points = np.array(
+            [
+                [conn_posi[0], 0],
+                [conn_posi[0], room.box_size[1]],
+                [0, conn_posi[1]],
+                [room.box_size[0], conn_posi[1]],
+            ]
+        )
+        conn_to_edge = rel_align_points - conn_posi
+
+        best = np.argmin(np.linalg.norm(conn_to_edge, axis=1))
+        return rel_align_points[best]
+
+    @property
+    def room1_cloest_edge_point(self):
+        return self.cal_cloest_edge_point(self.room1_posi, self.room1)
+
+    @property
+    def room2_cloest_edge_point(self):
+        return self.cal_cloest_edge_point(self.room2_posi, self.room2)
 
     def plot(self, ax: plt.Axes):
         start = self.room1.box_position + self.room1_posi
@@ -349,22 +379,56 @@ def load_maptxt(world_path: Path = c.WORLD_PATH, name="wara"):
     return room_map, connections
 
 
+def opt_conn(conn: Connection):
+    conn_posi_1 = conn.room1.box_position + conn.room1_posi
+    conn_posi_2 = conn.room2.box_position + conn.room2_posi
+
+    weight1, weight2 = map(np.prod, (conn.room1.box_size, conn.room2.box_size))
+    center = (conn_posi_1 * weight1 + conn_posi_2 * weight2) / (weight1 + weight2)
+
+    norm = np.linalg.norm(
+        sum(
+            map(
+                lambda x: (x) / np.linalg.norm(x),
+                (
+                    conn.room1_cloest_edge_point - conn.room1_posi,
+                    conn.room2_cloest_edge_point - conn.room2_posi,
+                ),
+            )
+        )
+    )
+
+    for room, cloest_edge_point in (
+        (conn.room1, conn.room1_cloest_edge_point),
+        (conn.room2, conn.room2_cloest_edge_point),
+    ):
+        if norm == 0:
+            room.box_position = center - cloest_edge_point
+
+
 if __name__ == "__main__":
     room_map, connections = load_maptxt()
     fig, ax = plt.subplots()
     ax: plt.Axes
 
+    for _ in range(10000):
+        conn = random.choice(connections)
+        opt_conn(conn)
+
     x0, x1, y0, y1 = 0, 0, 0, 0
     for room in room_map.values():
         room.plot(ax)
+
+    for conn in connections:
+        conn.plot(ax)
+
+    x0, x1, y0, y1 = 0, 0, 0, 0
+    for room in room_map.values():
         ext = room.box_extent
         x0 = min(x0, ext[0])
         x1 = max(x1, ext[1])
         y0 = min(y0, ext[2])
         y1 = max(y1, ext[3])
-
-    for conn in connections:
-        conn.plot(ax)
 
     ax.set_xlim(x0, x1)
     ax.set_ylim(y0, y1)
