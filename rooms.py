@@ -7,6 +7,13 @@ from matplotlib.patches import Rectangle
 from dataclasses import dataclass
 from loguru import logger
 import random
+from typing import Literal, Optional
+from tqdm import tqdm
+from itertools import product
+from pprint import pprint
+import utils
+
+plt.rcParams["font.sans-serif"] = ["MicroSoft YaHei"]
 
 
 def rgba_pixel(color: str = "#ffffff", alpha: float = 1):
@@ -108,18 +115,57 @@ class RoomTxt:
         plt.show()
 
 
+class RoomSettingTxt:
+    @classmethod
+    def from_file(cls, path: str | Path):
+        return cls(Path(path).read_text())
+
+    def __init__(self, text: str):
+        self.text = text
+        self.lines = text.splitlines()
+        self.name = self.lines[0].upper()
+        self.data: dict[str, str] = {}
+        for line in self.lines:
+            if line == "":
+                continue
+            key, value = line.split(": ")
+            self.data[key] = value
+
+        self.placed_objects = []
+        if "PlacedObjects" in self.data:
+            for obj in self.data["PlacedObjects"].split(", "):
+                if obj == "":
+                    continue
+                name, x, y, other = obj.split("><")
+                x, y = map(float, (x, y))
+                other = other.split("~")
+                self.placed_objects.append([name, x, y, other])
+
+
 class Room:
     def __init__(
         self,
         roomtxt: RoomTxt,
         box_position: np.ndarray = np.array([0, 0]),
         box_size: np.ndarray = None,
+        *,
+        room_setting: RoomSettingTxt | None = None,
     ):
         self.rootxt = roomtxt
         self.box_position = box_position
         self.box_size = (
             np.array([self.width, self.height]) if box_size is None else box_size
         )
+        self.room_setting = room_setting
+
+    def intersects(self, other: "Room") -> bool:
+        ax1, ay1 = self.box_position
+        ax2, ay2 = self.box_position + self.box_size
+
+        bx1, by1 = other.box_position
+        bx2, by2 = other.box_position + other.box_size
+
+        return not (ax2 < bx1 or bx2 < ax1 or ay2 < by1 or by2 < ay1)
 
     @property
     def name(self):
@@ -179,7 +225,29 @@ class Room:
         )
         ax.add_patch(rect)
 
-        ax.text(*self.box_position, self.cn_name, c="yellow", alpha=1, fontsize=12)
+        ax.text(*self.box_position, self.cn_name, c="yellow", alpha=1, fontsize=3)
+
+        if self.room_setting is not None:
+            for obj in self.room_setting.placed_objects:
+                name, x, y = obj[:3]
+                property: list[str] = obj[-1]
+
+                comments = ""
+                fontsize = 3
+                color = "#FF7F27"
+                if name in {"SpinningTopSpot", "WarpPoint"}:
+                    name = c.PLACE_OBJECT_NAME[name]
+                    target_map = c.zone_id_2_cn(property[4])
+                    target_room = property[5].upper()
+                    comments = f"({target_map}{target_room})"
+                elif name in c.PLACE_OBJECT_NAME:
+                    name = c.PLACE_OBJECT_NAME[name]
+                else:
+                    continue
+
+                x = self.box_position[0] + x / 20
+                y = self.box_position[1] + y / 20
+                ax.text(x, y, f"{name}{comments}", fontsize=fontsize, c=color)
 
 
 class MapTxt:
@@ -311,33 +379,19 @@ class Connection:
         self.room1_direct = room1_direct
         self.room2_direct = room2_direct
 
-    @staticmethod
-    def cal_cloest_edge_point(conn_posi: np.array, room: Room):
-        rel_align_points = np.array(
-            [
-                [conn_posi[0], 0],
-                [conn_posi[0], room.box_size[1]],
-                [0, conn_posi[1]],
-                [room.box_size[0], conn_posi[1]],
-            ]
-        )
-        conn_to_edge = rel_align_points - conn_posi
-
-        best = np.argmin(np.linalg.norm(conn_to_edge, axis=1))
-        return rel_align_points[best]
-
     @property
-    def room1_cloest_edge_point(self):
-        return self.cal_cloest_edge_point(self.room1_posi, self.room1)
-
-    @property
-    def room2_cloest_edge_point(self):
-        return self.cal_cloest_edge_point(self.room2_posi, self.room2)
+    def norm(self):
+        start = self.room1.box_position + self.room1_posi
+        end = self.room2.box_position + self.room2_posi
+        return np.linalg.norm(start - end)
 
     def plot(self, ax: plt.Axes):
         start = self.room1.box_position + self.room1_posi
         end = self.room2.box_position + self.room2_posi
-        ax.plot([start[0], end[0]], [start[1], end[1]], c="blue")
+        ax.plot([start[0], end[0]], [start[1], end[1]],             c="#54C1F0",
+            linestyle="-",
+            linewidth=1,
+            alpha=0.5)
 
 
 def load_maptxt(world_path: Path = c.WORLD_PATH, name="wara"):
@@ -349,11 +403,18 @@ def load_maptxt(world_path: Path = c.WORLD_PATH, name="wara"):
     map_txt = MapTxt.from_file(map_txt)
     for room in map_txt.rooms:
         room_txt_path = room_folder / (room["room_name"].lower() + ".txt")
+        room_setting_path = room_folder / (room["room_name"].lower() + "_settings.txt")
         if not room_txt_path.is_file():
+            logger.warning(f"{room_txt_path} not exists")
             continue
         room_map[room["room_name"].upper()] = Room(
             RoomTxt.from_file(room_txt_path),
             np.array([room["canon_pos_x"], room["canon_pos_y"]]),
+            room_setting=(
+                RoomSettingTxt.from_file(room_setting_path)
+                if room_setting_path.is_file()
+                else None
+            ),
         )
 
     connections: list[Connection] = []
@@ -379,50 +440,200 @@ def load_maptxt(world_path: Path = c.WORLD_PATH, name="wara"):
     return room_map, connections
 
 
-def opt_conn(conn: Connection):
-    conn_posi_1 = conn.room1.box_position + conn.room1_posi
-    conn_posi_2 = conn.room2.box_position + conn.room2_posi
-
-    weight1, weight2 = map(np.prod, (conn.room1.box_size, conn.room2.box_size))
-    center = (conn_posi_1 * weight1 + conn_posi_2 * weight2) / (weight1 + weight2)
-
-    norm = np.linalg.norm(
-        sum(
-            map(
-                lambda x: (x) / np.linalg.norm(x),
-                (
-                    conn.room1_cloest_edge_point - conn.room1_posi,
-                    conn.room2_cloest_edge_point - conn.room2_posi,
-                ),
-            )
+class OptConn:
+    @staticmethod
+    def cal_to_edge_vecs(conn_posi: np.ndarray, room: Room):
+        """
+        点到房间四个边的向量
+        根据模长排序
+        """
+        rel_align_points = np.array(
+            [
+                [conn_posi[0], 0],
+                [conn_posi[0], room.box_size[1]],
+                [0, conn_posi[1]],
+                [room.box_size[0], conn_posi[1]],
+            ]
         )
-    )
+        conn_to_edge = rel_align_points - conn_posi
 
-    for room, cloest_edge_point in (
-        (conn.room1, conn.room1_cloest_edge_point),
-        (conn.room2, conn.room2_cloest_edge_point),
+        return conn_to_edge[np.argsort(np.linalg.norm(conn_to_edge, axis=1))]
+
+    @staticmethod
+    def cal_to_vertex_vecs(conn_posi: np.ndarray, room: Room):
+        """
+        点到房间四个顶点的向量
+        根据模长排序
+        """
+        rel_align_points = np.array(
+            [
+                [0, 0],
+                [0, room.box_size[1]],
+                [room.box_size[0], 9],
+                [room.box_size[0], room.box_size[1]],
+            ]
+        )
+        conn_to_edge = rel_align_points - conn_posi
+
+        return conn_to_edge[np.argsort(np.linalg.norm(conn_to_edge, axis=1))]
+
+    @staticmethod
+    def cal_vec_relationship(
+        v1: np.ndarray, v2: np.ndarray, tol=1e-6
+    ) -> Literal[-1, 0, 1, None]:
+        """
+        1: 同向
+        -1: 反向
+        0: 垂直
+        None: 其他
+        """
+        v1 = np.asarray(v1)
+        v2 = np.asarray(v2)
+
+        if np.linalg.norm(v1) < tol or np.linalg.norm(v2) < tol:
+            return None
+
+        # 单位向量
+        u1 = v1 / np.linalg.norm(v1)
+        u2 = v2 / np.linalg.norm(v2)
+
+        dot = np.dot(u1, u2)
+
+        if np.abs(dot - 1) < tol:
+            return 1
+        elif np.abs(dot + 1) < tol:
+            return -1
+        elif np.abs(dot) < tol:
+            return 0
+        else:
+            return None
+
+    @classmethod
+    def opt_one(cls, conn: Connection, all_rooms: list[Room] = []):
+        global_conn_posi_1 = conn.room1.box_position + conn.room1_posi
+        global_conn_posi_2 = conn.room2.box_position + conn.room2_posi
+
+        weight1, weight2 = map(np.prod, (conn.room1.box_size, conn.room2.box_size))
+
+        r1_edge_vecs = cls.cal_to_edge_vecs(conn.room1_posi, conn.room1)
+        r2_edge_vecs = cls.cal_to_edge_vecs(conn.room2_posi, conn.room2)
+
+        dis = np.inf
+        for vec1, vec2 in product(r1_edge_vecs, r2_edge_vecs):
+            if not cls.cal_vec_relationship(vec1, vec2) == -1:
+                continue
+            new_dis = np.linalg.norm(vec1 - vec2)
+            if not new_dis < dis:
+                continue
+            dis = new_dis
+
+            center = (
+                (conn.room1.box_position + conn.room1_posi + vec1) * weight1
+                + (conn.room2.box_position + conn.room2_posi + vec2) * weight2
+            ) / (weight1 + weight2)
+            old_room1_posi = conn.room1.box_position
+            old_room2_posi = conn.room2.box_position
+            conn.room1.box_position = center - (conn.room1_posi + vec1)
+            conn.room2.box_position = center - (conn.room2_posi + vec2)
+
+            # for _ in range(10):
+            #     for i in all_rooms:
+            #         if i.name == conn.room1.name:
+            #             continue
+            #         if i.intersects(conn.room1):
+            #             conn.room1.box_position = (
+            #                 conn.room1.box_position * 0.5 + old_room1_posi * 0.5
+            #             )
+            #             break
+            #     else:
+            #         break
+            # for _ in range(10):
+            #     for i in all_rooms:
+            #         if i.name == conn.room2.name:
+            #             continue
+            #         if i.intersects(conn.room2):
+            #             conn.room2.box_position = (
+            #                 conn.room2.box_position * 0.5 + old_room2_posi * 0.5
+            #             )
+            #             break
+
+    @classmethod
+    def opt_a_lot(
+        cls,
+        room_map: dict[str, Room],
+        connections: list[Connection],
+        iter=10000,
+        repel=100000,
     ):
-        if norm == 0:
-            room.box_position = center - cloest_edge_point
+        random.seed(42)
+        rooms = list(room_map.values())
+        weights = [i.norm for i in connections]
+        linespace = np.arange(len(weights))
+        for _ in tqdm(range(iter)):
+            conn_idx: int = random.choices(linespace, weights)[0]
+            conn = connections[conn_idx]
+            OptConn.opt_one(conn, rooms)
+
+            weights[conn_idx] = conn.norm
+
+        for _ in tqdm(range(repel)):
+            room1, room2 = random.sample(rooms, k=2)
+            if room1.intersects(room2):
+                cls.repel_room(room1, room2, strength=5)
+
+    @staticmethod
+    def repel_room(a: Room, b: Room, strength=10):
+        delta = a.box_position - b.box_position
+        if np.linalg.norm(delta) == 0:
+            delta = np.random.randn(2)
+        direction = delta / np.linalg.norm(delta)
+        a.box_position += direction * strength
 
 
-if __name__ == "__main__":
-    room_map, connections = load_maptxt()
-    fig, ax = plt.subplots()
+import networkx as nx
+
+
+def spring_layout_optimize(room_map: dict[str, Room], connections: list[Connection]):
+    G = nx.Graph()
+
+    # 添加房间为节点
+    for room_name, room in room_map.items():
+        G.add_node(room_name)
+
+    # 添加连接为边
+    for conn in connections:
+        G.add_edge(conn.room1.name, conn.room2.name)
+
+    # 使用spring_layout优化节点坐标
+    pos = nx.spring_layout(G, scale=500, seed=42)  # scale可以调节整体图尺寸
+
+    # 更新房间位置
+    for room_name, room in room_map.items():
+        # 设置房间左上角 box_position = pos - size / 2
+        center_pos = np.array(pos[room_name])
+        room.box_position = center_pos - room.box_size / 2
+
+@logger.catch
+def plot_map(world_path, output, name="ward"):
+    room_map, connections = load_maptxt(world_path=world_path, name=name)
+    fig, ax = plt.subplots(figsize=(16, 16))
     ax: plt.Axes
 
-    for _ in range(10000):
-        conn = random.choice(connections)
-        opt_conn(conn)
+    OptConn.opt_a_lot(room_map, connections)
 
-    x0, x1, y0, y1 = 0, 0, 0, 0
+    # for room in room_map.values():
+    #     if room.name.upper() in c.ROOM_RECOMMAND_POSITION:
+    #         room.box_position = c.ROOM_RECOMMAND_POSITION[room.name.upper()]
+    #     else:
+    #         logger.warning(room.name)
+
     for room in room_map.values():
         room.plot(ax)
 
     for conn in connections:
         conn.plot(ax)
 
-    x0, x1, y0, y1 = 0, 0, 0, 0
+    x0, x1, y0, y1 = np.inf, -np.inf, np.inf, -np.inf
     for room in room_map.values():
         ext = room.box_extent
         x0 = min(x0, ext[0])
@@ -434,4 +645,21 @@ if __name__ == "__main__":
     ax.set_ylim(y0, y1)
 
     ax.set_aspect(1)
-    plt.show()
+    ax.axis("off")
+    fig.suptitle(f"{c.zone_id_2_cn(name)}", fontsize=30)
+    plt.tight_layout()
+    plt.savefig(output, dpi=600)
+    plt.close()
+    # plt.show()
+
+
+if __name__ == "__main__":
+    for i in c.WORLD_PATH.iterdir():
+        if i.name == "gates" or i.name.endswith("-rooms"):
+            continue
+        name = i.name
+        plot_map(
+            c.WORLD_PATH,
+            output=c.OUTPUT_PATH / f"{c.zone_id_2_cn(name)}.png",
+            name=name,
+        )
