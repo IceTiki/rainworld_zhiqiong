@@ -388,10 +388,14 @@ class Connection:
     def plot(self, ax: plt.Axes):
         start = self.room1.box_position + self.room1_posi
         end = self.room2.box_position + self.room2_posi
-        ax.plot([start[0], end[0]], [start[1], end[1]],             c="#54C1F0",
+        ax.plot(
+            [start[0], end[0]],
+            [start[1], end[1]],
+            c="#54C1F0",
             linestyle="-",
             linewidth=1,
-            alpha=0.5)
+            alpha=0.5,
+        )
 
 
 def load_maptxt(world_path: Path = c.WORLD_PATH, name="wara"):
@@ -612,6 +616,7 @@ def spring_layout_optimize(room_map: dict[str, Room], connections: list[Connecti
         # 设置房间左上角 box_position = pos - size / 2
         center_pos = np.array(pos[room_name])
         room.box_position = center_pos - room.box_size / 2
+
 
 @logger.catch
 def plot_map(world_path, output, name="ward"):
