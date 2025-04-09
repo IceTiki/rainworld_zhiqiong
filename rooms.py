@@ -4,21 +4,13 @@ from matplotlib import pyplot as plt
 import constants as c
 from typing import TypedDict
 from matplotlib.patches import Rectangle
-from dataclasses import dataclass
 from loguru import logger
-import random
-from typing import Literal, Optional
 from tqdm import tqdm
-from itertools import product
-from pprint import pprint
 import utils
 
 plt.rcParams["font.sans-serif"] = ["MicroSoft YaHei"]
 
 
-def rgba_pixel(color: str = "#ffffff", alpha: float = 1):
-    carr = [int(color[i : i + 2], 16) for i in (1, 3, 5)] + [alpha * 255]
-    return np.array([[carr]], np.uint8)
 
 
 class RoomTxt:
@@ -104,14 +96,14 @@ class RoomTxt:
         # ax = ax_list[-1]
         fig, ax = plt.subplots()
         ax: plt.Axes
-        ax.imshow(self.water_mask * rgba_pixel("#007AAE"))
-        ax.imshow(self.wall_im * rgba_pixel("#000000"))
-        ax.imshow(self.background_im * rgba_pixel("#000000", 0.25))
-        ax.imshow(self.pipe_im * rgba_pixel("#ffff00", 0.25))
-        ax.imshow(self.entrance_im * rgba_pixel("#ffff00", 0.5))
-        ax.imshow(self.bar_im * rgba_pixel("#880015", 1))
-        ax.imshow(self.map_matrix[:, :, 5:6] * rgba_pixel("#A349A4", 1))
-        ax.imshow(self.map_matrix[:, :, 8:9] * rgba_pixel("#3F48CC", 1))
+        ax.imshow(self.water_mask * utils.rgba_pixel("#007AAE"))
+        ax.imshow(self.wall_im * utils.rgba_pixel("#000000"))
+        ax.imshow(self.background_im * utils.rgba_pixel("#000000", 0.25))
+        ax.imshow(self.pipe_im * utils.rgba_pixel("#ffff00", 0.25))
+        ax.imshow(self.entrance_im * utils.rgba_pixel("#ffff00", 0.5))
+        ax.imshow(self.bar_im * utils.rgba_pixel("#880015", 1))
+        ax.imshow(self.map_matrix[:, :, 5:6] * utils.rgba_pixel("#A349A4", 1))
+        ax.imshow(self.map_matrix[:, :, 8:9] * utils.rgba_pixel("#3F48CC", 1))
         plt.show()
 
 
@@ -200,19 +192,19 @@ class Room:
 
     def plot(self, ax: plt.Axes):
         extent = self.box_extent
-        ax.imshow(self.rootxt.water_mask * rgba_pixel("#007AAE"), extent=extent)
-        ax.imshow(self.rootxt.wall_im * rgba_pixel("#000000"), extent=extent)
+        ax.imshow(self.rootxt.water_mask * utils.rgba_pixel("#007AAE"), extent=extent)
+        ax.imshow(self.rootxt.wall_im * utils.rgba_pixel("#000000"), extent=extent)
         ax.imshow(
-            self.rootxt.background_im * rgba_pixel("#000000", 0.25), extent=extent
+            self.rootxt.background_im * utils.rgba_pixel("#000000", 0.25), extent=extent
         )
-        ax.imshow(self.rootxt.pipe_im * rgba_pixel("#ffff00", 0.25), extent=extent)
-        ax.imshow(self.rootxt.entrance_im * rgba_pixel("#ffff00", 0.5), extent=extent)
-        ax.imshow(self.rootxt.bar_im * rgba_pixel("#880015", 1), extent=extent)
+        ax.imshow(self.rootxt.pipe_im * utils.rgba_pixel("#ffff00", 0.25), extent=extent)
+        ax.imshow(self.rootxt.entrance_im * utils.rgba_pixel("#ffff00", 0.5), extent=extent)
+        ax.imshow(self.rootxt.bar_im * utils.rgba_pixel("#880015", 1), extent=extent)
         ax.imshow(
-            self.rootxt.map_matrix[:, :, 5:6] * rgba_pixel("#A349A4", 1), extent=extent
+            self.rootxt.map_matrix[:, :, 5:6] * utils.rgba_pixel("#A349A4", 1), extent=extent
         )
         ax.imshow(
-            self.rootxt.map_matrix[:, :, 8:9] * rgba_pixel("#3F48CC", 1), extent=extent
+            self.rootxt.map_matrix[:, :, 8:9] * utils.rgba_pixel("#3F48CC", 1), extent=extent
         )
 
         rect = Rectangle(
@@ -444,193 +436,11 @@ def load_maptxt(world_path: Path = c.WORLD_PATH, name="wara"):
     return room_map, connections
 
 
-class OptConn:
-    @staticmethod
-    def cal_to_edge_vecs(conn_posi: np.ndarray, room: Room):
-        """
-        点到房间四个边的向量
-        根据模长排序
-        """
-        rel_align_points = np.array(
-            [
-                [conn_posi[0], 0],
-                [conn_posi[0], room.box_size[1]],
-                [0, conn_posi[1]],
-                [room.box_size[0], conn_posi[1]],
-            ]
-        )
-        conn_to_edge = rel_align_points - conn_posi
-
-        return conn_to_edge[np.argsort(np.linalg.norm(conn_to_edge, axis=1))]
-
-    @staticmethod
-    def cal_to_vertex_vecs(conn_posi: np.ndarray, room: Room):
-        """
-        点到房间四个顶点的向量
-        根据模长排序
-        """
-        rel_align_points = np.array(
-            [
-                [0, 0],
-                [0, room.box_size[1]],
-                [room.box_size[0], 9],
-                [room.box_size[0], room.box_size[1]],
-            ]
-        )
-        conn_to_edge = rel_align_points - conn_posi
-
-        return conn_to_edge[np.argsort(np.linalg.norm(conn_to_edge, axis=1))]
-
-    @staticmethod
-    def cal_vec_relationship(
-        v1: np.ndarray, v2: np.ndarray, tol=1e-6
-    ) -> Literal[-1, 0, 1, None]:
-        """
-        1: 同向
-        -1: 反向
-        0: 垂直
-        None: 其他
-        """
-        v1 = np.asarray(v1)
-        v2 = np.asarray(v2)
-
-        if np.linalg.norm(v1) < tol or np.linalg.norm(v2) < tol:
-            return None
-
-        # 单位向量
-        u1 = v1 / np.linalg.norm(v1)
-        u2 = v2 / np.linalg.norm(v2)
-
-        dot = np.dot(u1, u2)
-
-        if np.abs(dot - 1) < tol:
-            return 1
-        elif np.abs(dot + 1) < tol:
-            return -1
-        elif np.abs(dot) < tol:
-            return 0
-        else:
-            return None
-
-    @classmethod
-    def opt_one(cls, conn: Connection, all_rooms: list[Room] = []):
-        global_conn_posi_1 = conn.room1.box_position + conn.room1_posi
-        global_conn_posi_2 = conn.room2.box_position + conn.room2_posi
-
-        weight1, weight2 = map(np.prod, (conn.room1.box_size, conn.room2.box_size))
-
-        r1_edge_vecs = cls.cal_to_edge_vecs(conn.room1_posi, conn.room1)
-        r2_edge_vecs = cls.cal_to_edge_vecs(conn.room2_posi, conn.room2)
-
-        dis = np.inf
-        for vec1, vec2 in product(r1_edge_vecs, r2_edge_vecs):
-            if not cls.cal_vec_relationship(vec1, vec2) == -1:
-                continue
-            new_dis = np.linalg.norm(vec1 - vec2)
-            if not new_dis < dis:
-                continue
-            dis = new_dis
-
-            center = (
-                (conn.room1.box_position + conn.room1_posi + vec1) * weight1
-                + (conn.room2.box_position + conn.room2_posi + vec2) * weight2
-            ) / (weight1 + weight2)
-            old_room1_posi = conn.room1.box_position
-            old_room2_posi = conn.room2.box_position
-            conn.room1.box_position = center - (conn.room1_posi + vec1)
-            conn.room2.box_position = center - (conn.room2_posi + vec2)
-
-            # for _ in range(10):
-            #     for i in all_rooms:
-            #         if i.name == conn.room1.name:
-            #             continue
-            #         if i.intersects(conn.room1):
-            #             conn.room1.box_position = (
-            #                 conn.room1.box_position * 0.5 + old_room1_posi * 0.5
-            #             )
-            #             break
-            #     else:
-            #         break
-            # for _ in range(10):
-            #     for i in all_rooms:
-            #         if i.name == conn.room2.name:
-            #             continue
-            #         if i.intersects(conn.room2):
-            #             conn.room2.box_position = (
-            #                 conn.room2.box_position * 0.5 + old_room2_posi * 0.5
-            #             )
-            #             break
-
-    @classmethod
-    def opt_a_lot(
-        cls,
-        room_map: dict[str, Room],
-        connections: list[Connection],
-        iter=10000,
-        repel=100000,
-    ):
-        random.seed(42)
-        rooms = list(room_map.values())
-        weights = [i.norm for i in connections]
-        linespace = np.arange(len(weights))
-        for _ in tqdm(range(iter)):
-            conn_idx: int = random.choices(linespace, weights)[0]
-            conn = connections[conn_idx]
-            OptConn.opt_one(conn, rooms)
-
-            weights[conn_idx] = conn.norm
-
-        for _ in tqdm(range(repel)):
-            room1, room2 = random.sample(rooms, k=2)
-            if room1.intersects(room2):
-                cls.repel_room(room1, room2, strength=5)
-
-    @staticmethod
-    def repel_room(a: Room, b: Room, strength=10):
-        delta = a.box_position - b.box_position
-        if np.linalg.norm(delta) == 0:
-            delta = np.random.randn(2)
-        direction = delta / np.linalg.norm(delta)
-        a.box_position += direction * strength
-
-
-import networkx as nx
-
-
-def spring_layout_optimize(room_map: dict[str, Room], connections: list[Connection]):
-    G = nx.Graph()
-
-    # 添加房间为节点
-    for room_name, room in room_map.items():
-        G.add_node(room_name)
-
-    # 添加连接为边
-    for conn in connections:
-        G.add_edge(conn.room1.name, conn.room2.name)
-
-    # 使用spring_layout优化节点坐标
-    pos = nx.spring_layout(G, scale=500, seed=42)  # scale可以调节整体图尺寸
-
-    # 更新房间位置
-    for room_name, room in room_map.items():
-        # 设置房间左上角 box_position = pos - size / 2
-        center_pos = np.array(pos[room_name])
-        room.box_position = center_pos - room.box_size / 2
-
-
 @logger.catch
 def plot_map(world_path, output, name="ward"):
     room_map, connections = load_maptxt(world_path=world_path, name=name)
     fig, ax = plt.subplots(figsize=(16, 16))
     ax: plt.Axes
-
-    OptConn.opt_a_lot(room_map, connections)
-
-    # for room in room_map.values():
-    #     if room.name.upper() in c.ROOM_RECOMMAND_POSITION:
-    #         room.box_position = c.ROOM_RECOMMAND_POSITION[room.name.upper()]
-    #     else:
-    #         logger.warning(room.name)
 
     for room in room_map.values():
         room.plot(ax)
@@ -651,20 +461,25 @@ def plot_map(world_path, output, name="ward"):
 
     ax.set_aspect(1)
     ax.axis("off")
-    fig.suptitle(f"{c.zone_id_2_cn(name)}", fontsize=30)
+    fig.suptitle(f"{c.zone_id_2_cn(name)} ({name.upper()})", fontsize=30)
     plt.tight_layout()
-    plt.savefig(output, dpi=600)
+    plt.savefig(output, dpi=900)
     plt.close()
-    # plt.show()
 
 
-if __name__ == "__main__":
-    for i in c.WORLD_PATH.iterdir():
+def plot_all_map(world_path: Path = c.WORLD_PATH, output: Path = c.OUTPUT_PATH):
+    bar = tqdm(world_path.iterdir())
+    for i in bar:
         if i.name == "gates" or i.name.endswith("-rooms"):
             continue
         name = i.name
+        bar.desc = name
         plot_map(
             c.WORLD_PATH,
-            output=c.OUTPUT_PATH / f"{c.zone_id_2_cn(name)}.png",
+            output=output / f"{c.zone_id_2_cn(name)} ({name.upper()}).png",
             name=name,
         )
+
+
+if __name__ == "__main__":
+    plot_all_map()
