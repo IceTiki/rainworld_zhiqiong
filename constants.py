@@ -1,6 +1,7 @@
 from pathlib import Path
 import re
 from typing import Literal
+import json
 
 ROOT = Path(__file__).parent.absolute()
 RESOUCE_PATH = ROOT / "resource"
@@ -44,6 +45,28 @@ def find_special_object(path):
     return {"spinning_top_spot": spinning_top_spot, "warp_point": warp_point}
 
 
+def zone_id_2_cn(id_: str):
+    id_ = id_.upper()
+    return EN_2_CN.get(ZONE_ID_2_EN.get(id_, id_), ZONE_ID_2_EN.get(id_, id_))
+
+
 SPECIAL_OBJECT: dict[Literal["spinning_top_spot", "warp_point"], dict[str, str]] = (
     find_special_object(WORLD_PATH)
 )
+
+PLACE_OBJECT_NAME = {
+    "KarmaFlower": "业力花",
+    "SpinningTopSpot": "回响",
+    "WarpPoint": "裂隙",
+}
+
+ROOM_RECOMMAND_POSITION = {}
+CORNIMAP_PATH = RESOUCE_PATH / "地图/源文件(用Cornifer打开)"
+for cornimap in CORNIMAP_PATH.iterdir():
+    if not cornimap.suffix == ".cornimap":
+        continue
+    with open(cornimap, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    for obj in data["objects"]:
+        ROOM_RECOMMAND_POSITION[obj["name"].upper()] = [obj["pos"]["x"], obj["pos"]["y"]]
+
