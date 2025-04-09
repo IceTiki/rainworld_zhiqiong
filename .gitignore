@@ -1,2 +1,3 @@
-resource
-output
+resource/
+output/
+__pycache__/

@@ -5,6 +5,7 @@ from matplotlib.patches import Rectangle
 from loguru import logger
 import numpy as np
 import re
+from PIL import Image
 from pprint import pprint
 from typing import Literal
 from tqdm import tqdm
@@ -24,7 +25,7 @@ for i in WORLD_PATH.iterdir():
 
 
 EN_2_CN = {}
-for i in Path("strings.txt").read_text()[2:].splitlines():
+for i in (RESOUCE_PATH / "strings.txt").read_text()[2:].splitlines():
     en, cn = i.split("|")
     EN_2_CN[en] = cn
 
@@ -64,7 +65,7 @@ def read_map_image_warp_txt(content: str):
     for i in content.splitlines():
         name, cord = i.split(": ")
         x, y, w, h = map(int, cord.split(","))
-        result[name] = (x, y, w, h)
+        result[name.lower()] = (x, y, w, h)
     return result
 
 
@@ -82,15 +83,16 @@ def plot_map(map_path: Path, output: Path):
         if not i.is_file():
             return
 
-    img = mpimg.imread(img_path)
+    img = np.array(Image.open(img_path).convert("RGB"))
+
     # 绿替换为白
-    mask = img == np.array([0, 1, 0, 1])
+    mask = img == np.array([0, 255, 0])
     mask = np.all(mask, axis=2)
-    img[mask] = [1, 1, 1, 1]
+    img[mask] = [255, 255, 255]
     # 红替换为白
-    mask = img == np.array([1, 0, 0, 1])
+    mask = img == np.array([255, 0, 0])
     mask = np.all(mask, axis=2)
-    img[mask] = [221 / 255, 177 / 255, 177 / 255, 1]
+    img[mask] = [221, 177, 177]
 
     warp_txt = map_image_path.read_text()
 
@@ -113,9 +115,12 @@ def plot_map(map_path: Path, output: Path):
             continue
         _, content = line.split(": ")
         r1, r2, r1_cx, r1_cy, r2_cx, r2_cy, _, _ = content.split(",")
+        r1 = r1.lower()
+        r2 = r2.lower()
         r1_cx, r1_cy, r2_cx, r2_cy = map(int, (r1_cx, r1_cy, r2_cx, r2_cy))
 
         if r1 not in name_cord_map or r2 not in name_cord_map:
+            logger.warning(f"didn't know {r1} or {r2} position")
             continue
         r1_x1, r1_y1, _, _ = name_cord_map[r1]
         r2_x1, r2_y1, _, _ = name_cord_map[r2]
@@ -164,7 +169,7 @@ def plot_map(map_path: Path, output: Path):
         ax.text(x1, y1, text, c="yellow", alpha=1, fontsize=fontsize)
 
     map_cn_name = EN_2_CN.get(ZONE_ID_2_EN.get(map_name, map_name), map_name)
-    ax.axis('off')
+    ax.axis("off")
     fig.suptitle(f"{map_cn_name}", fontsize=30)
     plt.tight_layout()
     plt.savefig(output, dpi=400)
@@ -172,6 +177,10 @@ def plot_map(map_path: Path, output: Path):
 
 
 if __name__ == "__main__":
-    for i in tqdm(list(WORLD_PATH.iterdir())):
-        output = OUTPUT_PATH / f"{EN_2_CN.get(ZONE_ID_2_EN.get(i.name, i.name), i.name)}.png"
+    bar = tqdm(list(WORLD_PATH.iterdir()))
+    for i in bar:
+        output = (
+            OUTPUT_PATH / f"{EN_2_CN.get(ZONE_ID_2_EN.get(i.name, i.name), i.name)}.png"
+        )
+        bar.desc = output.stem
         plot_map(i, output)
