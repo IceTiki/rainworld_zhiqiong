@@ -1,3 +1,4 @@
 resource/
 output/
 __pycache__/
+/.vscode

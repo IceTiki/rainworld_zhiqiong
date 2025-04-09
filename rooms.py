@@ -6,11 +6,11 @@ from typing import TypedDict
 from matplotlib.patches import Rectangle
 from loguru import logger
 from tqdm import tqdm
+import math
 import utils
+import optroom
 
 plt.rcParams["font.sans-serif"] = ["MicroSoft YaHei"]
-
-
 
 
 class RoomTxt:
@@ -197,14 +197,20 @@ class Room:
         ax.imshow(
             self.rootxt.background_im * utils.rgba_pixel("#000000", 0.25), extent=extent
         )
-        ax.imshow(self.rootxt.pipe_im * utils.rgba_pixel("#ffff00", 0.25), extent=extent)
-        ax.imshow(self.rootxt.entrance_im * utils.rgba_pixel("#ffff00", 0.5), extent=extent)
-        ax.imshow(self.rootxt.bar_im * utils.rgba_pixel("#880015", 1), extent=extent)
         ax.imshow(
-            self.rootxt.map_matrix[:, :, 5:6] * utils.rgba_pixel("#A349A4", 1), extent=extent
+            self.rootxt.pipe_im * utils.rgba_pixel("#ffff00", 0.25), extent=extent
         )
         ax.imshow(
-            self.rootxt.map_matrix[:, :, 8:9] * utils.rgba_pixel("#3F48CC", 1), extent=extent
+            self.rootxt.entrance_im * utils.rgba_pixel("#ffff00", 0.5), extent=extent
+        )
+        ax.imshow(self.rootxt.bar_im * utils.rgba_pixel("#880015", 1), extent=extent)
+        ax.imshow(
+            self.rootxt.map_matrix[:, :, 5:6] * utils.rgba_pixel("#A349A4", 1),
+            extent=extent,
+        )
+        ax.imshow(
+            self.rootxt.map_matrix[:, :, 8:9] * utils.rgba_pixel("#3F48CC", 1),
+            extent=extent,
         )
 
         rect = Rectangle(
@@ -217,7 +223,29 @@ class Room:
         )
         ax.add_patch(rect)
 
-        ax.text(*self.box_position, self.cn_name, c="yellow", alpha=1, fontsize=3)
+        text = self.cn_name
+        fontsize = 3
+        color = "white"
+        bbox = dict(
+            facecolor="#000000aa",
+            edgecolor="#00000000",
+            boxstyle="square,pad=0",
+        )
+
+        if self.name.upper() in c.SPECIAL_ROOMS:
+            sp_type = c.SPECIAL_ROOMS[self.name.upper()]
+            sp_name = c.SPECIAL_ROOM_TYPE_2_CN.get(sp_type, sp_type)
+            color = "white"
+            fontsize *= 2
+            text += f"({sp_name})"
+            bbox = dict(
+                facecolor="#ff0000aa",
+                edgecolor="#00000000",
+                boxstyle="square,pad=0",
+            )
+        ax.text(
+            *self.box_position, text, c=color, alpha=1, fontsize=fontsize, bbox=bbox
+        )
 
         if self.room_setting is not None:
             for obj in self.room_setting.placed_objects:
@@ -226,12 +254,33 @@ class Room:
 
                 comments = ""
                 fontsize = 3
-                color = "#FF7F27"
+                color = "#ffffff"
                 if name in {"SpinningTopSpot", "WarpPoint"}:
+                    fontsize *= 2
                     name = c.PLACE_OBJECT_NAME[name]
-                    target_map = c.zone_id_2_cn(property[4])
-                    target_room = property[5].upper()
-                    comments = f"({target_map}{target_room})"
+                    map_idx = (
+                        (len(property) - 1 - property[::-1].index("Watcher")) + 1
+                        if "Watcher" in property
+                        else 4
+                    )
+                    target_map = c.zone_id_2_cn(property[map_idx])
+                    target_room = property[map_idx + 1].upper()
+
+                    if self.name.upper() == "WAUA_BATH":
+                        comments = f"(古人线结局, 一次性传送)\n(上古城市|WAUA_TOYS)"
+                    elif target_map != "NULL":
+                        comments = f"({target_map}|{target_room})"
+                    elif self.name.upper() == "WARA_P09":
+                        comments = f"(上古城市|WAUA_E01|需要满级业力)"
+                    elif self.name.upper() == "WAUA_TOYS":
+                        comments = f"(古人线结局)"
+                    elif self.name.upper()[:4] in {"WSUR", "WHIR", "WDSR", "WGWR"}:
+                        comments = f"(外缘|随机房间)"
+                    else:
+                        comments = f"(恶魔|WRSA_L01|需要满级业力)"
+                elif name == "PrinceBulb":
+                    fontsize *= 2
+                    comments = "王子"
                 elif name in c.PLACE_OBJECT_NAME:
                     name = c.PLACE_OBJECT_NAME[name]
                 else:
@@ -239,7 +288,18 @@ class Room:
 
                 x = self.box_position[0] + x / 20
                 y = self.box_position[1] + y / 20
-                ax.text(x, y, f"{name}{comments}", fontsize=fontsize, c=color)
+                ax.text(
+                    x,
+                    y,
+                    f"{name}{comments}",
+                    fontsize=fontsize,
+                    c=color,
+                    bbox=dict(
+                        facecolor="#ff0000aa",
+                        edgecolor="#00000000",
+                        boxstyle="square,pad=0",
+                    ),
+                )
 
 
 class MapTxt:
@@ -378,15 +438,51 @@ class Connection:
         return np.linalg.norm(start - end)
 
     def plot(self, ax: plt.Axes):
-        start = self.room1.box_position + self.room1_posi
-        end = self.room2.box_position + self.room2_posi
-        ax.plot(
-            [start[0], end[0]],
-            [start[1], end[1]],
-            c="#54C1F0",
-            linestyle="-",
-            linewidth=1,
-            alpha=0.5,
+        conn_r1 = self.room1.box_position + self.room1_posi
+        conn_r2 = self.room2.box_position + self.room2_posi
+
+        dir1 = self.DIRECTION_MAP[self.room1_direct]
+        dir2 = self.DIRECTION_MAP[self.room2_direct]
+
+        dir_len = 15
+        dir_len = min(dir_len, np.linalg.norm(conn_r2 - conn_r1) / 3)
+        if (
+            utils.calculate_cos_theta(conn_r2 - conn_r1, dir1) < -0.8
+            or utils.calculate_cos_theta(conn_r1 - conn_r2, dir2) < -0.8
+        ):
+            dir_len = 0
+        dir1, dir2 = map(
+            lambda x: x * dir_len,
+            (dir1, dir2),
+        )
+
+        linewidth = 0.6
+        alpha = 1
+        utils.cubic_bezier_curve(
+            conn_r1,
+            conn_r2,
+            dir1,
+            dir2,
+            ax,
+            dict(
+                c="#000000",
+                linestyle="-",
+                linewidth=linewidth,
+                alpha=alpha,
+            ),
+        )
+        utils.cubic_bezier_curve(
+            conn_r1,
+            conn_r2,
+            dir1,
+            dir2,
+            ax,
+            dict(
+                c="#FFF200",
+                linestyle="--",
+                linewidth=linewidth * 0.5,
+                alpha=alpha,
+            ),
         )
 
 
@@ -436,50 +532,69 @@ def load_maptxt(world_path: Path = c.WORLD_PATH, name="wara"):
     return room_map, connections
 
 
-@logger.catch
-def plot_map(world_path, output, name="ward"):
-    room_map, connections = load_maptxt(world_path=world_path, name=name)
-    fig, ax = plt.subplots(figsize=(16, 16))
+def plot_map(world_path, output, name="ward", opt: optroom.BaseOpt | None = None):
+    try:
+        room_map, connections = load_maptxt(world_path=world_path, name=name)
+    except Exception as e:
+        return
+    rooms = list(room_map.values())
+    fig, ax = plt.subplots(facecolor="white")
     ax: plt.Axes
 
-    for room in room_map.values():
+    if opt is not None:
+        optroom.BaseOpt.use_opt(opt, rooms, connections)
+
+    for room in rooms:
         room.plot(ax)
 
     for conn in connections:
         conn.plot(ax)
 
-    x0, x1, y0, y1 = np.inf, -np.inf, np.inf, -np.inf
-    for room in room_map.values():
-        ext = room.box_extent
-        x0 = min(x0, ext[0])
-        x1 = max(x1, ext[1])
-        y0 = min(y0, ext[2])
-        y1 = max(y1, ext[3])
+    big_box = optroom.Box.combined_big_box(map(optroom.Box.from_room, rooms))
 
-    ax.set_xlim(x0, x1)
-    ax.set_ylim(y0, y1)
+    x0, y0 = big_box.left_down
+    x1, y1 = big_box.right_top
+
+    delta_x = big_box.size[0]
+    delta_y = big_box.size[1]
+    ax.set_xlim(x0 - 0.1 * delta_x, x1 + 0.1 * delta_x)
+    ax.set_ylim(y0 - 0.1 * delta_y, y1 + 0.1 * delta_y)
 
     ax.set_aspect(1)
     ax.axis("off")
     fig.suptitle(f"{c.zone_id_2_cn(name)} ({name.upper()})", fontsize=30)
+
+    # size_ratio = delta_x / delta_y
+    # fig.set_size_inches(16 * math.sqrt(size_ratio), 16 / math.sqrt(size_ratio))
+    fig.set_size_inches(delta_x / 50, delta_y / 50, forward=True)
     plt.tight_layout()
-    plt.savefig(output, dpi=900)
+    plt.savefig(
+        output, dpi=400, transparent=False, bbox_inches="tight", facecolor="white"
+    )
     plt.close()
 
 
-def plot_all_map(world_path: Path = c.WORLD_PATH, output: Path = c.OUTPUT_PATH):
-    bar = tqdm(world_path.iterdir())
+def plot_all_map(
+    world_path: Path = c.WORLD_PATH,
+    output: Path = c.OUTPUT_PATH,
+    opt: optroom.BaseOpt | None = None,
+):
+    bar = tqdm(list(world_path.iterdir()))
     for i in bar:
         if i.name == "gates" or i.name.endswith("-rooms"):
             continue
+        # if i.name != "whir":
+        #     continue
         name = i.name
-        bar.desc = name
+        title = f"{c.zone_id_2_cn(name)} ({name.upper()})"
+        bar.desc = title
         plot_map(
             c.WORLD_PATH,
-            output=output / f"{c.zone_id_2_cn(name)} ({name.upper()}).png",
+            output=output / f"{title}.png",
             name=name,
+            opt=opt,
         )
 
 
 if __name__ == "__main__":
-    plot_all_map()
+    plot_all_map(opt=optroom.InitOpt())
