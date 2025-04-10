@@ -2,15 +2,36 @@ from pathlib import Path
 import numpy as np
 from matplotlib import pyplot as plt
 import constants as c
-from typing import TypedDict
+from typing import TypedDict, Optional, Generator
 from matplotlib.patches import Rectangle
+import matplotlib as mpl
 from loguru import logger
 from tqdm import tqdm
 import math
 import utils
 import optroom
+from pprint import pprint
+from matplotlib.patches import FancyArrowPatch
 
-plt.rcParams["font.sans-serif"] = ["MicroSoft YaHei"]
+mpl.use("Agg")
+plt.rcParams["font.sans-serif"] = ["Microsoft YaHei"]
+TEST_CATCHER = []
+# mpl.rcParams['font.family'] = 'Microsoft YaHei'  # 或 SimHei
+# mpl.use("pgf")  # 使用 pgf 后端才能走 xelatex
+# mpl.rcParams.update(
+#     {
+#         "text.usetex": True,
+#         "pgf.texsystem": "xelatex",
+#         "pgf.rcfonts": False,
+#         "pgf.preamble": "\n".join(
+#             [
+#                 r"\usepackage{xeCJK}",
+#                 r"\setCJKmainfont{Microsoft YaHei}",
+#                 r"\usepackage{xcolor}",
+#             ]
+#         ),
+#     }
+# )
 
 
 class RoomTxt:
@@ -25,7 +46,12 @@ class RoomTxt:
         self.lines = text.splitlines()
         self.name = self.lines[0].upper()
 
-        size, water_level, _ = self.lines[1].split("|")
+        line1 = self.lines[1].split("|")
+        if len(line1) != 2:
+            water_level = -1
+            size = line1[0]
+        else:
+            size, water_level = self.lines[1].split("|")
         self.width, self.height = map(int, size.split("*"))
         self.water_level = int(water_level)
 
@@ -123,7 +149,7 @@ class RoomSettingTxt:
             key, value = line.split(": ")
             self.data[key] = value
 
-        self.placed_objects = []
+        self.placed_objects: list[str, float, float, list[str]] = []
         if "PlacedObjects" in self.data:
             for obj in self.data["PlacedObjects"].split(", "):
                 if obj == "":
@@ -142,13 +168,17 @@ class Room:
         box_size: np.ndarray = None,
         *,
         room_setting: RoomSettingTxt | None = None,
+        map_txt_info: Optional["MapTxt._Room"] = None,
     ):
         self.rootxt = roomtxt
         self.box_position = box_position
         self.box_size = (
             np.array([self.width, self.height]) if box_size is None else box_size
         )
-        self.room_setting = room_setting
+        self.room_setting: RoomSettingTxt | None = room_setting
+        self.map_txt_info: "MapTxt._Room" | None = (
+            map_txt_info if map_txt_info is not None else {}
+        )
 
     def intersects(self, other: "Room") -> bool:
         ax1, ay1 = self.box_position
@@ -190,6 +220,12 @@ class Room:
             ]
         )
 
+    @property
+    def subregion_name(self) -> str:
+        if self.map_txt_info is not None:
+            return self.map_txt_info.get("subregion_name", "")
+        return ""
+
     def plot(self, ax: plt.Axes):
         extent = self.box_extent
         ax.imshow(self.rootxt.water_mask * utils.rgba_pixel("#007AAE"), extent=extent)
@@ -213,12 +249,13 @@ class Room:
             extent=extent,
         )
 
+        edgecolor = utils.color_hash(self.subregion_name)  # edgecolor="#138535",
         rect = Rectangle(
             self.box_position,
             self.width,
             self.height,
-            linewidth=1,
-            edgecolor="#138535",
+            linewidth=2,
+            edgecolor=edgecolor,
             facecolor="none",
         )
         ax.add_patch(rect)
@@ -274,13 +311,21 @@ class Room:
                         comments = f"(上古城市|WAUA_E01|需要满级业力)"
                     elif self.name.upper() == "WAUA_TOYS":
                         comments = f"(古人线结局)"
-                    elif self.name.upper()[:4] in {"WSUR", "WHIR", "WDSR", "WGWR"}:
-                        comments = f"(外缘|随机房间)"
+                    elif self.name.upper()[:4] in {
+                        "WSUR",
+                        "WHIR",
+                        "WDSR",
+                        "WGWR",
+                        "WSSR",
+                    }:
+                        comments = f"(外缘)"
                     else:
                         comments = f"(恶魔|WRSA_L01|需要满级业力)"
+
+                    TEST_CATCHER.append([x, y, self.name, target_room, comments])
                 elif name == "PrinceBulb":
                     fontsize *= 2
-                    comments = "王子"
+                    name = "王子"
                 elif name in c.PLACE_OBJECT_NAME:
                     name = c.PLACE_OBJECT_NAME[name]
                 else:
@@ -288,6 +333,7 @@ class Room:
 
                 x = self.box_position[0] + x / 20
                 y = self.box_position[1] + y / 20
+
                 ax.text(
                     x,
                     y,
@@ -486,71 +532,274 @@ class Connection:
         )
 
 
-def load_maptxt(world_path: Path = c.WORLD_PATH, name="wara"):
-    name = name.upper()
-    map_txt = world_path / name.lower() / f"map_{name.lower()}.txt"
-    room_folder = world_path / f"{name.lower()}-rooms"
+class Region:
+    @staticmethod
+    def load_maptxt(world_path: Path = c.WORLD_PATH, name="wara"):
+        name = name.upper()
+        map_txt = world_path / name.lower() / f"map_{name.lower()}.txt"
+        map_txt_watcher = world_path / name.lower() / f"map_{name.lower()}-watcher.txt"
+        if map_txt_watcher.is_file():
+            map_txt = map_txt_watcher
+        room_folder = world_path / f"{name.lower()}-rooms"
 
-    room_map: dict[str, Room] = {}
-    map_txt = MapTxt.from_file(map_txt)
-    for room in map_txt.rooms:
-        room_txt_path = room_folder / (room["room_name"].lower() + ".txt")
-        room_setting_path = room_folder / (room["room_name"].lower() + "_settings.txt")
-        if not room_txt_path.is_file():
-            logger.warning(f"{room_txt_path} not exists")
-            continue
-        room_map[room["room_name"].upper()] = Room(
-            RoomTxt.from_file(room_txt_path),
-            np.array([room["canon_pos_x"], room["canon_pos_y"]]),
-            room_setting=(
-                RoomSettingTxt.from_file(room_setting_path)
-                if room_setting_path.is_file()
-                else None
-            ),
-        )
-
-    connections: list[Connection] = []
-    for conn in map_txt.connections:
-        if (
-            conn["room_name_1"].upper() not in room_map
-            or conn["room_name_2"].upper() not in room_map
-        ):
-            logger.warning(conn)
-            continue
-
-        connections.append(
-            Connection(
-                room_map[conn["room_name_1"].upper()],
-                room_map[conn["room_name_2"].upper()],
-                np.array([conn["room_pos_1_x"], conn["room_pos_1_y"]]),
-                np.array([conn["room_pos_2_x"], conn["room_pos_2_y"]]),
-                conn["room_1_direction"],
-                conn["room_2_direction"],
+        room_map: dict[str, Room] = {}
+        map_txt = MapTxt.from_file(map_txt)
+        for room in map_txt.rooms:
+            room_txt_path = room_folder / (room["room_name"].lower() + ".txt")
+            room_setting_path = room_folder / (
+                room["room_name"].lower() + "_settings.txt"
             )
+            if not room_txt_path.is_file():
+                logger.warning(f"{room_txt_path} not exists")
+                continue
+            room_map[room["room_name"].upper()] = Room(
+                RoomTxt.from_file(room_txt_path),
+                np.array([room["canon_pos_x"], room["canon_pos_y"]]),
+                room_setting=(
+                    RoomSettingTxt.from_file(room_setting_path)
+                    if room_setting_path.is_file()
+                    else None
+                ),
+                map_txt_info=room,
+            )
+
+        connections: list[Connection] = []
+        for conn in map_txt.connections:
+            if (
+                conn["room_name_1"].upper() not in room_map
+                or conn["room_name_2"].upper() not in room_map
+            ):
+                logger.warning(
+                    f"{conn["room_name_1"].upper()} and {conn["room_name_2"].upper()} not in room_map."
+                )
+                continue
+
+            connections.append(
+                Connection(
+                    room_map[conn["room_name_1"].upper()],
+                    room_map[conn["room_name_2"].upper()],
+                    np.array([conn["room_pos_1_x"], conn["room_pos_1_y"]]),
+                    np.array([conn["room_pos_2_x"], conn["room_pos_2_y"]]),
+                    conn["room_1_direction"],
+                    conn["room_2_direction"],
+                )
+            )
+
+        return room_map, connections
+
+    @classmethod
+    # @logger.catch
+    def from_maptxt(cls, world_path: Path, name="ward"):
+        room_map, connections = cls.load_maptxt(world_path=world_path, name=name)
+        return cls(room_map=room_map, connections=connections, name=name)
+
+    def __init__(
+        self, room_map: dict[str, Room], connections: list[Connection], name: str
+    ):
+        self.room_map: dict[str, Room] = room_map
+        self.connections: list[Connection] = connections
+        self.__name: str
+        self.name: str = name
+
+    def get_room(self, key: str) -> Room | None:
+        return self.room_map.get(key.upper())
+
+    @property
+    def name(self) -> str:
+        return self.__name
+
+    @name.setter
+    def name(self, new_name: str):
+        self.__name = new_name.upper()
+
+    @property
+    def rooms(self) -> list[Room]:
+        return self.room_map.values()
+
+    @property
+    def region_box(self) -> optroom.Box:
+        return optroom.Box.combined_big_box(map(optroom.Box.from_room, self.rooms))
+
+    @property
+    def position(self) -> np.ndarray:
+        return self.region_box.position
+
+    @position.setter
+    def position(self, new_position: np.ndarray):
+        old_position = self.position
+        delta = new_position - old_position
+        for r in self.rooms:
+            r.box_position += delta
+
+    @property
+    def sub_regions(self) -> set[str]:
+        result = set()
+        for r in self.rooms:
+            result.add(r.subregion_name)
+        result.remove("")
+        return result
+
+    @property
+    def region_name_en(self) -> str:
+        return c.ZONE_ID_2_EN.get(self.name, self.name)
+
+    @property
+    def region_name_cn(self) -> str:
+        return c.EN_2_CN.get(self.region_name_en, self.region_name_en)
+
+    def optimize(self, opt: optroom.BaseOpt | None = None):
+        if opt is not None:
+            opt.optimizing_rooms(self.rooms, self.connections)
+
+    def plot(self, ax: plt.Axes):
+        for room in self.rooms:
+            room.plot(ax)
+
+        for conn in self.connections:
+            conn.plot(ax)
+
+        self.plot_box(ax)
+
+    def plot_box(self, ax: plt.Axes):
+        font_size = 30
+        title = [
+            (
+                f"{self.region_name_cn} ({self.name})",
+                "#000000",
+                font_size,
+            ),
+            (
+                f"{self.region_name_en}",
+                "#000000",
+                font_size,
+            ),
+        ]
+        if len(self.sub_regions) > 1:
+            for i in self.sub_regions:
+                title.append(
+                    (f"{c.en_2_cn(i)} ({i})", utils.color_hash(i), font_size * 0.66)
+                )
+
+        box = self.region_box
+        utils.draw_multiline_text_centered(
+            ax=ax,
+            lines=title,
+            posi=box.position + box.size * np.array([0, 1]),
+            alpha=0.5,
         )
 
-    return room_map, connections
+        rect = Rectangle(
+            box.position,
+            box.size[0],
+            box.size[1],
+            linewidth=4,
+            edgecolor="black",
+            facecolor="none",
+        )
+        ax.add_patch(rect)
 
 
-def plot_map(world_path, output, name="ward", opt: optroom.BaseOpt | None = None):
-    try:
-        room_map, connections = load_maptxt(world_path=world_path, name=name)
-    except Exception as e:
+class RegionTeleportConnection:
+    @classmethod
+    def from_name(
+        cls,
+        name1: str,
+        name2: str,
+        regions: list[Region],
+        r1_posi: np.ndarray = None,
+        r2_posi: np.ndarray = None,
+    ):
+        region_map = {r.name: r for r in regions}
+
+        regs = []
+        reg_positions = []
+        rooms: list[Room] = []
+
+        for name, posi in zip((name1, name2), (r1_posi, r2_posi)):
+            name = name.upper()
+            reg_name = name.split("_")[0]
+            region = region_map[reg_name]
+            room = region.get_room(name)
+            if room is None:
+                logger.warning(name)
+                continue
+
+            if posi is None:
+                room_posi = room.box_position + room.box_size / 2
+            else:
+                room_posi = room.box_position + posi
+            regs.append(region)
+            reg_positions.append(room_posi - region.region_box.position)
+            rooms.append(room)
+
+        return cls(*regs, *reg_positions)
+
+    def __init__(
+        self,
+        region1: Region,
+        region2: Region,
+        reg1_posi: np.ndarray,
+        reg2_posi: np.ndarray,
+    ):
+        self.region1: Region = region1
+        self.region2: Region = region2
+        self.reg1_posi: np.ndarray = reg1_posi
+        self.reg2_posi: np.ndarray = reg2_posi
+
+    def plot(self, ax: plt.Axes):
+        conn_r1 = self.region1.region_box.position + self.reg1_posi
+        conn_r2 = self.region2.region_box.position + self.reg2_posi
+        linewidth = 4
+        alpha = 0.2
+        color = "#FF0000"
+
+        # ax.annotate(
+        #     f"",
+        #     xy=(conn_r2[0], conn_r2[1]),
+        #     xytext=(conn_r1[0], conn_r1[1]),
+        #     fontsize=6,
+        #     arrowprops=dict(arrowstyle="->", color=color, lw=linewidth, alpha=alpha),
+        # )
+
+        # # 创建一个大的箭头
+        # long_arrow = FancyArrowPatch(conn_r1, conn_r2, mutation_scale=20, color=color, arrowstyle='->', lw=linewidth, alpha=alpha)
+        # ax.add_patch(long_arrow)
+
+        # 在箭头的中间添加多个小箭头
+        conn_vec = conn_r2 - conn_r1
+        conn_vec_norm = np.linalg.norm(conn_vec)
+        conn_vec_unit = conn_vec / conn_vec_norm  # ! DIV 0
+        SPACE = 50
+        num_arrows = int(conn_vec_norm / SPACE)
+        for i in range(1, num_arrows + 1):
+            t = i / (num_arrows + 1)  # 计算每个小箭头的比例位置
+            p0 = conn_r1 + t * conn_vec
+            p1 = p0 + conn_vec_unit * SPACE / 2
+
+            small_arrow = FancyArrowPatch(
+                p0,
+                p1,
+                mutation_scale=8,
+                color=color,
+                arrowstyle="->",
+                lw=linewidth,
+                alpha=alpha,
+            )
+            ax.add_patch(small_arrow)
+
+
+def plot_region(world_path, output, name="ward", opt: optroom.BaseOpt | None = None):
+    region = Region.from_maptxt(world_path, name)
+    if region is None:
         return
-    rooms = list(room_map.values())
     fig, ax = plt.subplots(facecolor="white")
     ax: plt.Axes
 
-    if opt is not None:
-        optroom.BaseOpt.use_opt(opt, rooms, connections)
+    region.optimize(opt)
+    region.position = np.array([0, 0])
+    region.plot(ax)
 
-    for room in rooms:
-        room.plot(ax)
-
-    for conn in connections:
-        conn.plot(ax)
-
-    big_box = optroom.Box.combined_big_box(map(optroom.Box.from_room, rooms))
+    big_box = region.region_box
 
     x0, y0 = big_box.left_down
     x1, y1 = big_box.right_top
@@ -562,16 +811,33 @@ def plot_map(world_path, output, name="ward", opt: optroom.BaseOpt | None = None
 
     ax.set_aspect(1)
     ax.axis("off")
-    fig.suptitle(f"{c.zone_id_2_cn(name)} ({name.upper()})", fontsize=30)
 
     # size_ratio = delta_x / delta_y
     # fig.set_size_inches(16 * math.sqrt(size_ratio), 16 / math.sqrt(size_ratio))
-    fig.set_size_inches(delta_x / 50, delta_y / 50, forward=True)
-    plt.tight_layout()
+    fig.set_size_inches(max(delta_x / 50, 5), max(delta_y / 50, 5), forward=True)
+    # plt.tight_layout()
     plt.savefig(
         output, dpi=400, transparent=False, bbox_inches="tight", facecolor="white"
     )
     plt.close()
+
+
+def yield_regions(world_path: Path) -> Generator[str, None, None]:
+    bar = tqdm(
+        list(
+            filter(
+                lambda x: x.name != "gates" and not x.name.endswith("-rooms"),
+                world_path.iterdir(),
+            )
+        )
+    )
+    for i in bar:
+        # if i.name != "warf":
+        #     continue
+        name = i.name
+        title = f"{c.zone_id_2_cn(name)} ({name.upper()})"
+        bar.desc = title
+        yield name
 
 
 def plot_all_map(
@@ -579,16 +845,9 @@ def plot_all_map(
     output: Path = c.OUTPUT_PATH,
     opt: optroom.BaseOpt | None = None,
 ):
-    bar = tqdm(list(world_path.iterdir()))
-    for i in bar:
-        if i.name == "gates" or i.name.endswith("-rooms"):
-            continue
-        # if i.name != "whir":
-        #     continue
-        name = i.name
+    for name in yield_regions(world_path):
         title = f"{c.zone_id_2_cn(name)} ({name.upper()})"
-        bar.desc = title
-        plot_map(
+        plot_region(
             c.WORLD_PATH,
             output=output / f"{title}.png",
             name=name,
@@ -596,5 +855,82 @@ def plot_all_map(
         )
 
 
+def plot_big_map(
+    world_path: Path = c.WORLD_PATH,
+    output: Path = c.OUTPUT_PATH / "union_map.png",
+    opt: optroom.BaseOpt | None = None,
+):
+    mpl.use("Agg")
+    regions: list[Region] = []
+    for name in yield_regions(world_path):
+        region = Region.from_maptxt(world_path, name)
+        regions.append(region)
+        region.optimize(opt)
+        # region.position = np.array([0, 0])
+
+    rt_conns: list[RegionTeleportConnection] = []
+    for x, y, r1, r2, _ in c.TELEPORTS:
+        rt_conns.append(
+            RegionTeleportConnection.from_name(
+                r1, r2, regions, r1_posi=np.array([x, y]) / 20
+            )
+        )
+
+    optroom.InitOpt("bfs").optimizing_regions(regions, rt_conns)
+
+    # ===============================
+    fig, ax = plt.subplots(facecolor="white")
+    ax: plt.Axes
+
+    big_box = optroom.Box.combined_big_box([i.region_box for i in regions])
+
+    x0, y0 = big_box.left_down
+    x1, y1 = big_box.right_top
+
+    delta_x = big_box.size[0]
+    delta_y = big_box.size[1]
+    ax.set_xlim(x0 - 0.2 * delta_x, x1 + 0.2 * delta_x)
+    ax.set_ylim(y0 - 0.2 * delta_y, y1 + 0.2 * delta_y)
+
+    ax.set_aspect(1)
+    ax.axis("off")
+
+    # size_ratio = delta_x / delta_y
+    # fig.set_size_inches(16 * math.sqrt(size_ratio), 16 / math.sqrt(size_ratio))
+    FACTOR = 50
+    fig.set_size_inches(delta_x / FACTOR, delta_y / FACTOR, forward=True)
+    MAX_EDGE_PIXEL = 40000
+    max_dpi = MAX_EDGE_PIXEL // max(delta_x / FACTOR, delta_y / FACTOR)
+    # plt.tight_layout()
+
+    for reg in regions:
+        reg.plot(ax)
+
+    for conn in rt_conns:
+        if conn.region1.name == "WRSA" or conn.region2.name == "WRSA":
+            continue
+        conn.plot(ax)
+
+    logger.info("Saving figure...")
+    fig.savefig(output, dpi=max_dpi, transparent=False, facecolor="white")
+    plt.close()
+
+
+def test_load(
+    world_path: Path = c.WORLD_PATH,
+):
+    fig, ax = plt.subplots(facecolor="white")
+    mpl.use("Agg")
+    regions: list[Region] = []
+    for name in yield_regions(world_path):
+        region = Region.from_maptxt(world_path, name)
+        regions.append(region)
+        region.plot(ax)
+
+
 if __name__ == "__main__":
-    plot_all_map(opt=optroom.InitOpt())
+    test_load()
+    # pprint(TEST_CATCHER)
+    # plot_all_map(opt=optroom.InitOpt())
+    plot_big_map(opt=optroom.InitOpt())
+    logger.info("Done!")

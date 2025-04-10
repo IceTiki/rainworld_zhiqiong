@@ -13,14 +13,17 @@ from pprint import pprint
 import utils
 import math
 import itertools
+from collections import deque
 from numpy.typing import NDArray
 from numpy.linalg import norm
 
 if typing.TYPE_CHECKING:
-    from rooms import Room, Connection
+    from rooms import Room, Connection, Region, RegionTeleportConnection
 else:
     Room = TypeVar("Room")
     Connection = TypeVar("Connection")
+    Region = TypeVar("Region")
+    RegionTeleportConnection = TypeVar("RegionTeleportConnection")
 
 
 Vec2d = NDArray[np.float64]
@@ -150,14 +153,36 @@ class Box:
 
 
 class BaseOpt:
-    @staticmethod
-    def use_opt(
-        opt: "BaseOpt", rooms: Iterable[Room], connections: Iterable[Connection]
+    def optimizing_rooms(
+        self, rooms: Iterable[Room], connections: Iterable[Connection]
     ):
         room_map, conn_map = Box.build_graph(rooms, connections)
-        opt(list(room_map.values()), list(conn_map.values()))
+        self(list(room_map.values()), list(conn_map.values()))
         for room, box in room_map.items():
             room.box_position = box.position
+
+    def optimizing_regions(
+        self, regions: Iterable[Region], rt_conns: Iterable[RegionTeleportConnection]
+    ):
+        region_map: dict[Region, Box] = {i: i.region_box for i in regions}
+        conn_map: dict[RegionTeleportConnection, Edge] = {}
+        for conn in rt_conns:
+            for region in (conn.region1, conn.region2):
+                if region not in region_map:
+                    region_map[region] = region.region_box
+
+            edge = Edge(
+                EndPoint(region_map[conn.region1], conn.reg1_posi),
+                EndPoint(region_map[conn.region2], conn.reg2_posi),
+            )
+            conn_map[conn] = edge
+            for region in (conn.region1, conn.region2):
+                box = region_map[region]
+                box.append_edge(edge)
+
+        self(list(region_map.values()), list(conn_map.values()))
+        for region, box in region_map.items():
+            region.position = box.position
 
     def __init__(self, *, boxes: list[Box] = None, edges: list[Edge] = None):
         self.boxes: list[Box] = boxes if boxes is not None else []
@@ -189,24 +214,30 @@ class BfsBoxes:
         return max(self.todo_boxes, key=lambda x: x.area)
 
     def __iter__(self) -> Generator[tuple[EndPoint, EndPoint], None, None]:
-        stack: list[Edge] = []
+        queue: deque[Edge] = deque()
         # BFS
         old_start = None
         while True:
-            if not stack:
+            if not queue:
                 if not self.todo_boxes:
                     break
                 start_box = self.choice()
-                stack.extend(start_box.edges)
+                queue.extend(
+                    sorted(
+                        start_box.edges, key=lambda x: x.boxes[0].area + x.boxes[1].area
+                    )
+                )
                 if old_start is not None:
                     yield EndPoint(old_start, np.array([0, 0])), EndPoint(
                         start_box, np.array([0, 0])
-                    )
+                    )  # 虚拟边, 用于触发非连通图第一个节点的repel
 
                 self.todo_boxes.remove(start_box)
                 old_start = start_box
+                if not queue:
+                    continue
 
-            edge = stack.pop()
+            edge = queue.popleft()
             if edge in self.done_edges:
                 continue
             self.done_edges.add(edge)
@@ -215,19 +246,91 @@ class BfsBoxes:
                 if box not in self.todo_boxes:
                     continue
                 self.todo_boxes.remove(box)
-                stack.extend(box.edges)
+                queue.extend(box.edges)
+
+                yield edge.end_points[1 - i], end_point
+
+
+class DfsBoxes:
+    def __init__(self, boxes: list[Box]):
+        self.boxes: list[Box] = list(boxes)
+        self.reset()
+
+    @property
+    def done_boxes(self):
+        return set(self.boxes) - self.todo_boxes
+
+    def reset(self):
+        self.todo_boxes = set(self.boxes)
+        self.done_edges = set()
+
+    def choice(self) -> Box:
+        return max(self.todo_boxes, key=lambda x: x.area)
+
+    def __iter__(self) -> Generator[tuple[EndPoint, EndPoint], None, None]:
+        stack: list[Edge] = []
+        old_start = None
+        while True:
+            if not stack:
+                if not self.todo_boxes:
+                    break
+                start_box = self.choice()
+                stack.extend(
+                    sorted(
+                        start_box.edges,
+                        key=lambda x: x.boxes[0].area + x.boxes[1].area,
+                        reverse=True,
+                    )
+                )
+                if old_start is not None:
+                    yield EndPoint(old_start, np.array([0, 0])), EndPoint(
+                        start_box, np.array([0, 0])
+                    )  # 虚拟边, 用于触发非连通图第一个节点的repel
+
+                self.todo_boxes.remove(start_box)
+                old_start = start_box
+                if not stack:
+                    continue
+
+            edge = stack.pop()
+            if edge in self.done_edges:
+                continue
+            self.done_edges.add(edge)
+
+            for i, end_point in enumerate(edge.end_points):
+                box = end_point.box
+                if box not in self.todo_boxes:
+                    continue
+                self.todo_boxes.remove(box)
+                stack.extend(
+                    sorted(
+                        box.edges,
+                        key=lambda x: x.boxes[0].area + x.boxes[1].area,
+                        reverse=True,
+                    )
+                )
 
                 yield edge.end_points[1 - i], end_point
 
 
 class InitOpt(BaseOpt):
+    def __init__(
+        self, search: Literal["bfs", "dfs"] = "dfs", *, boxes=None, edges=None
+    ):
+        super().__init__(boxes=boxes, edges=edges)
+        self.search = search
+
     def run(self):
-        bfs = BfsBoxes(self.boxes)
-        for ep_main, ep_sub in bfs:
+        searcher = (
+            DfsBoxes(self.boxes) if self.search == "dfs" else BfsBoxes(self.boxes)
+        )
+        for ep_main, ep_sub in searcher:
             self.align(ep_main, ep_sub)
-            self.repel(ep_sub, bfs.done_boxes)
+            self.repel(ep_sub, searcher.done_boxes)
 
     def align(self, end_point_main: EndPoint, end_point_sub: EndPoint):
+        if end_point_main.box is end_point_sub.box:
+            return
         conn_vec: list[np.ndarray] = []
         for vec1, vec2 in itertools.product(
             end_point_main.to_edge_vecs(), end_point_sub.to_edge_vecs()
