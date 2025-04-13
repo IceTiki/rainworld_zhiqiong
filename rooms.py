@@ -115,21 +115,25 @@ class RoomTxt:
         # ax_list: list[plt.Axes] = axs.flatten().tolist()
 
         # for i, ax in zip(range(self.CHANNEL), ax_list):
-        #     ax.imshow(self.map_matrix[:, :, i], cmap="gray")
+        #     ax.imshow(self.map_matrix[:, :, i], cmap="gray",clip_on=False)
         #     ax.set_title(str(i))
         #     ax.axis("off")
 
         # ax = ax_list[-1]
         fig, ax = plt.subplots()
         ax: plt.Axes
-        ax.imshow(self.water_mask * utils.rgba_pixel("#007AAE"))
-        ax.imshow(self.wall_im * utils.rgba_pixel("#000000"))
-        ax.imshow(self.background_im * utils.rgba_pixel("#000000", 0.25))
-        ax.imshow(self.pipe_im * utils.rgba_pixel("#ffff00", 0.25))
-        ax.imshow(self.entrance_im * utils.rgba_pixel("#ffff00", 0.5))
-        ax.imshow(self.bar_im * utils.rgba_pixel("#880015", 1))
-        ax.imshow(self.map_matrix[:, :, 5:6] * utils.rgba_pixel("#A349A4", 1))
-        ax.imshow(self.map_matrix[:, :, 8:9] * utils.rgba_pixel("#3F48CC", 1))
+        ax.imshow(self.water_mask * utils.rgba_pixel("#007AAE"), clip_on=False)
+        ax.imshow(self.wall_im * utils.rgba_pixel("#000000"), clip_on=False)
+        ax.imshow(self.background_im * utils.rgba_pixel("#000000", 0.25), clip_on=False)
+        ax.imshow(self.pipe_im * utils.rgba_pixel("#ffff00", 0.25), clip_on=False)
+        ax.imshow(self.entrance_im * utils.rgba_pixel("#ffff00", 0.5), clip_on=False)
+        ax.imshow(self.bar_im * utils.rgba_pixel("#880015", 1), clip_on=False)
+        ax.imshow(
+            self.map_matrix[:, :, 5:6] * utils.rgba_pixel("#A349A4", 1), clip_on=False
+        )
+        ax.imshow(
+            self.map_matrix[:, :, 8:9] * utils.rgba_pixel("#3F48CC", 1), clip_on=False
+        )
         plt.show()
 
 
@@ -228,25 +232,45 @@ class Room:
 
     def plot(self, ax: plt.Axes):
         extent = self.box_extent
-        ax.imshow(self.rootxt.water_mask * utils.rgba_pixel("#007AAE"), extent=extent)
-        ax.imshow(self.rootxt.wall_im * utils.rgba_pixel("#000000"), extent=extent)
         ax.imshow(
-            self.rootxt.background_im * utils.rgba_pixel("#000000", 0.25), extent=extent
+            self.rootxt.water_mask * utils.rgba_pixel("#007AAE"),
+            extent=extent,
+            clip_on=False,
         )
         ax.imshow(
-            self.rootxt.pipe_im * utils.rgba_pixel("#ffff00", 0.25), extent=extent
+            self.rootxt.wall_im * utils.rgba_pixel("#000000"),
+            extent=extent,
+            clip_on=False,
         )
         ax.imshow(
-            self.rootxt.entrance_im * utils.rgba_pixel("#ffff00", 0.5), extent=extent
+            self.rootxt.background_im * utils.rgba_pixel("#000000", 0.25),
+            extent=extent,
+            clip_on=False,
         )
-        ax.imshow(self.rootxt.bar_im * utils.rgba_pixel("#880015", 1), extent=extent)
+        ax.imshow(
+            self.rootxt.pipe_im * utils.rgba_pixel("#ffff00", 0.25),
+            extent=extent,
+            clip_on=False,
+        )
+        ax.imshow(
+            self.rootxt.entrance_im * utils.rgba_pixel("#ffff00", 0.5),
+            extent=extent,
+            clip_on=False,
+        )
+        ax.imshow(
+            self.rootxt.bar_im * utils.rgba_pixel("#880015", 1),
+            extent=extent,
+            clip_on=False,
+        )
         ax.imshow(
             self.rootxt.map_matrix[:, :, 5:6] * utils.rgba_pixel("#A349A4", 1),
             extent=extent,
+            clip_on=False,
         )
         ax.imshow(
             self.rootxt.map_matrix[:, :, 8:9] * utils.rgba_pixel("#3F48CC", 1),
             extent=extent,
+            clip_on=False,
         )
 
         edgecolor = utils.color_hash(self.subregion_name)  # edgecolor="#138535",
@@ -305,8 +329,6 @@ class Room:
 
                     if self.name.upper() == "WAUA_BATH":
                         comments = f"(古人线结局, 一次性传送)\n(上古城市|WAUA_TOYS)"
-                    elif target_map != "NULL":
-                        comments = f"({target_map}|{target_room})"
                     elif self.name.upper() == "WARA_P09":
                         comments = f"(上古城市|WAUA_E01|需要满级业力)"
                     elif self.name.upper() == "WAUA_TOYS":
@@ -319,10 +341,13 @@ class Room:
                         "WSSR",
                     }:
                         comments = f"(外缘)"
+                    elif target_map != "NULL":
+                        comments = f"({target_map}|{target_room})"
                     else:
                         comments = f"(恶魔|WRSA_L01|需要满级业力)"
 
-                    TEST_CATCHER.append([x, y, self.name, target_room, comments])
+                    TEST_CATCHER.append([x, y, self.name, target_room, comments, name])
+
                 elif name == "PrinceBulb":
                     fontsize *= 2
                     name = "王子"
@@ -452,6 +477,9 @@ class MapTxt:
                 }
             )
 
+        room_names = {i["room_name"] for i in self.rooms}
+        self.rooms = [i for i in self.rooms if (i["room_name"] + "W") not in room_names]
+
 
 class Connection:
     DIRECTION_MAP = {
@@ -546,8 +574,9 @@ class Region:
         map_txt = MapTxt.from_file(map_txt)
         for room in map_txt.rooms:
             room_txt_path = room_folder / (room["room_name"].lower() + ".txt")
-            room_setting_path = room_folder / (
-                room["room_name"].lower() + "_settings.txt"
+            room_setting_path = utils.world_file_locator(
+                Path(f"{name.lower()}-rooms")
+                / (room["room_name"].lower() + "_settings.txt")
             )
             if not room_txt_path.is_file():
                 logger.warning(f"{room_txt_path} not exists")
@@ -557,7 +586,7 @@ class Region:
                 np.array([room["canon_pos_x"], room["canon_pos_y"]]),
                 room_setting=(
                     RoomSettingTxt.from_file(room_setting_path)
-                    if room_setting_path.is_file()
+                    if room_setting_path is not None
                     else None
                 ),
                 map_txt_info=room,
@@ -661,7 +690,7 @@ class Region:
         self.plot_box(ax)
 
     def plot_box(self, ax: plt.Axes):
-        font_size = 30
+        font_size = 15
         title = [
             (
                 f"{self.region_name_cn} ({self.name})",
@@ -751,7 +780,7 @@ class RegionTeleportConnection:
         conn_r2 = self.region2.region_box.position + self.reg2_posi
         linewidth = 4
         alpha = 0.2
-        color = "#FF0000"
+        # color = "#FF0000"
 
         # ax.annotate(
         #     f"",
@@ -775,6 +804,7 @@ class RegionTeleportConnection:
             t = i / (num_arrows + 1)  # 计算每个小箭头的比例位置
             p0 = conn_r1 + t * conn_vec
             p1 = p0 + conn_vec_unit * SPACE / 2
+            color = plt.cm.cool(t)
 
             small_arrow = FancyArrowPatch(
                 p0,
@@ -857,10 +887,10 @@ def plot_all_map(
 
 def plot_big_map(
     world_path: Path = c.WORLD_PATH,
-    output: Path = c.OUTPUT_PATH / "union_map.png",
+    output: Path = c.OUTPUT_PATH / "union_map.pdf",
     opt: optroom.BaseOpt | None = None,
 ):
-    mpl.use("Agg")
+    # mpl.use("Agg")
     regions: list[Region] = []
     for name in yield_regions(world_path):
         region = Region.from_maptxt(world_path, name)
@@ -894,12 +924,14 @@ def plot_big_map(
 
     ax.set_aspect(1)
     ax.axis("off")
+    fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
+    ax.set_position([0, 0, 1, 1])
 
     # size_ratio = delta_x / delta_y
     # fig.set_size_inches(16 * math.sqrt(size_ratio), 16 / math.sqrt(size_ratio))
     FACTOR = 50
     fig.set_size_inches(delta_x / FACTOR, delta_y / FACTOR, forward=True)
-    MAX_EDGE_PIXEL = 40000
+    MAX_EDGE_PIXEL = 100000
     max_dpi = MAX_EDGE_PIXEL // max(delta_x / FACTOR, delta_y / FACTOR)
     # plt.tight_layout()
 
@@ -920,7 +952,7 @@ def test_load(
     world_path: Path = c.WORLD_PATH,
 ):
     fig, ax = plt.subplots(facecolor="white")
-    mpl.use("Agg")
+    # mpl.use("Agg")
     regions: list[Region] = []
     for name in yield_regions(world_path):
         region = Region.from_maptxt(world_path, name)
@@ -929,8 +961,9 @@ def test_load(
 
 
 if __name__ == "__main__":
-    test_load()
+    # test_load()
     # pprint(TEST_CATCHER)
-    # plot_all_map(opt=optroom.InitOpt())
+
+    plot_all_map(opt=optroom.InitOpt())
     plot_big_map(opt=optroom.InitOpt())
     logger.info("Done!")

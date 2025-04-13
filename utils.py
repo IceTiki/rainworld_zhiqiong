@@ -2,6 +2,8 @@ import numpy as np
 from matplotlib import pyplot as plt
 import matplotlib as mpl
 import hashlib
+from pathlib import Path
+from loguru import logger
 
 
 def uniform(arr: np.ndarray):
@@ -128,3 +130,31 @@ def draw_multiline_text_centered(
                 boxstyle="square,pad=0",
             ),
         )
+
+
+RAIN_WORLD_STREAMING_ASSETS = Path(
+    r"D:\Environment\Application\Steam\steamapps\common\Rain World\RainWorld_Data\StreamingAssets"
+)
+
+
+def world_file_locator(
+    file_rel_path: Path,
+    world_paths: list[Path] = [
+        RAIN_WORLD_STREAMING_ASSETS / r"mods\watcher\world",
+        RAIN_WORLD_STREAMING_ASSETS / r"mods\moreslugcats\world",
+        RAIN_WORLD_STREAMING_ASSETS / "world",
+    ],
+    mod_name="watcher",
+) -> Path | None:
+    for world in world_paths:
+        for file_path in (
+            file_rel_path.with_stem(file_rel_path.stem + f"-{mod_name}"),
+            file_rel_path,
+        ):
+            file_full_path = world / file_path
+            if not file_full_path.is_file():
+                continue
+            return file_full_path
+
+    logger.warning(f"{file_rel_path} not found.")
+    return None
