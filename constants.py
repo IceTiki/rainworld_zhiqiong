@@ -23,16 +23,14 @@ OUTPUT_PATH = ROOT / "output"
 TMP_OUTPUT_PATH = OUTPUT_PATH / "temp"
 CONSTANTS_FILES_PATH = ROOT / "constants_files"
 
-SLUGCAT_REGIONS: dict[str, list[str]] = JsonFile.load(
-    CONSTANTS_FILES_PATH / "slugcat_regions.json"
-)
-REGION_DISPLAYNAME: dict[str, str] = JsonFile.load(
-    CONSTANTS_FILES_PATH / "region_displayname.json"
-)
 
-TRANSLATIONS: dict[str, dict[str, str]] = JsonFile.load(
-    CONSTANTS_FILES_PATH / "translations.json"
-)
+def load_constant_file(file_stem: str):
+    return JsonFile.load(CONSTANTS_FILES_PATH / (file_stem + ".json"))
+
+
+SLUGCAT_REGIONS: dict[str, list[str]] = load_constant_file("slugcat_regions")
+REGION_DISPLAYNAME: dict[str, str] = load_constant_file("region_displayname")
+TRANSLATIONS: dict[str, dict[str, str]] = load_constant_file("translations")
 
 
 def translate(text: str, language="chi") -> str:

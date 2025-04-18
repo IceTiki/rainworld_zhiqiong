@@ -65,6 +65,14 @@ class Edge:
     def boxes(self):
         return [i.box for i in self.end_points]
 
+    @property
+    def end_point_1(self):
+        return self.end_points[0]
+
+    @property
+    def end_point_2(self):
+        return self.end_points[1]
+
 
 class Box:
     @classmethod
