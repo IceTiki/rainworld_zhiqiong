@@ -6,6 +6,7 @@ import matplotlib.image as mpimg
 import networkx as nx
 import numpy as np
 import assets
+from pprint import pprint
 
 
 plt.rcParams["font.sans-serif"] = ["MicroSoft YaHei"]
@@ -82,7 +83,8 @@ tele = {
     "WSKD_B34": "WRSA_L01",
     "WSKD_B38DRY": "WARD_B41",
     "WSKD_B40": "WARD_R15",
-    "WSSR_LAB6": "WRSA_L01",
+    # "WSSR_LAB6": "WRSA_L01",
+    "WSSR_LAB6": "WORA_START",
     "WSUR_B09": "WORA",
     "WTDA_A13": "WARG_B31",
     "WTDA_Z01": "WARE_H16",
@@ -116,6 +118,36 @@ echos = {
     ("WTDA", "WBLA"),
     ("WTDB", "WRFB"),
     ("WVWA", "WARC"),
+}
+
+best_posi = {
+    "WARA": [830.68, 185.77],
+    "WARB": [614.81, 156.8],
+    "WARC": [730.01, 44.123999999999995],
+    "WARD": [468.08, 271.59],
+    "WARE": [489.71, 157.93],
+    "WARF": [177.43, 205.76],
+    "WARG": [389.52, 226.48],
+    "WAUA": [968.8, 71.871],
+    "WBLA": [367.74, 356.75],
+    "WDSR": [764.9250000000001, 371.001],
+    "WGWR": [847.713, 273.933],
+    "WHIR": [942.213, 359.313],
+    "WORA": [853.59, 362.19000000000005],
+    "WPTA": [703.35, 137.4],
+    "WRFA": [217.47, 29.773],
+    "WRFB": [404.0, 43.948],
+    "WRRA": [131.28, 77.797],
+    "WRSA": [650.0, 450.0],
+    "WSKA": [33.68000000000001, 38.0],
+    "WSKB": [38.044, 135.8],
+    "WSKC": [584.48, 231.3],
+    "WSKD": [273.08, 314.0],
+    "WSSR": [560.0, 390.0],
+    "WSUR": [859.476, 450.129],
+    "WTDA": [267.45, 188.89],
+    "WTDB": [280.12, 103.92],
+    "WVWA": [599.92, 37.693],
 }
 
 tele_id = {k[:4]: v[:4] for k, v in tele.items()}
@@ -168,6 +200,10 @@ for i in ("WDSR", "WGWR", "WHIR", "WSUR"):
 
 for i in ("WDSR", "WGWR", "WHIR", "WSUR", "WORA"):
     pos[i] += np.array([70, -250.0])
+
+
+for k, v in best_posi.items():
+    pos[k] = v
 
 # 绘制图形
 fig, ax = plt.subplots(figsize=(16, 16))
@@ -333,7 +369,7 @@ handles = [
 ]
 # legend_line =
 # FFB919
-ax.legend(handles=handles,loc='upper left')
+ax.legend(handles=handles, loc="upper left")
 
 ax.axis("off")
 plt.suptitle(
