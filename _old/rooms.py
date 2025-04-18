@@ -9,7 +9,7 @@ from loguru import logger
 from tqdm import tqdm
 import math
 import utils
-import optroom
+import optim
 from pprint import pprint
 from matplotlib.patches import FancyArrowPatch
 
@@ -648,8 +648,8 @@ class Region:
         return self.room_map.values()
 
     @property
-    def region_box(self) -> optroom.Box:
-        return optroom.Box.combined_big_box(map(optroom.Box.from_room, self.rooms))
+    def region_box(self) -> optim.Box:
+        return optim.Box.combined_big_box(map(optim.Box.from_room, self.rooms))
 
     @property
     def position(self) -> np.ndarray:
@@ -678,7 +678,7 @@ class Region:
     def region_name_cn(self) -> str:
         return c.EN_2_CN.get(self.region_name_en, self.region_name_en)
 
-    def optimize(self, opt: optroom.BaseOpt | None = None):
+    def optimize(self, opt: optim.BaseOpt | None = None):
         if opt is not None:
             opt.optimizing_rooms(self.rooms, self.connections)
 
@@ -820,7 +820,7 @@ class RegionTeleportConnection:
             ax.add_patch(small_arrow)
 
 
-def plot_region(world_path, output, name="ward", opt: optroom.BaseOpt | None = None):
+def plot_region(world_path, output, name="ward", opt: optim.BaseOpt | None = None):
     region = Region.from_maptxt(world_path, name)
     if region is None:
         return
@@ -875,7 +875,7 @@ def yield_regions(world_path: Path) -> Generator[str, None, None]:
 def plot_all_map(
     world_path: Path = c.WORLD_PATH,
     output: Path = c.OUTPUT_PATH,
-    opt: optroom.BaseOpt | None = None,
+    opt: optim.BaseOpt | None = None,
 ):
     for name in yield_regions(world_path):
         title = f"{c.zone_id_2_cn(name)} ({name.upper()})"
@@ -890,7 +890,7 @@ def plot_all_map(
 def plot_big_map(
     world_path: Path = c.WORLD_PATH,
     output: Path = c.OUTPUT_PATH / "union_map.pdf",
-    opt: optroom.BaseOpt | None = None,
+    opt: optim.BaseOpt | None = None,
 ):
     # mpl.use("Agg")
     regions: list[Region] = []
@@ -908,13 +908,13 @@ def plot_big_map(
             )
         )
 
-    optroom.AlignOpt("bfs").optimizing_regions(regions, rt_conns)
+    optim.AlignOpt("bfs").optimizing_regions(regions, rt_conns)
 
     # ===============================
     fig, ax = plt.subplots(facecolor="white")
     ax: plt.Axes
 
-    big_box = optroom.Box.combined_big_box([i.region_box for i in regions])
+    big_box = optim.Box.combined_big_box([i.region_box for i in regions])
 
     x0, y0 = big_box.left_down
     x1, y1 = big_box.right_top
@@ -966,6 +966,6 @@ if __name__ == "__main__":
     # test_load()
     # pprint(TEST_CATCHER)
 
-    plot_all_map(opt=optroom.AlignOpt())
-    plot_big_map(opt=optroom.AlignOpt())
+    plot_all_map(opt=optim.AlignOpt())
+    plot_big_map(opt=optim.AlignOpt())
     logger.info("Done!")

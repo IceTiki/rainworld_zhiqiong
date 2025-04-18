@@ -10,7 +10,7 @@ from colls import Box, EndPoint, Edge
 from utils import CachedProperty
 import utils
 import constants as cons
-import optroom
+import optim
 
 plt.rcParams["font.sans-serif"] = ["Microsoft YaHei"]
 
@@ -542,7 +542,7 @@ class Region(Box, CachedProperty.Father):
     def name(self):
         return self.info.name
 
-    def opt(self, opt: optroom.BaseOpt = optroom.ForceOpt()):
+    def opt(self, opt: optim.BaseOpt = optim.ForceOpt()):
         opt(self.rooms, self.connections)
 
     def _plot_box(self, ax: plt.Axes):
