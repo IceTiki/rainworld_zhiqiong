@@ -5,6 +5,7 @@ from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 import matplotlib.image as mpimg
 import networkx as nx
 import numpy as np
+import assets
 
 
 plt.rcParams["font.sans-serif"] = ["MicroSoft YaHei"]
@@ -127,7 +128,10 @@ nodes = list(
     sorted(set([i for i in tele_id.values()]).union(set([i for i in tele_id.keys()])))
 )
 
-id2cn = {i: f"{c.zone_id_2_cn(i.upper())}\n({i})" for i in nodes}
+id2cn = {
+    i: f"{c.translate(c.REGION_DISPLAYNAME[i])}\n{c.REGION_DISPLAYNAME[i]}\n({i})"
+    for i in nodes
+}
 
 G.add_nodes_from(nodes)
 
@@ -149,12 +153,15 @@ for k, v in tele.items():
 pos = nx.nx_pydot.pydot_layout(G, prog="sfdp")
 pos["WARD"] += np.array([0, -30])
 pos["WARB"] += np.array([-30, -30])
-pos["WSKA"] += np.array([-50, 0])
+pos["WSKA"] += np.array([-70, 20])
+pos["WSKD"] += np.array([-20, 20])
 pos["WTDA"] += np.array([-60, -20])
 pos["WARG"] += np.array([40, -20])
 pos["WARC"] += np.array([0, -30])
 pos["WARA"] += np.array([0, 50])
+pos["WARF"] += np.array([0, 50])
 pos["WRSA"] = np.array([650.0, 450.0])
+# pos["WBLA"] = np.array([125, 425.0])
 
 for i in ("WDSR", "WGWR", "WHIR", "WSUR"):
     pos[i] = 0.3 * np.array(pos[i]) + 0.7 * np.array(pos["WORA"])
@@ -168,7 +175,11 @@ ax: plt.Axes
 
 # 为每个节点放置图片
 for node in nodes:
-    img_path = c.RESOUCE_PATH / "illustrations" / f"warp-{node.lower()}.png"
+    img_path = (
+        assets.RAIN_WORLD_PATH.streaming_assets_path
+        / "mods\\watcher\\illustrations"
+        / f"warp-{node.lower()}.png"
+    )
 
     img = mpimg.imread(img_path)
     x, y = pos[node]
@@ -247,7 +258,7 @@ for u, v in G.edges():
     if (r1, r2) in {("WARA", "WAUA"), ("WRSA", "WARA")}:
         ax.text(
             *mid,
-            "需满业力",
+            "需涟漪空间 (Need Ripplespace)",
             ha="center",
             va="center",
             color="purple",
@@ -309,14 +320,23 @@ nx.draw_networkx_labels(
 from matplotlib.lines import Line2D
 
 handles = [
-    Line2D([0], [0], color="#FFB919", lw=2, label="回响"),
-    Line2D([0], [0], color="#CF4E4B", lw=2, label="裂隙"),
-    Line2D([0], [0], color="purple", linestyle="--", lw=2, label="满业力裂隙"),
+    Line2D([0], [0], color="#FFB919", lw=2, label="回响 (Echo)"),
+    Line2D([0], [0], color="#B095D4", lw=2, label="裂隙 (Warppoint)"),
+    Line2D(
+        [0],
+        [0],
+        color="purple",
+        linestyle="--",
+        lw=2,
+        label="涟漪空间裂隙 (Ripplespace Warppoint)",
+    ),
 ]
 # legend_line =
 # FFB919
-ax.legend(handles=handles)
+ax.legend(handles=handles,loc='upper left')
 
 ax.axis("off")
-plt.suptitle("守望者传送总览", fontsize=30, fontweight="bold")
+plt.suptitle(
+    "观察者传送总览\nWatcher Map Teleportation Overview", fontsize=30, fontweight="bold"
+)
 plt.show()
