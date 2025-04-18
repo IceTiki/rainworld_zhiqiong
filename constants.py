@@ -3,10 +3,27 @@ import re
 from typing import Literal
 import json
 
+
+class JsonFile:
+    @staticmethod
+    def load(json_path="data.json", encoding="utf-8"):
+        """读取Json文件"""
+        with open(json_path, "r", encoding=encoding) as f:
+            return json.load(f)
+
+    @staticmethod
+    def write(item, json_path="data.json", encoding="utf-8", ensure_ascii=False):
+        """写入Json文件"""
+        with open(json_path, "w", encoding=encoding) as f:
+            json.dump(item, f, ensure_ascii=ensure_ascii)
+
+
 ROOT = Path(__file__).parent.absolute()
 RESOUCE_PATH = ROOT / "resource"
 WORLD_PATH = RESOUCE_PATH / "comb_world"
 OUTPUT_PATH = ROOT / "output"
+TMP_OUTPUT_PATH = OUTPUT_PATH / "temp"
+CONSTANTS_FILES_PATH = ROOT / "constants_files"
 
 ZONE_ID_2_EN = {}
 for i in WORLD_PATH.iterdir():
@@ -14,18 +31,29 @@ for i in WORLD_PATH.iterdir():
     if displayname_path.is_file():
         ZONE_ID_2_EN[i.name.upper()] = displayname_path.read_text()
 
+SLUGCAT_REGIONS: dict[str, list[str]] = JsonFile.load(
+    CONSTANTS_FILES_PATH / "slugcat_regions.json"
+)
+REGION_DISPLAYNAME: dict[str, str] = JsonFile.load(
+    CONSTANTS_FILES_PATH / "region_displayname.json"
+)
 
 EN_2_CN = {}
 for txt in (RESOUCE_PATH / "en2cn").iterdir():
     for line in txt.read_text()[2:].splitlines():
         en, cn = line.split("|")
         EN_2_CN[en] = cn
+TRANSLATIONS: dict[str, dict[str, str]] = JsonFile.load(
+    CONSTANTS_FILES_PATH / "translations.json"
+)
 
 
 def find_special_object(path):
     directory = Path(path)
     spinning_top_spot = {}  # 回响
     warp_point = {}  # 传送点
+def translate(text: str, language="chi") -> str:
+    return TRANSLATIONS[language].get(text, text)
 
     for file_path in directory.rglob("*.txt"):
         if not file_path.name.endswith("_settings.txt"):
@@ -62,6 +90,7 @@ SPECIAL_OBJECT: dict[Literal["spinning_top_spot", "warp_point"], dict[str, str]]
 PLACE_OBJECT_NAME = {
     "KarmaFlower": "业力花",
     "SpinningTopSpot": "回响",
+    "GhostSpot": "回响",
     "WarpPoint": "裂隙",
     "DataPearl": "珍珠",
 }
@@ -72,6 +101,7 @@ SPECIAL_ROOM_TYPE_2_CN = {
     "SHELTER": "庇护所",
     "SCAVOUTPOST": "拾荒者前哨",
     "ANCIENTSHELTER": "古代庇护所",
+    "GATE": "业力门",
 }
 
 ROOM_RECOMMAND_POSITION = {}
