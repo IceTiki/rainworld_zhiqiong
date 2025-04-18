@@ -66,8 +66,12 @@ class BaseOpt:
 
     _TEST_PLOT_COUNT = 0
 
+    @logger.catch
     def _test_plot(
-        self, boxes: list[Box], edges: list[Edge], output: Path | None | bool = None
+        self,
+        boxes: list[Box],
+        edges: list[Edge],
+        output: Path | None | typing.Literal[False] = None,
     ):
         if not DEBUG:
             return
@@ -77,6 +81,8 @@ class BaseOpt:
 
             output = cons.TMP_OUTPUT_PATH / f"{time.time_ns()}.png"
             self._TEST_PLOT_COUNT += 1
+        if isinstance(output, Path):
+            output.parent.mkdir(exist_ok=True, parents=True)
 
         fig, ax = plt.subplots(facecolor="white")
         ax: plt.Axes
@@ -245,7 +251,7 @@ class AlignOpt(BaseOpt):
         self.search = search
 
     def run(self, boxes: list[Box], edges: list[Edge]):
-        logger.debug("start align opt")
+        logger.debug("Start AlignOpt.")
         searcher = DfsBoxes(boxes) if self.search == "dfs" else BfsBoxes(boxes)
         i = 0
         for eps in searcher:
@@ -260,10 +266,10 @@ class AlignOpt(BaseOpt):
                 continue
             ep_main, ep_sub = eps
             self.align(ep_main, ep_sub)
-            self.repel(ep_main.box, ep_sub.box, searcher.done_boxes)
+            self.repel2(ep_main.box, ep_sub.box, searcher.done_boxes)
             self._test_plot(boxes, edges)
             i += 1
-        logger.debug("end align opt")
+        logger.debug("End AlignOpt.")
 
     @staticmethod
     def cal_best_edge_vec_pair(end_point_main: EndPoint, end_point_sub: EndPoint):
@@ -297,6 +303,38 @@ class AlignOpt(BaseOpt):
         return
 
     def repel(
+        self,
+        box: Box,
+        fixed_boxes: set[Box],
+        step=1,
+    ):
+        have_intersect = True
+
+        count_ = 0
+        np.random.seed(42)
+        while have_intersect:
+            count_ += 1
+            have_intersect = False
+
+            for b in fixed_boxes:
+                if b is box:
+                    continue
+                if not box.is_intersect(b):
+                    continue
+                have_intersect = True
+                delta = box.position - b.position
+                if np.linalg.norm(delta) == 0:
+                    delta = np.random.randn(2)
+                direction = delta / np.linalg.norm(delta) * step
+                box.position += direction
+
+            if count_ % 500 == 0:
+                step *= 1.1
+                box.position += np.random.randn(2) * step * 4
+                if count_ % 20000 == 0:
+                    logger.debug(f"Repel iter {count_}, {box.position=}")
+
+    def repel2(
         self,
         main_box: Box,
         sub_box: Box,
@@ -343,11 +381,13 @@ class ForceOpt(BaseOpt):
 
         return np.array([fx, fy])
 
-    def __init__(self, iters: int | None = None):
+    def __init__(self, iters: int | None = None, repel_factor=10):
         super().__init__()
         self.iters: int | None = iters
+        self.repel_factor = repel_factor
 
     def run(self, boxes: list[Box], edges: list[Edge]):
+        logger.debug("Start ForceOpt.")
         box_notes = {i: self.BoxOptParams() for i in boxes}
 
         iters = self.iters if self.iters is not None else len(boxes) * 30
@@ -360,10 +400,12 @@ class ForceOpt(BaseOpt):
                 edges,
                 box_notes=box_notes,
                 pull_factor=(1 - ip) * 0.5,
-                repel_factor=ip * 10,
+                repel_factor=ip * self.repel_factor,
             )
             if i % 20 == 0:
                 self._test_plot(boxes, edges)
+
+        logger.debug("End ForceOpt.")
 
     @staticmethod
     def cal_box_repel(stable_box: Box, repel_box: Box):
@@ -455,13 +497,16 @@ class ForceOpt(BaseOpt):
 
 
 class AvoidOverlap(BaseOpt):
-    def __init__(self):
+    def __init__(self, step=1):
         super().__init__()
+        self.step = step
 
     def run(self, boxes, edges):
+        logger.debug("Start AvoidOverlap.")
         have_intersection = True
         bar = iter(tqdm(itertools.count(), desc="checking intersection"))
         while have_intersection:
+            self._test_plot(boxes, edges)
             next(bar)
             have_intersection = False
             for i1, box1 in enumerate(boxes):
@@ -475,15 +520,20 @@ class AvoidOverlap(BaseOpt):
                     if np.linalg.norm(delta) == 0:
                         delta = np.random.randn(2)
                     direction = delta / np.linalg.norm(delta)
-                    box1.position += direction
-                    box2.position -= direction
+                    box1.position += direction * self.step
+                    box2.position -= direction * self.step
+
+        logger.debug("End AvoidOverlap.")
 
 
 class NonConnGraphLayout(BaseOpt):
+    # TODO: 堆叠方式可能有问题
     def __init__(self):
         super().__init__()
 
     def run(self, boxes: list[Box], edges):
+        logger.debug("Start NonConnGraphLayout.")
+        self._test_plot(boxes, edges)
         groups: list[set[Box]] = []
         group = None
         bfs = BfsBoxes(boxes)
@@ -532,8 +582,10 @@ class NonConnGraphLayout(BaseOpt):
                     break
 
             delta = best_post - big_box.position
-            print(best_post)
             for i in box_set:
                 i.position += delta
 
             done_boxes.append(Box.combined_big_box(box_set))
+
+        self._test_plot(boxes, edges)
+        logger.debug("End NonConnGraphLayout.")
