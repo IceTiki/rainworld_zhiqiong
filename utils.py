@@ -4,6 +4,96 @@ import matplotlib as mpl
 import hashlib
 from pathlib import Path
 from loguru import logger
+import json
+from typing import TypeVar, Generic, Callable, Optional, Any
+
+T = TypeVar("T")
+F = TypeVar("F", bound=Callable[..., T])
+
+
+class CachedProperty(property, Generic[T]):
+    """
+    for `CachedObject`
+    """
+
+    class Father:
+        def __init__(self):
+            self._cache: dict = {}
+
+    def __init__(self, func: F):
+        self.func: F = func
+        self.name: str = func.__name__
+        self.func_setter: Optional[Callable[[Any, T], None]] = None
+
+    def __get__(self, instance: Father, owner: type) -> T:
+        if instance is None:
+            return self
+        # if not hasattr(instance, "_cache"):
+        #     instance._cache = {}
+
+        key = f"{owner.__name__}.{self.name}"
+        if key not in instance._cache:
+            instance._cache[key] = self.func(instance)
+        return instance._cache[key]
+
+    def __set__(self, instance: Father, value: T):
+        if self.func_setter is not None:
+            self.func_setter(instance, value)
+        else:
+            key = f"{instance.__class__.__name__}.{self.name}"
+            instance._cache[key] = value
+
+    def setter(self, fset: Callable[[Any, T], None]) -> "CachedProperty[T]":
+        self.func_setter = fset
+        return self
+
+
+class JsonFile:
+    @staticmethod
+    def load(json_path="data.json", encoding="utf-8"):
+        """读取Json文件"""
+        with open(json_path, "r", encoding=encoding) as f:
+            return json.load(f)
+
+    @staticmethod
+    def write(item, json_path="data.json", encoding="utf-8", ensure_ascii=False):
+        """写入Json文件"""
+        with open(json_path, "w", encoding=encoding) as f:
+            json.dump(item, f, ensure_ascii=ensure_ascii)
+
+
+def bezier_curve(
+    p0: np.ndarray, p0r: np.ndarray, p1l: np.ndarray, p1: np.ndarray, num=100
+):
+    t = np.linspace(0, 1, num)
+    curve = (
+        (1 - t)[:, None] ** 3 * p0
+        + 3 * (1 - t)[:, None] ** 2 * t[:, None] * p0r
+        + 3 * (1 - t)[:, None] * t[:, None] ** 2 * p1l
+        + t[:, None] ** 3 * p1
+    )
+    return curve
+
+
+def alpha_blend(
+    fg: np.ndarray,
+    bg: np.ndarray,
+):
+    fg = fg.astype(np.float32) / 255.0
+    bg = bg.astype(np.float32) / 255.0
+
+    fg_rgb = fg[..., :3]
+    fg_alpha = fg[..., 3:]
+
+    bg_rgb = bg[..., :3]
+    bg_alpha = bg[..., 3:]
+
+    out_alpha = fg_alpha + bg_alpha * (1 - fg_alpha)
+    out_rgb = (fg_rgb * fg_alpha + bg_rgb * bg_alpha * (1 - fg_alpha)) / np.clip(
+        out_alpha, 1e-6, 1.0
+    )
+    out_image = np.concatenate([out_rgb, out_alpha], axis=-1)
+    return (out_image * 255).astype(np.uint8)
 
 
 def uniform(arr: np.ndarray):
@@ -102,6 +192,11 @@ def draw_multiline_text_centered(
     fontname="Microsoft YaHei",
     rel_fontscale: float = 1,  # 用于从 fontsize 估算轴坐标高度的缩放系数,
     alpha=1,
+    bbox=dict(
+                facecolor="#ffffff88",
+                edgecolor="#00000000",
+                boxstyle="square,pad=0",
+            )
 ):
 
     cx, cy = posi
@@ -124,11 +219,7 @@ def draw_multiline_text_centered(
             fontname=fontname,
             fontweight="bold",
             alpha=alpha,
-            bbox=dict(
-                facecolor="#ffffff88",
-                edgecolor="#00000000",
-                boxstyle="square,pad=0",
-            ),
+            bbox=bbox,
         )
 
 
