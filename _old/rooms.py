@@ -13,6 +13,8 @@ import optroom
 from pprint import pprint
 from matplotlib.patches import FancyArrowPatch
 
+import assets
+
 mpl.use("Agg")
 plt.rcParams["font.sans-serif"] = ["Microsoft YaHei"]
 TEST_CATCHER = []
@@ -899,14 +901,14 @@ def plot_big_map(
         # region.position = np.array([0, 0])
 
     rt_conns: list[RegionTeleportConnection] = []
-    for x, y, r1, r2, _ in c.TELEPORTS:
+    for x, y, r1, r2, _ in c.__TELEPORTS:
         rt_conns.append(
             RegionTeleportConnection.from_name(
                 r1, r2, regions, r1_posi=np.array([x, y]) / 20
             )
         )
 
-    optroom.InitOpt("bfs").optimizing_regions(regions, rt_conns)
+    optroom.AlignOpt("bfs").optimizing_regions(regions, rt_conns)
 
     # ===============================
     fig, ax = plt.subplots(facecolor="white")
@@ -964,6 +966,6 @@ if __name__ == "__main__":
     # test_load()
     # pprint(TEST_CATCHER)
 
-    plot_all_map(opt=optroom.InitOpt())
-    plot_big_map(opt=optroom.InitOpt())
+    plot_all_map(opt=optroom.AlignOpt())
+    plot_big_map(opt=optroom.AlignOpt())
     logger.info("Done!")
