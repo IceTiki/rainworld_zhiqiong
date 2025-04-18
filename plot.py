@@ -227,12 +227,13 @@ class Room(Box):
                     "WGWR",
                     "WSSR",
                 }:
+                    # target_room = "WORA_START"
                     comments = f"(外缘)"
                 elif target_map_name != "NULL":
                     comments = f"({target_map_cn}|{target_room})"
                 else:
+                    # target_room = "WRSA_L01"
                     comments = f"(恶魔|WRSA_L01|需要满级业力)"
-
             elif name == "PrinceBulb":
                 fontsize *= 2
                 name = "王子"
@@ -490,10 +491,11 @@ class Region(Box, CachedProperty.Father):
 
         # ===
 
-        rooms = list({i.name: i for i in rooms}.values())
+        rooms = list({i.name.upper(): i for i in rooms}.values())
         connections = list(
             {
-                tuple(sorted((i.room1.name, i.room2.name))): i for i in connections
+                tuple(sorted((i.room1.name.upper(), i.room2.name.upper()))): i
+                for i in connections
             }.values()
         )
 
@@ -507,6 +509,10 @@ class Region(Box, CachedProperty.Father):
 
         self.rooms = rooms
         self.connections = connections
+
+    @CachedProperty
+    def room_map(self) -> dict[str, Room]:
+        return {i.name.upper(): i for i in self.rooms}
 
     @CachedProperty
     def rooms(self) -> list[Room]:
