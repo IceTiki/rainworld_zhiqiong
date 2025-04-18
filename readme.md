@@ -1,6 +1,4 @@
-![裂隙传送总览](./readme.assets/裂隙传送总览.png)
-
-
+![overview](./readme.assets/overview.svg)
 
 https://rainworldmodding.miraheze.org/wiki/Creating_A_Region
 
