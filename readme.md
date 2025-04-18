@@ -39,12 +39,12 @@
 
 ### 工业区
 
-![Industrial Complex 工业区 (HI)](./readme.assets/Industrial Complex 工业区 (HI).png)
+![Industrial Complex 工业区 (HI)](./readme.assets/hi.png)
 
 ### 盐化区
 
-![Salination 盐化区 (WARB)](./readme.assets/Salination 盐化区 (WARB).png)
+![Salination 盐化区 (WARB)](./readme.assets/warb.png)
 
 ### 冷库
 
-![Cold Storage 冷库 (WARD)](./readme.assets/Cold Storage 冷库 (WARD).png)
+![Cold Storage 冷库 (WARD)](./readme.assets/ward.png)
