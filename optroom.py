@@ -17,13 +17,143 @@ from collections import deque
 from numpy.typing import NDArray
 from numpy.linalg import norm
 
-if typing.TYPE_CHECKING:
-    from rooms import Room, Connection, Region, RegionTeleportConnection
-else:
-    Room = TypeVar("Room")
-    Connection = TypeVar("Connection")
-    Region = TypeVar("Region")
-    RegionTeleportConnection = TypeVar("RegionTeleportConnection")
+DEBUG = False
+
+# if typing.TYPE_CHECKING:
+#     from rooms import Room, Connection, Region, RegionTeleportConnection
+# else:
+#     Room = TypeVar("Room")
+#     Connection = TypeVar("Connection")
+#     Region = TypeVar("Region")
+#     RegionTeleportConnection = TypeVar("RegionTeleportConnection")
+
+
+# Vec2d = NDArray[np.float64]
+# RoomMap = dict[Room, "Box"]
+# ConnectionMap = dict[Connection, "Edge"]
+
+
+# class EndPoint:
+#     def __init__(self, box: "Box", posi: Vec2d):
+#         self.box: Box = box
+#         self.ep_posi: Vec2d = posi
+
+#     @property
+#     def distance_left(self):
+#         return self.ep_posi[0]
+
+#     @property
+#     def distance_down(self):
+#         return self.ep_posi[1]
+
+#     @property
+#     def distance_right(self):
+#         return self.box.size[0] - self.ep_posi[0]
+
+#     @property
+#     def distance_top(self):
+#         return self.box.size[1] - self.ep_posi[1]
+
+#     def to_edge_vecs(self):
+#         return np.array(
+#             [
+#                 [-self.distance_left, 0],
+#                 [self.distance_right, 0],
+#                 [0, -self.distance_down],
+#                 [0, self.distance_top],
+#             ]
+#         )
+
+#     def to_vertex_vecs(self):
+#         return np.array(
+#             [
+#                 [-self.distance_left, -self.distance_down],
+#                 [self.distance_right, -self.distance_down],
+#                 [-self.distance_left, self.distance_top],
+#                 [self.distance_right, self.distance_top],
+#             ]
+#         )
+
+
+# class Edge:
+#     def __init__(self, end_point_1: EndPoint, end_point_2: EndPoint):
+#         self.end_points: list[EndPoint] = [end_point_1, end_point_2]
+
+#     @property
+#     def boxes(self):
+#         return [i.box for i in self.end_points]
+
+
+# class Box:
+#     @classmethod
+#     def combined_big_box(cls, boxes: Iterable["Box"]):
+#         boxes = list(boxes)
+#         left_downs = np.array([i.position for i in boxes])
+#         right_tops = left_downs + np.array([i.size for i in boxes])
+
+#         left_down = left_downs.min(axis=0)
+#         right_top = right_tops.max(axis=0)
+#         size = right_top - left_down
+#         return cls(left_down, size)
+
+#     @classmethod
+#     def from_room(cls, room: Room):
+#         return cls(room.box_position.copy(), room.box_size.copy())
+
+#     @classmethod
+#     def build_graph(
+#         cls, rooms: Iterable[Room], conns: Iterable[Connection]
+#     ) -> tuple[RoomMap, ConnectionMap]:
+#         room_map: RoomMap = {r: cls.from_room(r) for r in rooms}
+#         conn_map: ConnectionMap = {}
+#         for conn in conns:
+#             for room in (conn.room1, conn.room2):
+#                 if room not in room_map:
+#                     room_map[room] = cls.from_room(room)
+
+#             edge = Edge(
+#                 EndPoint(room_map[conn.room1], conn.room1_posi),
+#                 EndPoint(room_map[conn.room2], conn.room2_posi),
+#             )
+#             conn_map[conn] = edge
+#             for room in (conn.room1, conn.room2):
+#                 box = room_map[room]
+#                 box.append_edge(edge)
+
+#         return room_map, conn_map
+
+#     def __init__(self, position: Vec2d, size: Vec2d, edges: list[Edge] = None):
+#         self.position: Vec2d = position
+#         self.size: Vec2d = size
+#         self.edges: list[Edge] = edges if edges is not None else []
+
+#     @property
+#     def area(self):
+#         return np.prod(self.size)
+
+#     @property
+#     def left_down(self):
+#         return self.position
+
+#     @property
+#     def right_top(self):
+#         return self.position + self.size
+
+#     def append_edge(self, edge: Edge):
+#         self.edges.append(edge)
+
+#     def coord_to_global(self, coord: Vec2d):
+#         return self.position + coord
+
+#     def is_intersect(self, other: "Box") -> bool:
+#         x1, y1 = self.left_down
+#         x1_, y1_ = self.right_top
+#         x2, y2 = other.left_down
+#         x2_, y2_ = other.right_top
+
+#         return not (x1 > x2_ or x1_ < x2 or y1 > y2_ or y1_ < y2)
+
+from colls import Box, Edge, EndPoint
 
 
 class BaseOpt:
