@@ -3,7 +3,7 @@ from dataclasses import dataclass
 import numpy as np
 from loguru import logger
 from matplotlib import pyplot as plt
-from matplotlib.patches import Rectangle
+from matplotlib.patches import Rectangle, FancyArrowPatch
 
 from assets import RegionInfo, RoomInfo, RoomTxt
 from colls import Box, EndPoint, Edge
@@ -342,9 +342,9 @@ class Connection(Edge):
         room1_direct: int,
         room2_direct: int,
     ):
-        self.end_point_1 = EndPoint(room1, room1_posi)
-        self.end_point_2 = EndPoint(room2, room2_posi)
-        super().__init__(self.end_point_1, self.end_point_2)
+        end_point_1 = EndPoint(room1, room1_posi)
+        end_point_2 = EndPoint(room2, room2_posi)
+        super().__init__(end_point_1, end_point_2)
 
         self.room1_direct = room1_direct
         self.room2_direct = room2_direct
@@ -551,11 +551,10 @@ class Region(Box, CachedProperty.Father):
     def opt(self, opt: optim.BaseOpt = optim.ForceOpt()):
         opt(self.rooms, self.connections)
 
-    def _plot_box(self, ax: plt.Axes):
+    def _plot_box(self, ax: plt.Axes, *, box_size_factor=1):
         font_size = 30
-        FACTOR = 1.1
-        size = self.size * FACTOR
-        position = self.position - self.size * (FACTOR - 1) / 2
+        size = self.size * box_size_factor
+        position = self.position - self.size * (box_size_factor - 1) / 2
 
         rect = Rectangle(
             position,
@@ -601,14 +600,70 @@ class Region(Box, CachedProperty.Father):
             ),
         )
 
-    def plot(self, ax: plt.Axes):
+    def plot(self, ax: plt.Axes, *, box_size_factor=1):
         rooms = self.rooms
         connections = self.connections
 
-        self._plot_box(ax)
+        self._plot_box(ax, box_size_factor=box_size_factor)
 
         for r in rooms:
             r.plot(ax)
 
         for c in connections:
             c.plot(ax)
+
+
+class Teleport(Edge):
+
+    class Warppoint(EndPoint):
+        @property
+        def rel_posi(self):
+            return (self._room.position - self.box.position) + self._posi
+
+        @property
+        def box(self):
+            return self.region
+
+        def __init__(self, region: Region, room: Room, posi: np.ndarray):
+            self.region = region
+            self._room = room
+            self._posi = posi
+
+    def __init__(
+        self, region_1, region_2, room_1, room_2, posi_1, posi_2, *, type_: str = ""
+    ):
+        from_point: Teleport.Warppoint = Teleport.Warppoint(region_1, room_1, posi_1)
+        to_point: Teleport.Warppoint = Teleport.Warppoint(region_2, room_2, posi_2)
+        super().__init__(from_point, to_point)
+        self.end_point_1: Teleport.Warppoint
+        self.end_point_2: Teleport.Warppoint
+
+        self.type_: str = type_
+
+    def plot(self, ax: plt.Axes):
+        conn_r1 = self.end_point_1.glo_posi
+        conn_r2 = self.end_point_2.glo_posi
+        linewidth = 4
+        alpha = 0.2
+
+        conn_vec = conn_r2 - conn_r1
+        conn_vec_norm = np.linalg.norm(conn_vec)
+        conn_vec_unit = conn_vec / conn_vec_norm  # ! DIV 0
+        SPACE = 50
+        num_arrows = int(conn_vec_norm / SPACE)
+        for i in range(1, num_arrows + 1):
+            t = i / (num_arrows + 1)  # 计算每个小箭头的比例位置
+            p0 = conn_r1 + t * conn_vec
+            p1 = p0 + conn_vec_unit * SPACE / 2
+            color = plt.cm.cool(t)
+
+            small_arrow = FancyArrowPatch(
+                p0,
+                p1,
+                mutation_scale=8,
+                color=color,
+                arrowstyle="->",
+                lw=linewidth,
+                alpha=alpha,
+            )
+            ax.add_patch(small_arrow)
