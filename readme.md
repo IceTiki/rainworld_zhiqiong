@@ -35,7 +35,15 @@
 * [World File Format - Rain World Modding](https://rainworldmodding.miraheze.org/wiki/World_File_Format)
 * [Level Editor - Rain World Modding](https://rainworldmodding.miraheze.org/wiki/Level_Editor)
 
-## 参考地图效果
+## 参考效果
+
+### 排布算法动画
+
+![anima](./readme.assets/anima.gif)
+
+### 冷库
+
+![Cold Storage 冷库 (WARD)](./readme.assets/ward.png)
 
 ### 工业区
 
@@ -45,6 +53,3 @@
 
 ![Salination 盐化区 (WARB)](./readme.assets/warb.png)
 
-### 冷库
-
-![Cold Storage 冷库 (WARD)](./readme.assets/ward.png)
