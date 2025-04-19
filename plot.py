@@ -641,9 +641,11 @@ class Teleport(Edge):
         self.type_: str = type_
 
     def plot(self, ax: plt.Axes):
+        if self.end_point_2._room.name.upper() == "WRSA_L01":
+            return
         conn_r1 = self.end_point_1.glo_posi
         conn_r2 = self.end_point_2.glo_posi
-        linewidth = 4
+        linewidth = 8
         alpha = 0.2
 
         conn_vec = conn_r2 - conn_r1
@@ -655,7 +657,13 @@ class Teleport(Edge):
             t = i / (num_arrows + 1)  # 计算每个小箭头的比例位置
             p0 = conn_r1 + t * conn_vec
             p1 = p0 + conn_vec_unit * SPACE / 2
-            color = plt.cm.cool(t)
+            if self.type_ == "SpinningTopSpot":
+                color = plt.cm.Wistia(t)
+            elif self.type_ == "WarpPoint":
+                color = plt.cm.cool(t)
+            else:
+                color = "black"
+
 
             small_arrow = FancyArrowPatch(
                 p0,
