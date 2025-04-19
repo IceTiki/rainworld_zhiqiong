@@ -8,6 +8,7 @@
 * 支持渲染
   * 沙子（`TerrainHandle`）
   * 贴壁长腿菌可以攀爬的长触手（ `CorruptionTube`）
+  * 酸液（`LethalWater`和`Toxic Brine Water`）
 * 支持区域
   * 观察者的工业区子区域`水培法`
 * 标注
