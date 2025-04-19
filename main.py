@@ -63,13 +63,7 @@ def plot_watcher_big_map():
         if regname2.upper() == "WRSA":
             continue
 
-        if regname1.upper() in {"SU", "HI", "CC", "SH", "LF"} or regname2.upper() in {
-            "SU",
-            "HI",
-            "CC",
-            "SH",
-            "LF",
-        }:
+        if regname1.upper() in {"SU", "HI", "CC", "SH", "LF"}:
             continue
 
         box1, box2 = opt_boxes_map[reg_map[regname1]], opt_boxes_map[reg_map[regname2]]
@@ -85,6 +79,34 @@ def plot_watcher_big_map():
                 EndPoint(box2, tp.end_point_2.rel_posi),
             )
         )
+
+    for i in ["GATE_HI_SH", "GATE_HI_CC", "GATE_SU_HI", "GATE_LF_SU"]:
+        _, r1, r2 = i.split("_")
+        for reg1, reg2 in ([reg_map[r1], reg_map[r2]], [reg_map[r2], reg_map[r1]]):
+            tp = Teleport(
+                reg1,
+                reg2,
+                reg1.room_map[i],
+                reg2.room_map[i],
+                reg1.room_map[i].size / 2,
+                reg2.room_map[i].size / 2,
+                type_="Gate",
+            )
+            teleports.append(tp)
+
+            box1, box2 = opt_boxes_map[reg1], opt_boxes_map[reg2]
+            edge = Edge(
+                EndPoint(box1, tp.end_point_1.rel_posi),
+                EndPoint(box2, tp.end_point_2.rel_posi),
+            )
+            box1.append_edge(edge)
+            box2.append_edge(edge)
+            opt_edges.append(
+                Edge(
+                    EndPoint(box1, tp.end_point_1.rel_posi),
+                    EndPoint(box2, tp.end_point_2.rel_posi),
+                )
+            )
 
     opt_boxes = list(opt_boxes_map.values())
     for opt in [
@@ -142,7 +164,7 @@ def plot_watcher_big_map():
 
 
 def plot_watcher_regions():
-    optim.DEBUG = False  # ! DEBUG
+    # optim.DEBUG = True  # ! DEBUG
     regs = [
         Region(RegionInfo(RegionPath(i, mod_name="Watcher", slugcat_name="Watcher")))
         for i in cons.SLUGCAT_REGIONS["Watcher"]
