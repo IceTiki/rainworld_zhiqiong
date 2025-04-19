@@ -265,9 +265,10 @@ class Room(Box):
             wpi.comments = f"古人线结局"
             wpi.to_room = "WAUA_TOYS"
             wpi.to_coord = [22.5, 61.5]
-        # elif wpi.from_room == "WORA_STARCATCHER07":
-        #     wpi.to_coord = "WORA_STARCATCHER02"
-        #     wpi.to
+        elif wpi.from_room == "WORA_STARCATCHER03":
+            wpi.to_room = "WRSA_L01"
+            wpi.comments = f"位于涟漪空间"
+            wpi.to_coord = [76, 184.82]
         elif wpi.from_room[:4] in {
             "WSUR",
             "WHIR",
