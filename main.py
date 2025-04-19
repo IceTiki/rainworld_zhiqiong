@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from typing import Literal
 
 from pprint import pprint
 from matplotlib import pyplot as plt
@@ -172,9 +173,10 @@ def plot_watcher_regions():
 
     bar = tqdm(regs)
 
-    posi_cache_data: dict = {}
-    posi_cache = "watcher_posi_cache"
-    posi_cache_path = Path(cons.CONSTANTS_FILES_PATH / f"{posi_cache}.json")
+    posi_cache_name = "watcher_posi_cache"
+    posi_cache_data: dict[
+        str, dict[Literal["posi", "room_posi"], list[float] | dict[str, list[float]]]
+    ] = cons.load_constant_file(posi_cache_name)
 
     for reg in bar:
         bar.desc = reg.info.displayname_trans("chi")
@@ -182,17 +184,25 @@ def plot_watcher_regions():
         #     continue
         # if reg.name.upper() != "WARB":
         #     continue
+
+        if reg.name.upper() in posi_cache_data:
+            for room_name, posi in posi_cache_data[reg.name.upper()][
+                "room_posi"
+            ].items():
+                reg.room_map[room_name].position = np.array(posi)
+        else:
+            reg.opt(optim.AlignOpt())
+            reg.opt(optim.ForceOpt())
+            reg.opt(optim.AvoidOverlap())
+            reg.opt(optim.NonConnGraphLayout())
+
+            posi_cache_data[reg.name] = {
+                "posi": list(reg.position),
+                "room_posi": {i.name: list(i.position) for i in reg.rooms},
+            }
+
         fig, ax = plt.subplots(facecolor="white")
         ax: plt.Axes
-        reg.opt(optim.AlignOpt())
-        reg.opt(optim.ForceOpt())
-        reg.opt(optim.AvoidOverlap())
-        reg.opt(optim.NonConnGraphLayout())
-
-        posi_cache_data[reg.name] = {
-            "posi": list(reg.position),
-            "room_posi": {i.name: list(i.position) for i in reg.rooms},
-        }
 
         for r in reg.rooms:
             r.position *= 1.1
@@ -220,7 +230,7 @@ def plot_watcher_regions():
         )
         plt.close()
 
-    utils.JsonFile.write(posi_cache_data, posi_cache_path)
+    cons.save_constant_file(posi_cache_name, posi_cache_data)
 
 
 if __name__ == "__main__":

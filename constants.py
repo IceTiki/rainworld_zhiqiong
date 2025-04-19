@@ -1,6 +1,6 @@
 from pathlib import Path
 import re
-from typing import Literal
+from typing import Literal, Any
 import json
 
 
@@ -25,7 +25,15 @@ CONSTANTS_FILES_PATH = ROOT / "constants_files"
 
 
 def load_constant_file(file_stem: str):
-    return JsonFile.load(CONSTANTS_FILES_PATH / (file_stem + ".json"))
+    path_ = CONSTANTS_FILES_PATH / (file_stem + ".json")
+    if not path_.exists():
+        return {}
+    return JsonFile.load(path_)
+
+
+def save_constant_file(file_stem: str, item: dict | list | Any):
+    path_ = CONSTANTS_FILES_PATH / (file_stem + ".json")
+    return JsonFile.write(item, path_)
 
 
 SLUGCAT_REGIONS: dict[str, list[str]] = load_constant_file("slugcat_regions")
