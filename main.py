@@ -41,14 +41,14 @@ def plot_watcher_big_map():
     opt_edges = []
 
     for i in watcher_warppoints:
-        type_ = i["type"]
-        from_ = i["from"]
-        to_ = i["to"]
+        type_ = i["obj_type"]
+        from_ = i["from_room"]
+        to_ = i["to_room"]
         from_coord = i["from_coord"]
         to_coord = i["to_coord"]
 
-        regname1 = from_.split("_", maxsplit=1)[0]
-        regname2 = to_.split("_", maxsplit=1)[0]
+        regname1 = from_.split("_", maxsplit=1)[0].upper()
+        regname2 = to_.split("_", maxsplit=1)[0].upper()
 
         tp = Teleport(
             reg_map[regname1],
@@ -61,7 +61,7 @@ def plot_watcher_big_map():
         )
         teleports.append(tp)
 
-        if regname2.upper() == "WRSA":
+        if regname2.upper() == "WRSA":  # 恶魔
             continue
 
         if regname1.upper() in {"SU", "HI", "CC", "SH", "LF"}:
@@ -81,9 +81,26 @@ def plot_watcher_big_map():
             )
         )
 
-    for i in ["GATE_HI_SH", "GATE_HI_CC", "GATE_SU_HI", "GATE_LF_SU"]:
+    gate_rooms = set(
+        j.name.upper()
+        for i in regions
+        for j in i.rooms
+        if j.name.upper().startswith("GATE_")
+    )
+    for i in gate_rooms:
         _, r1, r2 = i.split("_")
-        for reg1, reg2 in ([reg_map[r1], reg_map[r2]], [reg_map[r2], reg_map[r1]]):
+        if r1 not in reg_map or r2 not in reg_map:
+            continue
+
+        reg1, reg2 = reg_map[r1], reg_map[r2]
+
+        if i not in reg1.room_map or i not in reg2.room_map:
+            continue
+
+        for flag in range(2):
+            if flag == 1:
+                reg1, reg2 = reg2, reg1
+
             tp = Teleport(
                 reg1,
                 reg2,

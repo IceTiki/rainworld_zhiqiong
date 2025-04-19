@@ -22,6 +22,7 @@ ROOT = Path(__file__).parent.absolute()
 OUTPUT_PATH = ROOT / "output"
 TMP_OUTPUT_PATH = OUTPUT_PATH / "temp"
 CONSTANTS_FILES_PATH = ROOT / "constants_files"
+TMP_OUTPUT_PATH.mkdir(exist_ok=True, parents=True)
 
 
 def load_constant_file(file_stem: str):

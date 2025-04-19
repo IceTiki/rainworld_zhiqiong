@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import numpy as np
 from loguru import logger
@@ -186,54 +186,135 @@ class Room(Box):
 
         # return (canvas * 255).astype(np.uint8)
 
+    @dataclass
+    class _WarpPointInfo:
+        obj_type: str = "NULL"
+        obj_type_cn: str = "NULL"
+        from_room: str = "NULL"
+        to_room: str = "NULL"
+        from_coord: list[float] = field(default_factory=lambda: [0, 0])
+        to_coord: list[float] = field(default_factory=lambda: [0, 0])
+        comments: str = ""
+        raw: list[str] = field(default_factory=list)
+
+        @property
+        def from_region(self):
+            return self.from_room.split("_", maxsplit=1)[0]
+
+        @property
+        def to_region(self):
+            return self.to_room.split("_", maxsplit=1)[0]
+
+    @staticmethod
+    def _is_float(num: str) -> bool:
+        try:
+            float(num)
+            return True
+        except ValueError:
+            return False
+
+    def _get_warppoint_info(
+        self, obj: tuple[str, float, float, list[str]]
+    ) -> _WarpPointInfo:
+        wpi = self._WarpPointInfo()
+        wpi.obj_type, x, y, property_ = obj
+        wpi.from_coord = [x, y]
+        assert wpi.obj_type in {"SpinningTopSpot", "WarpPoint"}
+        wpi.obj_type_cn = cons.PLACE_OBJECT_NAME[wpi.obj_type]
+        wpi.from_room = self.name.upper()
+        wpi.raw = list(obj)
+
+        # ====
+
+        flag = "start"
+        for i in property_:
+            if i == "NULL" and flag in {
+                "find_to_room",
+                "find_to_coord_x",
+                "find_to_coord_y",
+            }:
+                break
+
+            if flag == "start" and i == "Watcher":
+                flag = "find_to_room"
+                continue
+            elif flag == "find_to_room" and i != "Watcher":
+                if "_" in i:
+                    flag = "find_to_coord_x"
+                    wpi.to_room = i.upper()
+                continue
+            elif flag == "find_to_coord_x" and self._is_float(i):
+                wpi.to_coord = [float(i) / 20]
+                flag = "find_to_coord_y"
+                continue
+            elif flag == "find_to_coord_y":
+                wpi.to_coord.append(float(i) / 20)
+                break
+
+        # ====
+
+        if wpi.from_room == "WAUA_BATH":
+            wpi.comments = "古人线结局, 一次性传送"
+            wpi.to_room = "WAUA_TOYS"
+            # wpi.to_coord = [22.5, 61.5]
+        elif wpi.from_room == "WARA_P09":
+            wpi.comments = f"位于涟漪空间"
+            wpi.to_room = "WAUA_E01"
+            wpi.to_coord = [38, 16]  # 手动设置坐标，不精确
+        elif wpi.from_room == "WAUA_TOYS":
+            wpi.comments = f"古人线结局"
+            wpi.to_room = "WAUA_TOYS"
+            wpi.to_coord = [22.5, 61.5]
+        # elif wpi.from_room == "WORA_STARCATCHER07":
+        #     wpi.to_coord = "WORA_STARCATCHER02"
+        #     wpi.to
+        elif wpi.from_room[:4] in {
+            "WSUR",
+            "WHIR",
+            "WDSR",
+            "WGWR",
+            "WSSR",
+        }:
+            wpi.comments = f"到达房间随机"
+            wpi.to_room = "WORA_START"
+            wpi.to_coord = [24, 96]  #  手动设置坐标，不精确
+        elif wpi.to_room != "NULL":
+            pass
+        else:
+            wpi.to_room = "WRSA_L01"
+            wpi.comments = f"位于涟漪空间"
+            wpi.to_coord = [76, 184.82]
+
+        return wpi
+
     def _plot_object(self, ax: plt.Axes):
         room_setting = self.info.roomsettingtxt
         if room_setting is None:
             return
         for obj in room_setting.placed_objects:
             name, x, y = obj[:3]
-            property: list[str] = obj[-1]
+            property_: list[str] = obj[-1]
 
             comments = ""
             fontsize = 3
             color = "#ffffff"
             if name in {"SpinningTopSpot", "WarpPoint"}:
                 fontsize *= 2
-                name = cons.PLACE_OBJECT_NAME[name]
-                map_idx = (
-                    (len(property) - 1 - property[::-1].index("Watcher")) + 1
-                    if "Watcher" in property
-                    else 4
-                )
-                target_map_name = property[map_idx]
-                target_map_displayname = cons.REGION_DISPLAYNAME.get(
-                    target_map_name, target_map_name
-                )
-                target_map_cn = cons.TRANSLATIONS["chi"].get(
-                    target_map_displayname, target_map_displayname
-                )
-                target_room = property[map_idx + 1].upper()
+                wp_info = self._get_warppoint_info(obj)
+                name = wp_info.obj_type_cn
 
-                if self.name.upper() == "WAUA_BATH":
-                    comments = f"(古人线结局, 一次性传送)\n(上古城市|WAUA_TOYS)"
-                elif self.name.upper() == "WARA_P09":
-                    comments = f"(上古城市|WAUA_E01|需要满级业力)"
-                elif self.name.upper() == "WAUA_TOYS":
-                    comments = f"(古人线结局)"
-                elif self.name.upper()[:4] in {
-                    "WSUR",
-                    "WHIR",
-                    "WDSR",
-                    "WGWR",
-                    "WSSR",
-                }:
-                    # target_room = "WORA_START"
-                    comments = f"(外缘)"
-                elif target_map_name != "NULL":
-                    comments = f"({target_map_cn}|{target_room})"
-                else:
-                    # target_room = "WRSA_L01"
-                    comments = f"(恶魔|WRSA_L01|需要满级业力)"
+                to_reg_name_cn = (
+                    cons.translate(
+                        cons.REGION_DISPLAYNAME.get(
+                            wp_info.to_region, wp_info.to_region
+                        )
+                    )
+                )
+                comments = f"({to_reg_name_cn}|{wp_info.to_room})" + (
+                    f"\n({wp_info.comments})" if wp_info.comments else ""
+                )
+
+
             elif name == "PrinceBulb":
                 fontsize *= 2
                 name = "王子"
@@ -242,8 +323,8 @@ class Room(Box):
             elif name == "CorruptionTube":
                 x = self.position[0] + x
                 y = self.position[1] + y
-                x2 = x + float(property[0]) / 20
-                y2 = y + float(property[1]) / 20
+                x2 = x + float(property_[0]) / 20
+                y2 = y + float(property_[1]) / 20
                 ax.plot([x, x2], [y, y2], color="purple", linestyle=":", linewidth=0.5)
                 continue
             else:
@@ -663,7 +744,6 @@ class Teleport(Edge):
                 color = plt.cm.cool(t)
             else:
                 color = "black"
-
 
             small_arrow = FancyArrowPatch(
                 p0,

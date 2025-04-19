@@ -1,50 +1,101 @@
 [
     {
-        "type": "SpinningTopSpot",
-        "from": "CC_C12",
-        "to": "WSKB_C17",
+        "obj_type": "SpinningTopSpot",
+        "obj_type_cn": "回响",
+        "from_room": "CC_C12",
+        "to_room": "WSKB_C17",
         "from_coord": [
             46.69703,
             106.62195
         ],
         "to_coord": [
-            25.5,
-            0.75
+            24.5,
+            25.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "SpinningTopSpot",
+            46.69703,
+            106.62195,
+            [
+                "18",
+                "77",
+                "Watcher",
+                "WSKB",
+                "wskb_c17",
+                "490",
+                "510",
+                "15"
+            ]
+        ]
     },
     {
-        "type": "SpinningTopSpot",
-        "from": "SH_A08",
-        "to": "WSKA_D02",
+        "obj_type": "SpinningTopSpot",
+        "obj_type_cn": "回响",
+        "from_room": "SH_A08",
+        "to_room": "WSKA_D02",
         "from_coord": [
             32.3904,
             17.88457
         ],
         "to_coord": [
-            18.5,
-            0.85
+            202.5,
+            18.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "SpinningTopSpot",
+            32.3904,
+            17.88457,
+            [
+                "44",
+                "106",
+                "Watcher",
+                "WSKA",
+                "wska_d02",
+                "4050",
+                "370",
+                "17",
+                "false"
+            ]
+        ]
     },
     {
-        "type": "SpinningTopSpot",
-        "from": "LF_B01W",
-        "to": "WRFA_SK04",
+        "obj_type": "SpinningTopSpot",
+        "obj_type_cn": "回响",
+        "from_room": "LF_B01W",
+        "to_room": "WRFA_SK04",
         "from_coord": [
             29.569205,
             65.80435
         ],
         "to_coord": [
-            22.5,
-            0.8
+            27.5,
+            22.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "SpinningTopSpot",
+            29.569205,
+            65.80435,
+            [
+                "37",
+                "40",
+                "Watcher",
+                "WRFA",
+                "wrfa_sk04",
+                "550",
+                "450",
+                "16",
+                "false"
+            ]
+        ]
     },
     {
-        "type": "SpinningTopSpot",
-        "from": "WARA_P09",
-        "to": "WAUA_E01",
+        "obj_type": "SpinningTopSpot",
+        "obj_type_cn": "回响",
+        "from_room": "WARA_P09",
+        "to_room": "WAUA_E01",
         "from_coord": [
             76.51595,
             58.1765
@@ -53,12 +104,29 @@
             38,
             16
         ],
-        "note": "Manual coordinate setting, inaccurate | 手动设置坐标，不精确"
+        "comments": "位于涟漪空间",
+        "raw": [
+            "SpinningTopSpot",
+            76.51595,
+            58.1765,
+            [
+                "163.3867",
+                "-2.106598",
+                "Watcher",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "1",
+                "true"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WARB_F18",
-        "to": "WARC_B12",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WARB_F18",
+        "to_room": "WARC_B12",
         "from_coord": [
             32.718914999999996,
             19.048470000000002
@@ -67,26 +135,84 @@
             81.5,
             3.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            32.718914999999996,
+            19.048470000000002,
+            [
+                "243.7781",
+                "-88.85373",
+                "Watcher",
+                "Watcher",
+                "WARC",
+                "WARC_B12",
+                "1630",
+                "70",
+                "78540579-c9e1-4962-8d56-ac59ee9b2e1e",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "SpinningTopSpot",
-        "from": "WARB_J01",
-        "to": "WARA_P05",
+        "obj_type": "SpinningTopSpot",
+        "obj_type_cn": "回响",
+        "from_room": "WARB_J01",
+        "to_room": "WARA_P05",
         "from_coord": [
             84.9402,
             60.260400000000004
         ],
         "to_coord": [
-            18.5,
-            0.1
+            35.5,
+            18.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "SpinningTopSpot",
+            84.9402,
+            60.260400000000004,
+            [
+                "172",
+                "58",
+                "Watcher",
+                "WARA",
+                "wara_p05",
+                "710",
+                "370",
+                "2",
+                "false"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WARB_J08",
-        "to": "WRSA_L01",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WARB_J08",
+        "to_room": "WRSA_L01",
         "from_coord": [
             23.165995000000002,
             21.48527
@@ -95,12 +221,51 @@
             76,
             184.82
         ],
-        "note": "Manual coordinate setting, inaccurate | 手动设置坐标，不精确"
+        "comments": "位于涟漪空间",
+        "raw": [
+            "WarpPoint",
+            23.165995000000002,
+            21.48527,
+            [
+                "0",
+                "0",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "564dae0d-51f4-4066-b942-46418b9f7354",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "true",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WARC_B12",
-        "to": "WARB_F18",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WARC_B12",
+        "to_room": "WARB_F18",
         "from_coord": [
             76.55085,
             10.35123
@@ -109,40 +274,118 @@
             32.5,
             16.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            76.55085,
+            10.35123,
+            [
+                "243.2085",
+                "179.9858",
+                "Watcher",
+                "Watcher",
+                "WARB",
+                "warb_f18",
+                "650",
+                "330",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "SpinningTopSpot",
-        "from": "WARC_F01",
-        "to": "WARA_E08",
+        "obj_type": "SpinningTopSpot",
+        "obj_type_cn": "回响",
+        "from_room": "WARC_F01",
+        "to_room": "WARA_E08",
         "from_coord": [
             17.88249,
             12.740075000000001
         ],
         "to_coord": [
-            20.5,
-            0.2
+            61.5,
+            20.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "SpinningTopSpot",
+            17.88249,
+            12.740075000000001,
+            [
+                "0",
+                "0",
+                "Watcher",
+                "WARA",
+                "wara_e08",
+                "1230",
+                "410",
+                "4",
+                "false"
+            ]
+        ]
     },
     {
-        "type": "SpinningTopSpot",
-        "from": "WARD_R02",
-        "to": "WARB_F01",
+        "obj_type": "SpinningTopSpot",
+        "obj_type_cn": "回响",
+        "from_room": "WARD_R02",
+        "to_room": "WARB_F01",
         "from_coord": [
             12.72083,
             96.1409
         ],
         "to_coord": [
-            22.5,
-            0.15
+            19.5,
+            22.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "SpinningTopSpot",
+            12.72083,
+            96.1409,
+            [
+                "-48",
+                "178",
+                "Watcher",
+                "WARB",
+                "warb_f01",
+                "390",
+                "450",
+                "3",
+                "false"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WARD_R10",
-        "to": "WSSR_CRAMPED",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WARD_R10",
+        "to_room": "WSSR_CRAMPED",
         "from_coord": [
             23.37296,
             14.20907
@@ -151,12 +394,52 @@
             22.5,
             13.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            23.37296,
+            14.20907,
+            [
+                "0",
+                "0",
+                "Watcher",
+                "Watcher",
+                "WSSR",
+                "wssr_cramped",
+                "450",
+                "270",
+                "4a175968-2161-4cc5-8dbe-69a37fe9f060",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "false",
+                "true",
+                "true",
+                "false",
+                "0",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WARD_B41",
-        "to": "WSKD_B38",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WARD_B41",
+        "to_room": "WSKD_B38",
         "from_coord": [
             17.052500000000002,
             18.512165
@@ -165,12 +448,55 @@
             26.5,
             11.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            17.052500000000002,
+            18.512165,
+            [
+                "447",
+                "-160.9811",
+                "Watcher",
+                "Watcher",
+                "WSKD",
+                "wskd_b38",
+                "530",
+                "230",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WARD_E01",
-        "to": "WARG_D06_FUTURE",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WARD_E01",
+        "to_room": "WARG_D06_FUTURE",
         "from_coord": [
             32.781355000000005,
             26.882889999999996
@@ -179,12 +505,58 @@
             18.5,
             62.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            32.781355000000005,
+            26.882889999999996,
+            [
+                "-61",
+                "-231",
+                "Watcher",
+                "Watcher",
+                "WARG",
+                "warg_d06_future",
+                "370",
+                "1250",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WARD_E09",
-        "to": "WRSA_L01",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WARD_E09",
+        "to_room": "WRSA_L01",
         "from_coord": [
             21.07593,
             14.781965
@@ -193,12 +565,51 @@
             76,
             184.82
         ],
-        "note": "Manual coordinate setting, inaccurate | 手动设置坐标，不精确"
+        "comments": "位于涟漪空间",
+        "raw": [
+            "WarpPoint",
+            21.07593,
+            14.781965,
+            [
+                "115",
+                "39",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "86494689-3f72-4bd7-b4c7-e3688b94c134",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "true",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WARD_E12",
-        "to": "WSKC_A10",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WARD_E12",
+        "to_room": "WSKC_A10",
         "from_coord": [
             72.57865000000001,
             21.763355
@@ -207,12 +618,56 @@
             50.5,
             24.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            72.57865000000001,
+            21.763355,
+            [
+                "0",
+                "0",
+                "Watcher",
+                "Watcher",
+                "WSKC",
+                "wskc_a10",
+                "1010",
+                "490",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WARD_E33",
-        "to": "WBLA_B08",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WARD_E33",
+        "to_room": "WBLA_B08",
         "from_coord": [
             23.192785,
             53.919399999999996
@@ -221,12 +676,61 @@
             35.5,
             20.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            23.192785,
+            53.919399999999996,
+            [
+                "70",
+                "111",
+                "Watcher",
+                "Watcher",
+                "WBLA",
+                "wbla_b08",
+                "710",
+                "410",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WARE_I14",
-        "to": "WARB_H13",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WARE_I14",
+        "to_room": "WARB_H13",
         "from_coord": [
             31.14822,
             18.396549999999998
@@ -235,12 +739,57 @@
             12.5,
             16.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            31.14822,
+            18.396549999999998,
+            [
+                "250.5038",
+                "187.3715",
+                "Watcher",
+                "Watcher",
+                "WARB",
+                "warb_h13",
+                "250",
+                "330",
+                "6e432261-468e-4beb-a348-aa4ef07e68e7",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "false",
+                "true",
+                "true",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WARE_G15",
-        "to": "WRSA_L01",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WARE_G15",
+        "to_room": "WRSA_L01",
         "from_coord": [
             14.481919999999999,
             25.347479999999997
@@ -249,26 +798,83 @@
             76,
             184.82
         ],
-        "note": "Manual coordinate setting, inaccurate | 手动设置坐标，不精确"
+        "comments": "位于涟漪空间",
+        "raw": [
+            "WarpPoint",
+            14.481919999999999,
+            25.347479999999997,
+            [
+                "0",
+                "0",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "91658379-dddf-47fb-848e-9eff032b5744",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "true",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "SpinningTopSpot",
-        "from": "WARE_H05",
-        "to": "WSKC_A03",
+        "obj_type": "SpinningTopSpot",
+        "obj_type_cn": "回响",
+        "from_room": "WARE_H05",
+        "to_room": "WSKC_A03",
         "from_coord": [
             73.36605,
             7.87213
         ],
         "to_coord": [
-            20.5,
-            0.35
+            23.5,
+            20.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "SpinningTopSpot",
+            73.36605,
+            7.87213,
+            [
+                "-40.02356",
+                "-206.1049",
+                "Watcher",
+                "WSKC",
+                "wskc_a03",
+                "470",
+                "410",
+                "7",
+                "false"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WARE_H16",
-        "to": "WTDA_Z01",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WARE_H16",
+        "to_room": "WTDA_Z01",
         "from_coord": [
             66.63395,
             31.37312
@@ -277,12 +883,54 @@
             121.5,
             27.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            66.63395,
+            31.37312,
+            [
+                "74",
+                "-255",
+                "Watcher",
+                "Watcher",
+                "WTDA",
+                "wtda_z01",
+                "2430",
+                "550",
+                "2f928218-8905-489d-930b-b2060d4144cf",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WARF_A06",
-        "to": "WSKA_D13",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WARF_A06",
+        "to_room": "WSKA_D13",
         "from_coord": [
             15.453475000000001,
             51.38985
@@ -291,12 +939,62 @@
             32.5,
             14.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            15.453475000000001,
+            51.38985,
+            [
+                "-25",
+                "141",
+                "Watcher",
+                "Watcher",
+                "WSKA",
+                "wska_d13",
+                "650",
+                "290",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WARF_B11",
-        "to": "WRFA_F01",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WARF_B11",
+        "to_room": "WRFA_F01",
         "from_coord": [
             80.47234999999999,
             63.81535
@@ -305,12 +1003,56 @@
             79.5,
             52.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            80.47234999999999,
+            63.81535,
+            [
+                "0",
+                "0",
+                "Watcher",
+                "Watcher",
+                "WRFA",
+                "wrfa_f01",
+                "1590",
+                "1050",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WARF_B14",
-        "to": "WSKB_C18",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WARF_B14",
+        "to_room": "WSKB_C18",
         "from_coord": [
             63.8275,
             49.909634999999994
@@ -319,26 +1061,91 @@
             30.5,
             8.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            63.8275,
+            49.909634999999994,
+            [
+                "-315.3097",
+                "274.0164",
+                "Watcher",
+                "Watcher",
+                "WSKB",
+                "wskb_c18",
+                "610",
+                "170",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "SpinningTopSpot",
-        "from": "WARF_B33",
-        "to": "WTDA_B12",
+        "obj_type": "SpinningTopSpot",
+        "obj_type_cn": "回响",
+        "from_room": "WARF_B33",
+        "to_room": "WTDA_B12",
         "from_coord": [
             15.768055,
             16.303245
         ],
         "to_coord": [
-            14.5,
-            0.3
+            81.5,
+            14.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "SpinningTopSpot",
+            15.768055,
+            16.303245,
+            [
+                "39",
+                "22",
+                "Watcher",
+                "WTDA",
+                "wtda_b12",
+                "1630",
+                "290",
+                "6",
+                "false"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WARF_D06",
-        "to": "WSKD_B33",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WARF_D06",
+        "to_room": "WSKD_B33",
         "from_coord": [
             67.1273,
             58.465599999999995
@@ -347,12 +1154,54 @@
             169.5,
             16.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            67.1273,
+            58.465599999999995,
+            [
+                "83",
+                "2",
+                "Watcher",
+                "Watcher",
+                "WSKD",
+                "wskd_b33",
+                "3390",
+                "330",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WARF_D15",
-        "to": "WRSA_L01",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WARF_D15",
+        "to_room": "WRSA_L01",
         "from_coord": [
             24.01371,
             23.910885
@@ -361,12 +1210,51 @@
             76,
             184.82
         ],
-        "note": "Manual coordinate setting, inaccurate | 手动设置坐标，不精确"
+        "comments": "位于涟漪空间",
+        "raw": [
+            "WarpPoint",
+            24.01371,
+            23.910885,
+            [
+                "0",
+                "0",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "true",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WARG_B31",
-        "to": "WTDA_A13",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WARG_B31",
+        "to_room": "WTDA_A13",
         "from_coord": [
             15.47123,
             73.67240000000001
@@ -375,12 +1263,56 @@
             22.5,
             13.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            15.47123,
+            73.67240000000001,
+            [
+                "315",
+                "-179",
+                "Watcher",
+                "Watcher",
+                "WTDA",
+                "wtda_a13",
+                "450",
+                "270",
+                "e335633d-6637-42c5-9940-626cdbd04744",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WARG_H20",
-        "to": "WRSA_L01",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WARG_H20",
+        "to_room": "WRSA_L01",
         "from_coord": [
             24.508895000000003,
             20.420425
@@ -389,12 +1321,51 @@
             76,
             184.82
         ],
-        "note": "Manual coordinate setting, inaccurate | 手动设置坐标，不精确"
+        "comments": "位于涟漪空间",
+        "raw": [
+            "WarpPoint",
+            24.508895000000003,
+            20.420425,
+            [
+                "27",
+                "23",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "true",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WARG_W11",
-        "to": "WSKD_B12",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WARG_W11",
+        "to_room": "WSKD_B12",
         "from_coord": [
             29.856029999999997,
             9.93298
@@ -403,12 +1374,56 @@
             69.5,
             24.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            29.856029999999997,
+            9.93298,
+            [
+                "57.79099",
+                "28.1257",
+                "Watcher",
+                "Watcher",
+                "WSKD",
+                "wskd_b12",
+                "1390",
+                "490",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WARG_W12",
-        "to": "WRSA_L01",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WARG_W12",
+        "to_room": "WRSA_L01",
         "from_coord": [
             26.421100000000003,
             16.680105
@@ -417,12 +1432,52 @@
             76,
             184.82
         ],
-        "note": "Manual coordinate setting, inaccurate | 手动设置坐标，不精确"
+        "comments": "位于涟漪空间",
+        "raw": [
+            "WarpPoint",
+            26.421100000000003,
+            16.680105,
+            [
+                "115",
+                "78",
+                "Watcher",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "true",
+                "true",
+                "true",
+                "false",
+                "0",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WARG_A06_FUTURE",
-        "to": "WTDB_A04",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WARG_A06_FUTURE",
+        "to_room": "WTDB_A04",
         "from_coord": [
             83.20705000000001,
             56.304100000000005
@@ -431,12 +1486,56 @@
             14.5,
             20.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            83.20705000000001,
+            56.304100000000005,
+            [
+                "-586",
+                "-224",
+                "Watcher",
+                "Watcher",
+                "WTDB",
+                "wtdb_a04",
+                "290",
+                "410",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "true",
+                "true",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WARG_D06_FUTURE",
-        "to": "WARD_E01",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WARG_D06_FUTURE",
+        "to_room": "WARD_E01",
         "from_coord": [
             21.577185,
             61.59085
@@ -445,26 +1544,127 @@
             31.5,
             27.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            21.577185,
+            61.59085,
+            [
+                "0",
+                "0",
+                "Watcher",
+                "Watcher",
+                "WARD",
+                "ward_e01",
+                "630",
+                "550",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "SpinningTopSpot",
-        "from": "WAUA_BATH",
-        "to": "WAUA_TOYS",
+        "obj_type": "SpinningTopSpot",
+        "obj_type_cn": "回响",
+        "from_room": "WAUA_TOYS",
+        "to_room": "WAUA_TOYS",
+        "from_coord": [
+            18.85949,
+            93.32124999999999
+        ],
+        "to_coord": [
+            22.5,
+            61.5
+        ],
+        "comments": "古人线结局",
+        "raw": [
+            "SpinningTopSpot",
+            18.85949,
+            93.32124999999999,
+            [
+                "0",
+                "0",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "39",
+                "false"
+            ]
+        ]
+    },
+    {
+        "obj_type": "SpinningTopSpot",
+        "obj_type_cn": "回响",
+        "from_room": "WAUA_BATH",
+        "to_room": "WAUA_TOYS",
         "from_coord": [
             75.30895000000001,
             11.16565
         ],
         "to_coord": [
-            61.5,
-            0.95
+            22.5,
+            61.5
         ],
-        "note": ""
+        "comments": "古人线结局, 一次性传送",
+        "raw": [
+            "SpinningTopSpot",
+            75.30895000000001,
+            11.16565,
+            [
+                "-209",
+                "55",
+                "Watcher",
+                "SB",
+                "sb_d07",
+                "450",
+                "1230",
+                "19",
+                "false"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WBLA_B08",
-        "to": "WARD_E33",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WBLA_B08",
+        "to_room": "WARD_E33",
         "from_coord": [
             34.938665,
             20.11966
@@ -473,26 +1673,87 @@
             22.5,
             55.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            34.938665,
+            20.11966,
+            [
+                "0",
+                "0",
+                "Watcher",
+                "Watcher",
+                "WARD",
+                "ward_e33",
+                "450",
+                "1110",
+                "a8b2cbe8-cbf8-419a-8c8c-a6e14ec6836a",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "SpinningTopSpot",
-        "from": "WBLA_D03",
-        "to": "WSKD_B01",
+        "obj_type": "SpinningTopSpot",
+        "obj_type_cn": "回响",
+        "from_room": "WBLA_D03",
+        "to_room": "WSKD_B01",
         "from_coord": [
             14.706695,
             51.724450000000004
         ],
         "to_coord": [
-            25.5,
-            0.45
+            75.5,
+            25.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "SpinningTopSpot",
+            14.706695,
+            51.724450000000004,
+            [
+                "0",
+                "0",
+                "Watcher",
+                "WSKD",
+                "wskd_b01",
+                "1510",
+                "510",
+                "9",
+                "false"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WBLA_E02",
-        "to": "WSSR_CRAMPED",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WBLA_E02",
+        "to_room": "WSSR_CRAMPED",
         "from_coord": [
             34.996660000000006,
             17.508490000000002
@@ -501,12 +1762,54 @@
             22.5,
             13.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            34.996660000000006,
+            17.508490000000002,
+            [
+                "0",
+                "0",
+                "Watcher",
+                "Watcher",
+                "WSSR",
+                "wssr_cramped",
+                "450",
+                "270",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "false",
+                "true",
+                "true",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WBLA_J01",
-        "to": "WRSA_L01",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WBLA_J01",
+        "to_room": "WRSA_L01",
         "from_coord": [
             234.4884,
             62.04515
@@ -515,12 +1818,54 @@
             76,
             184.82
         ],
-        "note": "Manual coordinate setting, inaccurate | 手动设置坐标，不精确"
+        "comments": "位于涟漪空间",
+        "raw": [
+            "WarpPoint",
+            234.4884,
+            62.04515,
+            [
+                "74.16028",
+                "-307.766",
+                "Watcher",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "358b2a7c-3d96-4a06-b717-4704fe2ddaf8",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "true",
+                "true",
+                "true",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WDSR_A25",
-        "to": "WORA_START",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WDSR_A25",
+        "to_room": "WORA_START",
         "from_coord": [
             27.978089999999998,
             24.33451
@@ -529,12 +1874,52 @@
             24,
             96
         ],
-        "note": "Manual coordinate setting, inaccurate (Note: the outer edge does not reach a fixed position in the room). | 手动设置坐标，不精确（备注：外缘到达房间不固定）"
+        "comments": "到达房间随机",
+        "raw": [
+            "WarpPoint",
+            27.978089999999998,
+            24.33451,
+            [
+                "0",
+                "0",
+                "Watcher",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "false",
+                "true",
+                "true",
+                "false",
+                "0",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WGWR_DISPOSAL",
-        "to": "WORA_START",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WGWR_DISPOSAL",
+        "to_room": "WORA_START",
         "from_coord": [
             38.772365,
             59.77665
@@ -543,12 +1928,52 @@
             24,
             96
         ],
-        "note": "Manual coordinate setting, inaccurate (Note: the outer edge does not reach a fixed position in the room). | 手动设置坐标，不精确（备注：外缘到达房间不固定）"
+        "comments": "到达房间随机",
+        "raw": [
+            "WarpPoint",
+            38.772365,
+            59.77665,
+            [
+                "0",
+                "0",
+                "Watcher",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "false",
+                "true",
+                "true",
+                "false",
+                "0",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WGWR_C09",
-        "to": "WORA_START",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WGWR_C09",
+        "to_room": "WORA_START",
         "from_coord": [
             82.8442,
             44.33499
@@ -557,12 +1982,51 @@
             24,
             96
         ],
-        "note": "Manual coordinate setting, inaccurate (Note: the outer edge does not reach a fixed position in the room). | 手动设置坐标，不精确（备注：外缘到达房间不固定）"
+        "comments": "到达房间随机",
+        "raw": [
+            "WarpPoint",
+            82.8442,
+            44.33499,
+            [
+                "0",
+                "0",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "5838c975-081a-4450-a5df-90b450cd0c6b",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WHIR_B13",
-        "to": "WORA_START",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WHIR_B13",
+        "to_room": "WORA_START",
         "from_coord": [
             33.011835000000005,
             72.7475
@@ -571,12 +2035,52 @@
             24,
             96
         ],
-        "note": "Manual coordinate setting, inaccurate (Note: the outer edge does not reach a fixed position in the room). | 手动设置坐标，不精确（备注：外缘到达房间不固定）"
+        "comments": "到达房间随机",
+        "raw": [
+            "WarpPoint",
+            33.011835000000005,
+            72.7475,
+            [
+                "0",
+                "0",
+                "Watcher",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "false",
+                "true",
+                "true",
+                "false",
+                "0",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WHIR_A22",
-        "to": "WORA_START",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WHIR_A22",
+        "to_room": "WORA_START",
         "from_coord": [
             33.0025,
             22.037345
@@ -585,12 +2089,51 @@
             24,
             96
         ],
-        "note": "Manual coordinate setting, inaccurate (Note: the outer edge does not reach a fixed position in the room). | 手动设置坐标，不精确（备注：外缘到达房间不固定）"
+        "comments": "到达房间随机",
+        "raw": [
+            "WarpPoint",
+            33.0025,
+            22.037345,
+            [
+                "11",
+                "83",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WHIR_A06",
-        "to": "WORA_START",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WHIR_A06",
+        "to_room": "WORA_START",
         "from_coord": [
             28.009745,
             23.510255
@@ -599,12 +2142,51 @@
             24,
             96
         ],
-        "note": "Manual coordinate setting, inaccurate (Note: the outer edge does not reach a fixed position in the room). | 手动设置坐标，不精确（备注：外缘到达房间不固定）"
+        "comments": "到达房间随机",
+        "raw": [
+            "WarpPoint",
+            28.009745,
+            23.510255,
+            [
+                "0",
+                "0",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WORA_DESERT6",
-        "to": "WRSA_L01",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WORA_DESERT6",
+        "to_room": "WRSA_L01",
         "from_coord": [
             23.82776,
             18.722739999999998
@@ -613,12 +2195,56 @@
             76,
             184.82
         ],
-        "note": "Manual coordinate setting, inaccurate | 手动设置坐标，不精确"
+        "comments": "位于涟漪空间",
+        "raw": [
+            "WarpPoint",
+            23.82776,
+            18.722739999999998,
+            [
+                "296",
+                "-337",
+                "Watcher",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "false",
+                "true",
+                "true",
+                "false",
+                "0",
+                "-1",
+                "False",
+                "False",
+                "False",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WORA_STARCATCHER03",
-        "to": "WRSA_C01",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WORA_STARCATCHER03",
+        "to_room": "WRSA_C01",
         "from_coord": [
             22.37207,
             9.059149999999999
@@ -627,12 +2253,62 @@
             118.5,
             21.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            22.37207,
+            9.059149999999999,
+            [
+                "245.7274",
+                "25.58148",
+                "Watcher",
+                "Watcher",
+                "WRSA",
+                "WRSA_C01",
+                "2370",
+                "430",
+                "d3ed8b6f-45c2-4646-b745-fd4fd1198a9e",
+                "WatcherOnly",
+                "4",
+                "8",
+                "8",
+                "4",
+                "4",
+                "2",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "true",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "False",
+                "False",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WORA_STARCATCHER07",
-        "to": "WORA_STARCATCHER02",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WORA_STARCATCHER07",
+        "to_room": "WORA_STARCATCHER02",
         "from_coord": [
             32.834070000000004,
             100.74
@@ -641,12 +2317,52 @@
             32.5,
             23.5
         ],
-        "note": "Teleport within the same map | 同图传送"
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            32.834070000000004,
+            100.74,
+            [
+                "171",
+                "17",
+                "NULL",
+                "Watcher",
+                "WORA",
+                "wora_starcatcher02",
+                "650",
+                "470",
+                "7ad3c3f3-af7c-4868-81ee-6d50bbe92228",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WPTA_C05",
-        "to": "WRSA_L01",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WPTA_C05",
+        "to_room": "WRSA_L01",
         "from_coord": [
             28.663225,
             45.717835
@@ -655,12 +2371,52 @@
             76,
             184.82
         ],
-        "note": "Manual coordinate setting, inaccurate | 手动设置坐标，不精确"
+        "comments": "位于涟漪空间",
+        "raw": [
+            "WarpPoint",
+            28.663225,
+            45.717835,
+            [
+                "0",
+                "0",
+                "Watcher",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "251295f3-7df5-456e-8a25-516be146d6a4",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "true",
+                "true",
+                "true",
+                "false",
+                "0",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WPTA_C07",
-        "to": "WVWA_H01",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WPTA_C07",
+        "to_room": "WVWA_H01",
         "from_coord": [
             34.37657,
             19.39875
@@ -669,26 +2425,88 @@
             23.5,
             246.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            34.37657,
+            19.39875,
+            [
+                "5.128906",
+                "-111.8245",
+                "Watcher",
+                "Watcher",
+                "WVWA",
+                "wvwa_h01",
+                "470",
+                "4930",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "SpinningTopSpot",
-        "from": "WPTA_F03",
-        "to": "WARA_P08",
+        "obj_type": "SpinningTopSpot",
+        "obj_type_cn": "回响",
+        "from_room": "WPTA_F03",
+        "to_room": "WARA_P08",
         "from_coord": [
             23.52408,
             211.51100000000002
         ],
         "to_coord": [
-            27.5,
-            0.7
+            22.5,
+            27.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "SpinningTopSpot",
+            23.52408,
+            211.51100000000002,
+            [
+                "0",
+                "0",
+                "Watcher",
+                "WARA",
+                "wara_p08",
+                "450",
+                "550",
+                "14",
+                "false"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WRFA_F01",
-        "to": "WARF_B11",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WRFA_F01",
+        "to_room": "WARF_B11",
         "from_coord": [
             79.5675,
             53.530899999999995
@@ -697,12 +2515,53 @@
             78.5,
             64.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            79.5675,
+            53.530899999999995,
+            [
+                "141",
+                "29",
+                "Watcher",
+                "Watcher",
+                "WARF",
+                "warf_b11",
+                "1570",
+                "1290",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WRFA_A12",
-        "to": "WSKA_D15",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WRFA_A12",
+        "to_room": "WSKA_D15",
         "from_coord": [
             14.83268,
             18.2235
@@ -711,12 +2570,54 @@
             83.5,
             27.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            14.83268,
+            18.2235,
+            [
+                "304",
+                "26",
+                "Watcher",
+                "Watcher",
+                "WSKA",
+                "wska_d15",
+                "1670",
+                "550",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WRFA_A21",
-        "to": "WRFB_A11",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WRFA_A21",
+        "to_room": "WRFB_A11",
         "from_coord": [
             23.959184999999998,
             27.847095000000003
@@ -725,12 +2626,55 @@
             23.5,
             22.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            23.959184999999998,
+            27.847095000000003,
+            [
+                "199",
+                "-15",
+                "Watcher",
+                "Watcher",
+                "WRFB",
+                "wrfb_a11",
+                "470",
+                "450",
+                "ce3ee7b8-d591-4586-95d1-4688152755ff",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "false",
+                "true",
+                "true",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WRFA_B09",
-        "to": "WRSA_L01",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WRFA_B09",
+        "to_room": "WRSA_L01",
         "from_coord": [
             28.64076,
             14.677955
@@ -739,12 +2683,55 @@
             76,
             184.82
         ],
-        "note": "Manual coordinate setting, inaccurate | 手动设置坐标，不精确"
+        "comments": "位于涟漪空间",
+        "raw": [
+            "WarpPoint",
+            28.64076,
+            14.677955,
+            [
+                "0",
+                "0",
+                "Watcher",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "d48b2ed2-99d6-49a6-ac35-86a2a88bad0e",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "true",
+                "true",
+                "true",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WRFA_D08",
-        "to": "WRRA_B01",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WRFA_D08",
+        "to_room": "WRRA_B01",
         "from_coord": [
             19.562345,
             23.54
@@ -753,12 +2740,59 @@
             79.5,
             27.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            19.562345,
+            23.54,
+            [
+                "62",
+                "-63",
+                "Watcher",
+                "Watcher",
+                "WRRA",
+                "wrra_b01",
+                "1590",
+                "550",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WRFB_C07",
-        "to": "WRSA_L01",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WRFB_C07",
+        "to_room": "WRSA_L01",
         "from_coord": [
             14.303655000000001,
             98.08840000000001
@@ -767,26 +2801,82 @@
             76,
             184.82
         ],
-        "note": "Manual coordinate setting, inaccurate | 手动设置坐标，不精确"
+        "comments": "位于涟漪空间",
+        "raw": [
+            "WarpPoint",
+            14.303655000000001,
+            98.08840000000001,
+            [
+                "0",
+                "0",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "6e9d2363-c5d3-46fb-88d2-e78c1453e0d8",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "true",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "SpinningTopSpot",
-        "from": "WRFB_A22",
-        "to": "WARE_I01X",
+        "obj_type": "SpinningTopSpot",
+        "obj_type_cn": "回响",
+        "from_room": "WRFB_A22",
+        "to_room": "WARE_I01X",
         "from_coord": [
             15.905715,
             17.389395
         ],
         "to_coord": [
-            12.5,
-            0.4
+            24.5,
+            12.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "SpinningTopSpot",
+            15.905715,
+            17.389395,
+            [
+                "0",
+                "0",
+                "Watcher",
+                "WARE",
+                "ware_i01x",
+                "490",
+                "250",
+                "8",
+                "false"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WRFB_B12",
-        "to": "WVWA_E01",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WRFB_B12",
+        "to_room": "WVWA_E01",
         "from_coord": [
             24.91294,
             60.904250000000005
@@ -795,12 +2885,52 @@
             235.5,
             16.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            24.91294,
+            60.904250000000005,
+            [
+                "0",
+                "0",
+                "Watcher",
+                "Watcher",
+                "WVWA",
+                "wvwa_e01",
+                "4710",
+                "330",
+                "aeb1559f-6d20-44d1-b9be-dc97e1246ac7",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WRRA_B01",
-        "to": "WRFA_D08",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WRRA_B01",
+        "to_room": "WRFA_D08",
         "from_coord": [
             80.1276,
             26.545375
@@ -809,12 +2939,52 @@
             21.5,
             24.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            80.1276,
+            26.545375,
+            [
+                "149",
+                "-4",
+                "Watcher",
+                "Watcher",
+                "WRFA",
+                "wrfa_d08",
+                "430",
+                "490",
+                "7df489a1-f76c-42d0-a773-3ba5b80e790b",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WRRA_A07",
-        "to": "WSKB_C07",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WRRA_A07",
+        "to_room": "WSKB_C07",
         "from_coord": [
             17.583785,
             23.690325
@@ -823,12 +2993,55 @@
             19.5,
             15.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            17.583785,
+            23.690325,
+            [
+                "139",
+                "13",
+                "Watcher",
+                "Watcher",
+                "WSKB",
+                "wskb_c07",
+                "390",
+                "310",
+                "48138d19-8a9d-424b-a14c-8b8e7d2d4e3a",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WRRA_L01",
-        "to": "WRSA_L01",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WRRA_L01",
+        "to_room": "WRSA_L01",
         "from_coord": [
             32.934795,
             96.06694999999999
@@ -837,12 +3050,53 @@
             76,
             184.82
         ],
-        "note": "Manual coordinate setting, inaccurate | 手动设置坐标，不精确"
+        "comments": "位于涟漪空间",
+        "raw": [
+            "WarpPoint",
+            32.934795,
+            96.06694999999999,
+            [
+                "0",
+                "0",
+                "Watcher",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "e38285bd-5d28-4d4a-b7e2-9b3aad03f912",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "true",
+                "true",
+                "true",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WRRA_A26",
-        "to": "WTDB_A19",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WRRA_A26",
+        "to_room": "WTDB_A19",
         "from_coord": [
             30.460135,
             19.079905
@@ -851,12 +3105,53 @@
             23.5,
             10.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            30.460135,
+            19.079905,
+            [
+                "33",
+                "-5.137634",
+                "Watcher",
+                "Watcher",
+                "WTDB",
+                "wtdb_a19",
+                "470",
+                "210",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WRSA_D01",
-        "to": "WARA_P17",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WRSA_D01",
+        "to_room": "WARA_P17",
         "from_coord": [
             24.68929,
             61.57735
@@ -865,12 +3160,57 @@
             88.5,
             25.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            24.68929,
+            61.57735,
+            [
+                "0",
+                "0",
+                "Watcher",
+                "Watcher",
+                "WARA",
+                "WARA_P17",
+                "1770",
+                "510",
+                "d22e070d-4177-486b-bb5b-32e6be73617c",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "true",
+                "true",
+                "true",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WSKA_D07",
-        "to": "WRSA_L01",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WSKA_D07",
+        "to_room": "WRSA_L01",
         "from_coord": [
             13.917155,
             102.2713
@@ -879,12 +3219,51 @@
             76,
             184.82
         ],
-        "note": "Manual coordinate setting, inaccurate | 手动设置坐标，不精确"
+        "comments": "位于涟漪空间",
+        "raw": [
+            "WarpPoint",
+            13.917155,
+            102.2713,
+            [
+                "0",
+                "0",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "true",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WSKA_D13",
-        "to": "WARF_A06",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WSKA_D13",
+        "to_room": "WARF_A06",
         "from_coord": [
             32.604835,
             12.54511
@@ -893,12 +3272,54 @@
             15.5,
             51.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            32.604835,
+            12.54511,
+            [
+                "0",
+                "0",
+                "Watcher",
+                "Watcher",
+                "WARF",
+                "warf_a06",
+                "310",
+                "1030",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WSKA_D15",
-        "to": "WRFA_A12",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WSKA_D15",
+        "to_room": "WRFA_A12",
         "from_coord": [
             83.785,
             27.56266
@@ -907,12 +3328,60 @@
             14.5,
             18.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            83.785,
+            27.56266,
+            [
+                "90",
+                "27.99704",
+                "Watcher",
+                "Watcher",
+                "WRFA",
+                "wrfa_a12",
+                "290",
+                "370",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WSKB_C18",
-        "to": "WARF_B14",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WSKB_C18",
+        "to_room": "WARF_B14",
         "from_coord": [
             32.077785,
             7.67188
@@ -921,12 +3390,56 @@
             62.5,
             50.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            32.077785,
+            7.67188,
+            [
+                "23",
+                "70",
+                "Watcher",
+                "Watcher",
+                "WARF",
+                "warf_b14",
+                "1250",
+                "1010",
+                "78658954-d283-4198-8404-26bbe2f8ce77",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WSKB_C07",
-        "to": "WRRA_A07",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WSKB_C07",
+        "to_room": "WRRA_A07",
         "from_coord": [
             20.31,
             14.787375
@@ -935,12 +3448,55 @@
             17.5,
             25.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            20.31,
+            14.787375,
+            [
+                "-236.4042",
+                "93",
+                "Watcher",
+                "Watcher",
+                "WRRA",
+                "wrra_a07",
+                "350",
+                "510",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WSKC_A10",
-        "to": "WARD_E12",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WSKC_A10",
+        "to_room": "WARD_E12",
         "from_coord": [
             51.80425,
             23.15652
@@ -949,26 +3505,88 @@
             72.5,
             21.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            51.80425,
+            23.15652,
+            [
+                "90.96814",
+                "5.051025",
+                "Watcher",
+                "Watcher",
+                "WARD",
+                "ward_e12",
+                "1450",
+                "430",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "SpinningTopSpot",
-        "from": "WSKC_A23",
-        "to": "WPTA_B10",
+        "obj_type": "SpinningTopSpot",
+        "obj_type_cn": "回响",
+        "from_room": "WSKC_A23",
+        "to_room": "WPTA_B10",
         "from_coord": [
             74.4231,
             144.62425000000002
         ],
         "to_coord": [
-            25.5,
-            0.5
+            14.5,
+            25.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "SpinningTopSpot",
+            74.4231,
+            144.62425000000002,
+            [
+                "166.0519",
+                "-38.05322",
+                "Watcher",
+                "WPTA",
+                "WPTA_B10",
+                "290",
+                "510",
+                "10",
+                "false"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WSKC_A25",
-        "to": "WRSA_L01",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WSKC_A25",
+        "to_room": "WRSA_L01",
         "from_coord": [
             20.829655,
             17.646234999999997
@@ -977,12 +3595,55 @@
             76,
             184.82
         ],
-        "note": "Manual coordinate setting, inaccurate | 手动设置坐标，不精确"
+        "comments": "位于涟漪空间",
+        "raw": [
+            "WarpPoint",
+            20.829655,
+            17.646234999999997,
+            [
+                "0",
+                "0",
+                "",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "true",
+                "true",
+                "true",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WSKD_B12",
-        "to": "WARG_W11",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WSKD_B12",
+        "to_room": "WARG_W11",
         "from_coord": [
             72.2099,
             23.704625
@@ -991,12 +3652,54 @@
             28.5,
             9.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            72.2099,
+            23.704625,
+            [
+                "78.99988",
+                "34.22339",
+                "Watcher",
+                "Watcher",
+                "WARG",
+                "warg_w11",
+                "570",
+                "190",
+                "1ab35bff-180d-4be7-ae58-f95c856ef118",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WSKD_B33",
-        "to": "WARF_D06",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WSKD_B33",
+        "to_room": "WARF_D06",
         "from_coord": [
             170.60055,
             16.257275
@@ -1005,12 +3708,55 @@
             66.5,
             59.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            170.60055,
+            16.257275,
+            [
+                "0",
+                "0",
+                "Watcher",
+                "Watcher",
+                "WARF",
+                "warf_d06",
+                "1330",
+                "1190",
+                "21796d2b-ff64-45ba-808f-5c47a493182a",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WSKD_B34",
-        "to": "WRSA_L01",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WSKD_B34",
+        "to_room": "WRSA_L01",
         "from_coord": [
             25.291845000000002,
             56.627700000000004
@@ -1019,12 +3765,51 @@
             76,
             184.82
         ],
-        "note": "Manual coordinate setting, inaccurate | 手动设置坐标，不精确"
+        "comments": "位于涟漪空间",
+        "raw": [
+            "WarpPoint",
+            25.291845000000002,
+            56.627700000000004,
+            [
+                "162",
+                "2",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "ffe2e342-2385-4a36-bf57-44cf9d383cb9",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "true",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WSKD_B38",
-        "to": "WARD_B41",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WSKD_B38",
+        "to_room": "WARD_B41",
         "from_coord": [
             27.867815,
             14.45736
@@ -1033,26 +3818,84 @@
             16.5,
             18.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            27.867815,
+            14.45736,
+            [
+                "241.5985",
+                "-201.1229",
+                "Watcher",
+                "Watcher",
+                "WARD",
+                "ward_b41",
+                "330",
+                "370",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "SpinningTopSpot",
-        "from": "WSKD_B40",
-        "to": "WARD_R15",
+        "obj_type": "SpinningTopSpot",
+        "obj_type_cn": "回响",
+        "from_room": "WSKD_B40",
+        "to_room": "WARD_R15",
         "from_coord": [
             27.284545,
             62.34045
         ],
         "to_coord": [
             17.5,
-            0.55
+            17.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "SpinningTopSpot",
+            27.284545,
+            62.34045,
+            [
+                "324",
+                "-87",
+                "Watcher",
+                "WARD",
+                "ward_r15",
+                "350",
+                "350",
+                "11",
+                "false"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WSSR_LAB6",
-        "to": "WORA_START",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WSSR_LAB6",
+        "to_room": "WORA_START",
         "from_coord": [
             24.103434999999998,
             18.420775
@@ -1061,12 +3904,54 @@
             24,
             96
         ],
-        "note": "Manual coordinate setting, inaccurate (Note: the outer edge does not reach a fixed position in the room). | 手动设置坐标，不精确（备注：外缘到达房间不固定）"
+        "comments": "到达房间随机",
+        "raw": [
+            "WarpPoint",
+            24.103434999999998,
+            18.420775,
+            [
+                "164",
+                "-49",
+                "Watcher",
+                "Watcher",
+                "WORA",
+                "NULL",
+                "NULL",
+                "NULL",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WSUR_B09",
-        "to": "WORA_START",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WSUR_B09",
+        "to_room": "WORA_START",
         "from_coord": [
             26.03492,
             61.004949999999994
@@ -1075,12 +3960,51 @@
             24,
             96
         ],
-        "note": "Manual coordinate setting, inaccurate (Note: the outer edge does not reach a fixed position in the room). | 手动设置坐标，不精确（备注：外缘到达房间不固定）"
+        "comments": "到达房间随机",
+        "raw": [
+            "WarpPoint",
+            26.03492,
+            61.004949999999994,
+            [
+                "0",
+                "0",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "ba2fd4f0-3f7c-4cab-85e4-0cc88e64495d",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WTDA_A13",
-        "to": "WARG_B31",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WTDA_A13",
+        "to_room": "WARG_B31",
         "from_coord": [
             22.18996,
             13.133255
@@ -1089,12 +4013,56 @@
             14.5,
             73.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            22.18996,
+            13.133255,
+            [
+                "316.6031",
+                "178",
+                "Watcher",
+                "Watcher",
+                "WARG",
+                "warg_b31",
+                "290",
+                "1470",
+                "f87fa71f-d815-483d-b1d3-ced91811ee04",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WTDA_Z01",
-        "to": "WARE_H16",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WTDA_Z01",
+        "to_room": "WARE_H16",
         "from_coord": [
             122.46255000000001,
             27.452499999999997
@@ -1103,12 +4071,61 @@
             66.5,
             31.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            122.46255000000001,
+            27.452499999999997,
+            [
+                "-373",
+                "-25",
+                "Watcher",
+                "Watcher",
+                "WARE",
+                "ware_h16",
+                "1330",
+                "630",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WTDA_Z07",
-        "to": "WRSA_L01",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WTDA_Z07",
+        "to_room": "WRSA_L01",
         "from_coord": [
             90.84,
             15.39934
@@ -1117,26 +4134,86 @@
             76,
             184.82
         ],
-        "note": "Manual coordinate setting, inaccurate | 手动设置坐标，不精确"
+        "comments": "位于涟漪空间",
+        "raw": [
+            "WarpPoint",
+            90.84,
+            15.39934,
+            [
+                "-184",
+                "139",
+                "Watcher",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "true",
+                "true",
+                "true",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "SpinningTopSpot",
-        "from": "WTDA_Z14",
-        "to": "WBLA_C01",
+        "obj_type": "SpinningTopSpot",
+        "obj_type_cn": "回响",
+        "from_room": "WTDA_Z14",
+        "to_room": "WBLA_C01",
         "from_coord": [
             33.34001,
             25.537875
         ],
         "to_coord": [
-            103.5,
-            0.6
+            34.5,
+            103.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "SpinningTopSpot",
+            33.34001,
+            25.537875,
+            [
+                "-528",
+                "-91",
+                "Watcher",
+                "WBLA",
+                "wbla_c01",
+                "690",
+                "2070",
+                "12",
+                "false"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WTDB_A03",
-        "to": "WRSA_L01",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WTDB_A03",
+        "to_room": "WRSA_L01",
         "from_coord": [
             20.474494999999997,
             16.580125000000002
@@ -1145,12 +4222,51 @@
             76,
             184.82
         ],
-        "note": "Manual coordinate setting, inaccurate | 手动设置坐标，不精确"
+        "comments": "位于涟漪空间",
+        "raw": [
+            "WarpPoint",
+            20.474494999999997,
+            16.580125000000002,
+            [
+                "0",
+                "0",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "c3c123aa-7e60-4753-97fb-1887aab7373c",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "true",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WTDB_A04",
-        "to": "WARG_A06_FUTURE",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WTDB_A04",
+        "to_room": "WARG_A06_FUTURE",
         "from_coord": [
             19.697065000000002,
             20.178045
@@ -1159,12 +4275,59 @@
             84.5,
             56.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            19.697065000000002,
+            20.178045,
+            [
+                "-499",
+                "52",
+                "Watcher",
+                "Watcher",
+                "WARG",
+                "warg_a06_future",
+                "1690",
+                "1130",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WTDB_A19",
-        "to": "WRRA_A26",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WTDB_A19",
+        "to_room": "WRRA_A26",
         "from_coord": [
             24.11255,
             9.933735
@@ -1173,26 +4336,86 @@
             30.5,
             19.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            24.11255,
+            9.933735,
+            [
+                "315.3763",
+                "-307",
+                "Watcher",
+                "Watcher",
+                "WRRA",
+                "wrra_a26",
+                "610",
+                "390",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "SpinningTopSpot",
-        "from": "WTDB_A26",
-        "to": "WRFB_D09",
+        "obj_type": "SpinningTopSpot",
+        "obj_type_cn": "回响",
+        "from_room": "WTDB_A26",
+        "to_room": "WRFB_D09",
         "from_coord": [
             60.435950000000005,
             22.302619999999997
         ],
         "to_coord": [
-            56.5,
-            0.0
+            18.5,
+            56.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "SpinningTopSpot",
+            60.435950000000005,
+            22.302619999999997,
+            [
+                "0",
+                "0",
+                "Watcher",
+                "WRFB",
+                "wrfb_d09",
+                "370",
+                "1130",
+                "0",
+                "false"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WVWA_H01",
-        "to": "WPTA_C07",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WVWA_H01",
+        "to_room": "WPTA_C07",
         "from_coord": [
             24.412925,
             246.5166
@@ -1201,12 +4424,57 @@
             33.5,
             19.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            24.412925,
+            246.5166,
+            [
+                "0",
+                "0",
+                "Watcher",
+                "Watcher",
+                "WPTA",
+                "wpta_c07",
+                "670",
+                "390",
+                "f62b963d-d505-4512-81c2-06ed6b68cb15",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WVWA_A09",
-        "to": "WRSA_L01",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WVWA_A09",
+        "to_room": "WRSA_L01",
         "from_coord": [
             24.11255,
             27.307765
@@ -1215,12 +4483,52 @@
             76,
             184.82
         ],
-        "note": "Manual coordinate setting, inaccurate | 手动设置坐标，不精确"
+        "comments": "位于涟漪空间",
+        "raw": [
+            "WarpPoint",
+            24.11255,
+            27.307765,
+            [
+                "159",
+                "-125",
+                "Watcher",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "NULL",
+                "90619dc7-458a-4ec5-bf08-b2e16e42a435",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "true",
+                "true",
+                "true",
+                "true",
+                "false",
+                "0",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "WarpPoint",
-        "from": "WVWA_E01",
-        "to": "WRFB_B12",
+        "obj_type": "WarpPoint",
+        "obj_type_cn": "裂隙",
+        "from_room": "WVWA_E01",
+        "to_room": "WRFB_B12",
         "from_coord": [
             236.8082,
             16.510405
@@ -1229,20 +4537,81 @@
             24.5,
             62.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "WarpPoint",
+            236.8082,
+            16.510405,
+            [
+                "14",
+                "96",
+                "Watcher",
+                "Watcher",
+                "WRFB",
+                "wrfb_b12",
+                "490",
+                "1250",
+                "",
+                "WatcherOnly",
+                "0",
+                "6",
+                "8",
+                "4",
+                "8",
+                "4",
+                "4",
+                "4",
+                "7",
+                "150",
+                "150",
+                "-1",
+                "0",
+                "0",
+                "false",
+                "false",
+                "false",
+                "false",
+                "false",
+                "0",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1",
+                "-1"
+            ]
+        ]
     },
     {
-        "type": "SpinningTopSpot",
-        "from": "WVWA_F03",
-        "to": "WARC_E03",
+        "obj_type": "SpinningTopSpot",
+        "obj_type_cn": "回响",
+        "from_room": "WVWA_F03",
+        "to_room": "WARC_E03",
         "from_coord": [
             15.292455,
             64.85575
         ],
         "to_coord": [
-            93.5,
-            0.25
+            75.5,
+            93.5
         ],
-        "note": ""
+        "comments": "",
+        "raw": [
+            "SpinningTopSpot",
+            15.292455,
+            64.85575,
+            [
+                "0",
+                "0",
+                "Watcher",
+                "WARC",
+                "warc_e03",
+                "1510",
+                "1870",
+                "5",
+                "false"
+            ]
+        ]
     }
 ]
