@@ -39,11 +39,9 @@
 
 ### 排布算法动画
 
-![anima](./readme.assets/anima.gif)
+<img src="./readme.assets/anima.gif" alt="anima" style="zoom:50%;" /><img src="./readme.assets/ward.png" alt="Cold Storage 冷库 (WARD)" style="zoom: 10%;" />
 
-### 冷库
 
-![Cold Storage 冷库 (WARD)](./readme.assets/ward.png)
 
 ### 工业区
 
