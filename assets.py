@@ -502,7 +502,7 @@ class RoomTxt(_BaseTxt):
     class MapImColor:
         water: np.ndarray = field(default_factory=lambda: utils.rgba_pixel("#007AAE"))
         water_acid: np.ndarray = field(
-            default_factory=lambda: utils.rgba_pixel("#7AE732")
+            default_factory=lambda: utils.rgba_pixel("#B2FF00")
         )
         wall: np.ndarray = field(default_factory=lambda: utils.rgba_pixel("#000000"))
         background: np.ndarray = field(
@@ -723,6 +723,9 @@ class RoomSettingTxt(_BaseTxt):
 
     @CachedProperty
     def effects(self) -> list[tuple[str, str, float, float]]:
+        """
+        x, y以及除了20
+        """
         res: list[tuple[str, str, float, float]] = []
         if "Effects" in self.data:
             for eff in self.data["Effects"].split(", "):
@@ -730,7 +733,7 @@ class RoomSettingTxt(_BaseTxt):
                 if not eff:
                     continue
                 name, ukn, x, y = eff.split("-")[:4]
-                x, y = map(float, (x, y))
+                x, y = map(lambda x:float(x) / 20, (x, y))
 
                 res.append((name, ukn, x, y))
 
@@ -768,6 +771,10 @@ class RoomInfo(CachedProperty.Father):
                 name, ukn, x, y = eff
                 if name == "LethalWater":
                     res.lethal_water = True
+                elif name == "Toxic Brine Water":
+                    res.lethal_water = True
+                    res.water_flux_min_level = y
+                    res.water_flux_max_level = y
                 elif name == "WaterFluxMaxLevel":
                     res.water_flux_max_level = y
                 elif name == "WaterFluxMinLevel":
