@@ -294,7 +294,7 @@ class Room(Box):
         fontsize = 6
         color = "white"
         bbox = dict(
-            facecolor="#000000ff",
+            facecolor="#00000088",
             edgecolor="#00000000",
             boxstyle="square,pad=0",
         )
@@ -306,7 +306,7 @@ class Room(Box):
             fontsize *= 1
             text += f"({sp_name})"
             bbox = dict(
-                facecolor="#ff0000ff",
+                facecolor="#ff000088",
                 edgecolor="#00000000",
                 boxstyle="square,pad=0",
             )

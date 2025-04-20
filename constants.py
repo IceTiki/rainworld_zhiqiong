@@ -87,6 +87,7 @@ PLACE_OBJECT_NAME = {
     "GhostSpot": "回响",
     "WarpPoint": "裂隙",
     "DataPearl": "珍珠",
+    "DynamicWarpTarget": "随机传送到达",
 }
 SPECIAL_ROOM_TYPE_2_CN = {
     "SWARMROOM": "蝠蝇巢室",
