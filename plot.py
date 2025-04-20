@@ -53,94 +53,18 @@ class Room(Box):
     def name(self):
         return self.info.name
 
-    def _render_terrain_handle(self) -> np.ndarray:
-        width = self.width
-        height = self.height
-        im = np.zeros((height, width, 1), dtype=np.bool_)
-        SCALE = 20
-        SAMPLE = 20
-
-        roomsettingtxt = self.info.roomsettingtxt
-
-        if roomsettingtxt is None:
-            return im
-        terrain = [i for i in roomsettingtxt.placed_objects if i[0] == "TerrainHandle"]
-        if len(terrain) < 2:
-            return im
-        terrain.sort(key=lambda x: x[1])
-
-        terrain = list(map(list, terrain))
-        for i in terrain:
-            i[-1] = list(map(float, i[-1]))
-
-        curve = np.empty((0, 2))
-        for t1, t2 in zip(terrain[:-1], terrain[1:]):
-            n1, x1, y1, (xl1, yl1, xr1, yr1, ukn1) = t1
-            n2, x2, y2, (xl2, yl2, xr2, yr2, ukn2) = t2
-
-            p1 = np.array((x1, y1))
-            p2 = np.array((x2, y2))
-            pr1 = np.array((xr1, yr1)) / SCALE
-            pl2 = np.array((xl2, yl2)) / SCALE
-
-            num = int((x2 - x1) * SAMPLE)
-
-            curve = np.concatenate(
-                [curve, utils.bezier_curve(p1, p1 + pr1, p2 + pl2, p2, num=num)], axis=0
-            )
-
-        x = curve[:, 0].astype(int)
-        y = curve[:, 1].astype(int)
-
-        mask = (x >= 0) & (x < width) & (y >= 0) & (y < height)
-        x = x[mask]
-        y = y[mask]
-
-        im[height - 1 - y, x] = 1
-
-        # if (
-        #     0 <= terrain[0][1] < width
-        #     and 0 <= (height - 1 - int(terrain[0][2])) < height - 1
-        # ):
-        #     im[height - 1 - int(terrain[0][2]), : int(terrain[0][1])] = 1
-        # if (
-        #     0 <= terrain[-1][1] < width
-        #     and 0 <= (height - 1 - int(terrain[-1][2])) < height - 1
-        # ):
-        #     im[height - 1 - int(terrain[-1][2]), int(terrain[-1][1]) :] = 1
-
-        im = np.maximum.accumulate(im, axis=0)
-        # # plt.scatter(curve[:, 0], curve[:, 1])
-        # # plt.scatter([i[1] for i in terrain], [-i[2] for i in terrain])
-        # # plt.scatter(
-        # #     [i[1] + i[-1][0] /SCALE for i in terrain], [i[2] + i[-1][1] /SCALE for i in terrain]
-        # # )
-        # # plt.scatter(
-        # #     [i[1] + i[-1][2] /SCALE for i in terrain], [i[2] + i[-1][3] /SCALE for i in terrain]
-        # # )
-        # plt.scatter(x, height-y)
-        # plt.imshow(im)
-        # plt.show()
-        return im
-
     def _render_map(self, color=RoomTxt.MapImColor()):
         room_info = self.info
         water_info = room_info.water_info
-        height = room_info.height
-        wmin, wmax = map(
-            lambda x: int(min(max(0, x), height)),
-            (water_info.water_flux_min_level, water_info.water_flux_max_level),
-        )
-
         shape = (room_info.height, room_info.width, 4)
         if water_info.lethal_water:
             water = np.full(shape, color.water_acid, dtype=np.uint8)
         else:
             water = np.full(shape, color.water, dtype=np.uint8)
 
-        # alpha
-        water[: height - wmax, :, :] = 0
-        water[height - wmax : height - wmin, :, :] //= 2
+        water = water.astype(np.float64)
+        water[:, :, 3:4] *= self.info.water_mask
+        water = water.astype(np.uint8)
 
         canvas: np.ndarray = water
 
@@ -149,7 +73,7 @@ class Room(Box):
         for im, c in zip(
             [
                 map_im.background,
-                self._render_terrain_handle(),
+                self.info.sand_im,
                 map_im.wall,
                 map_im.pipe,
                 map_im.entrance,
@@ -296,6 +220,8 @@ class Room(Box):
             name, x, y = obj[:3]
             property_: list[str] = obj[-1]
 
+            x, y = self.position + (x, y)
+
             comments = ""
             fontsize = 3
             color = "#ffffff"
@@ -304,35 +230,25 @@ class Room(Box):
                 wp_info = self._get_warppoint_info(obj)
                 name = wp_info.obj_type_cn
 
-                to_reg_name_cn = (
-                    cons.translate(
-                        cons.REGION_DISPLAYNAME.get(
-                            wp_info.to_region, wp_info.to_region
-                        )
-                    )
+                to_reg_name_cn = cons.translate(
+                    cons.REGION_DISPLAYNAME.get(wp_info.to_region, wp_info.to_region)
                 )
                 comments = f"({to_reg_name_cn}|{wp_info.to_room})" + (
                     f"\n({wp_info.comments})" if wp_info.comments else ""
                 )
-
-
             elif name == "PrinceBulb":
                 fontsize *= 2
                 name = "王子"
             elif name in cons.PLACE_OBJECT_NAME:
                 name = cons.PLACE_OBJECT_NAME[name]
             elif name == "CorruptionTube":
-                x = self.position[0] + x
-                y = self.position[1] + y
                 x2 = x + float(property_[0]) / 20
                 y2 = y + float(property_[1]) / 20
                 ax.plot([x, x2], [y, y2], color="purple", linestyle=":", linewidth=0.5)
                 continue
             else:
+                # fontsize /= 2
                 continue
-
-            x = self.position[0] + x
-            y = self.position[1] + y
 
             ax.text(
                 x,
