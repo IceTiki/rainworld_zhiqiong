@@ -9,6 +9,8 @@
   * 沙子（`TerrainHandle`）
   * 贴壁长腿菌可以攀爬的长触手（ `CorruptionTube`）
   * 酸液（`LethalWater`和`Toxic Brine Water`）
+  * 水中的空气区域（`AirPocket`, `WaterCutoff`）
+  * 浮动水位（`WaterFluxMinLevel`、`WaterFluxMaxLevel`、`WaterCycleTop`、`WaterCycleBottom`）
 * 支持区域
   * 观察者的工业区子区域`水培法`
 * 标注
@@ -49,7 +51,21 @@
 
 <img src="./readme.assets/anima.gif" alt="anima" style="zoom:50%;" /><img src="./readme.assets/ward.png" alt="Cold Storage 冷库 (WARD)" style="zoom: 10%;" />
 
+### 沙子渲染
 
+![image-20250420173432820](./readme.assets/image-20250420173432820.png)
+
+### 水中的空气区域
+
+<img src="./readme.assets/image-20250420173504926.png" alt="image-20250420173504926" style="zoom:33%;" /><img src="./readme.assets/image-20250420173522096.png" alt="image-20250420173522096" style="zoom:33%;" />
+
+### 贴壁长腿菌可以攀爬的长触手
+
+<img src="./readme.assets/image-20250420173610059.png" alt="image-20250420173610059" style="zoom:33%;" />
+
+### 浮动水位
+
+![image-20250420173815503](./readme.assets/image-20250420173815503.png)
 
 ### 工业区
 
