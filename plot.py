@@ -13,7 +13,7 @@ import constants as cons
 import optim
 
 plt.rcParams["font.sans-serif"] = ["Microsoft YaHei"]
-
+DEBUG = False
 
 class Room(Box):
     COLORS = {
@@ -119,6 +119,7 @@ class Room(Box):
         from_coord: list[float] = field(default_factory=lambda: [0, 0])
         to_coord: list[float] = field(default_factory=lambda: [0, 0])
         comments: str = ""
+        ripple: bool = False
         raw: list[str] = field(default_factory=list)
 
         @property
@@ -183,6 +184,7 @@ class Room(Box):
             # wpi.to_coord = [22.5, 61.5]
         elif wpi.from_room == "WARA_P09":
             wpi.comments = f"位于涟漪空间"  # In ripple space
+            wpi.ripple = True
             wpi.to_room = "WAUA_E01"
             wpi.to_coord = [38, 16]  # 手动设置坐标，不精确
         elif wpi.from_room == "WAUA_TOYS":
@@ -192,6 +194,7 @@ class Room(Box):
         elif wpi.from_room == "WORA_STARCATCHER03":
             wpi.to_room = "WRSA_L01"
             wpi.comments = f"位于涟漪空间"  # In ripple space
+            wpi.ripple = True
             wpi.to_coord = [76, 184.82]
         elif wpi.from_room[:4] in {
             "WSUR",
@@ -208,6 +211,7 @@ class Room(Box):
         else:
             wpi.to_room = "WRSA_L01"
             wpi.comments = f"位于涟漪空间"  # In ripple space
+            wpi.ripple = True
             wpi.to_coord = [76, 184.82]
 
         return wpi
@@ -219,6 +223,7 @@ class Room(Box):
         for obj in room_setting.placed_objects:
             name, x, y = obj[:3]
             property_: list[str] = obj[-1]
+            comment_name = name
 
             x, y = self.position + (x, y)
 
@@ -228,32 +233,55 @@ class Room(Box):
             if name in {"SpinningTopSpot", "WarpPoint"}:
                 fontsize *= 2
                 wp_info = self._get_warppoint_info(obj)
-                name = wp_info.obj_type_cn
+                comment_name = ""
 
                 to_reg_name_cn = cons.translate(
                     cons.REGION_DISPLAYNAME.get(wp_info.to_region, wp_info.to_region)
                 )
-                comments = f"({to_reg_name_cn}|{wp_info.to_room})" + (
+                comments = f"{to_reg_name_cn}|{wp_info.to_room}" + (
                     f"\n({wp_info.comments})" if wp_info.comments else ""
                 )
+
+                if name == "SpinningTopSpot" and not wp_info.ripple:
+                    icon = cons.load_img("ghost")
+                    target_short_side=20
+                elif name == "SpinningTopSpot" and wp_info.ripple:
+                    icon = cons.load_img("ghost_ripple")
+                    target_short_side=20
+                elif name == "WarpPoint" and not wp_info.ripple:
+                    icon = cons.load_img("warp")
+                    target_short_side=30
+                elif name == "WarpPoint" and wp_info.ripple:
+                    icon = cons.load_img("warp_ripple")
+                    target_short_side=30
+                utils.plot_img_centering(ax, icon, x, y, target_short_side=target_short_side)
             elif name == "PrinceBulb":
                 fontsize *= 2
-                name = "王子"  # Prince
+                comment_name = "王子"  # Prince
+            elif name in {"KarmaFlower", "DataPearl"}:
+                if name == "KarmaFlower":
+                    icon = cons.load_img("karma_flower")
+                elif name == "DataPearl":
+                    icon = cons.load_img("pearl")
+                utils.plot_img_centering(ax, icon, x, y, target_short_side=5)
+                continue
             elif name in cons.PLACE_OBJECT_NAME:
-                name = cons.PLACE_OBJECT_NAME[name]
+                comment_name = cons.PLACE_OBJECT_NAME[name]
             elif name == "CorruptionTube":
                 x2 = x + float(property_[0]) / 20
                 y2 = y + float(property_[1]) / 20
                 ax.plot([x, x2], [y, y2], color="purple", linestyle=":", linewidth=0.5)
                 continue
             else:
-                # fontsize /= 2
-                continue
+                if DEBUG:
+                    fontsize /= 2
+                else:
+                    continue
 
             ax.text(
                 x,
                 y,
-                f"{name}{comments}",
+                f"{comment_name}{comments}",
                 fontsize=fontsize,
                 c=color,
                 bbox=dict(

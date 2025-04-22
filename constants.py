@@ -1,7 +1,11 @@
 from pathlib import Path
 import re
-from typing import Literal, Any
+from typing import Literal, Any, Callable
 import json
+import functools
+
+import numpy as np
+from PIL import Image
 
 
 class JsonFile:
@@ -22,6 +26,7 @@ ROOT = Path(__file__).parent.absolute()
 OUTPUT_PATH = ROOT / "output"
 TMP_OUTPUT_PATH = OUTPUT_PATH / "temp"
 CONSTANTS_FILES_PATH = ROOT / "constants_files"
+IMG_FILES_PATH = CONSTANTS_FILES_PATH / "img"
 TMP_OUTPUT_PATH.mkdir(exist_ok=True, parents=True)
 
 
@@ -35,6 +40,23 @@ def load_constant_file(file_stem: str):
 def save_constant_file(file_stem: str, item: dict | list | Any):
     path_ = CONSTANTS_FILES_PATH / (file_stem + ".json")
     return JsonFile.write(item, path_)
+
+
+def _copy_deco(func: Callable[..., np.ndarray]):
+    def warp(*args, **kwargs):
+        return func(*args, **kwargs).copy()
+
+    return warp
+
+
+@_copy_deco
+@functools.cache
+def load_img(
+    name: str, suffix: str = ".png"
+) -> np.ndarray:
+    img = Image.open(IMG_FILES_PATH / (name + suffix)).convert("RGBA")
+    img_array = np.array(img, np.uint8)
+    return img_array
 
 
 SLUGCAT_REGIONS: dict[str, list[str]] = load_constant_file("slugcat_regions")
@@ -83,12 +105,12 @@ def _update_constants():
 
 PLACE_OBJECT_NAME = {
     "KarmaFlower": "业力花",
-    "SpinningTopSpot": "陀螺",
+    "SpinningTopSpot": "回响",
     "GhostSpot": "回响",
     "WarpPoint": "裂隙",
     "DataPearl": "珍珠",
     "DynamicWarpTarget": "动态路径终点",
-    "ScavengerTreasury":"拾荒者宝库",
+    "ScavengerTreasury": "拾荒者宝库",
 }
 SPECIAL_ROOM_TYPE_2_CN = {
     "SWARMROOM": "蝠蝇巢室",

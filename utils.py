@@ -193,10 +193,10 @@ def draw_multiline_text_centered(
     rel_fontscale: float = 1,  # 用于从 fontsize 估算轴坐标高度的缩放系数,
     alpha=1,
     bbox=dict(
-                facecolor="#ffffff88",
-                edgecolor="#00000000",
-                boxstyle="square,pad=0",
-            )
+        facecolor="#ffffff88",
+        edgecolor="#00000000",
+        boxstyle="square,pad=0",
+    ),
 ):
 
     cx, cy = posi
@@ -249,3 +249,20 @@ def world_file_locator(
 
     logger.warning(f"{file_rel_path} not found.")
     return None
+
+
+def plot_img_centering(ax: plt.Axes, img: np.ndarray, x: float, y: float, target_short_side:int):
+    h, w, _ = img.shape
+
+    scale_factor = target_short_side / min(h, w)
+    display_w, display_h = w * scale_factor, h * scale_factor
+
+    ax.imshow(
+        img,
+        extent=[
+            x - display_w / 2,
+            x + display_w / 2,
+            y - display_h / 2,
+            y + display_h / 2,
+        ],
+    )
