@@ -83,11 +83,12 @@ def _update_constants():
 
 PLACE_OBJECT_NAME = {
     "KarmaFlower": "业力花",
-    "SpinningTopSpot": "回响",
+    "SpinningTopSpot": "陀螺",
     "GhostSpot": "回响",
     "WarpPoint": "裂隙",
     "DataPearl": "珍珠",
-    "DynamicWarpTarget": "随机传送到达",
+    "DynamicWarpTarget": "动态路径终点",
+    "ScavengerTreasury":"拾荒者宝库",
 }
 SPECIAL_ROOM_TYPE_2_CN = {
     "SWARMROOM": "蝠蝇巢室",
