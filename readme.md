@@ -1,6 +1,6 @@
 # **CN** | [EN](readme_en.md)
 
-## 观察者传送总览
+## 观望者传送总览
 
 ![overview](./readme.assets/overview.svg)
 
@@ -31,7 +31,6 @@
 
 ### TODO
 
-- [ ] 翠绿水道动态水位解析方式位置，珊瑚洞穴裂隙到达处是空气房间，空气区域计算方式未知。
 - [ ] `WAUA_BATH`到`WAUA_TOYS`的回响传送位置有点不准确
 
 ## 链接

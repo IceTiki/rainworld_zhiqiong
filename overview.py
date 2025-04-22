@@ -98,6 +98,9 @@ tele = {
     "WVWA_A09": "WRSA_L01",
     "WVWA_E01": "WRFB_B12",
     "WVWA_F03": "WARC_E03",
+    "CC_C12": "WSKB_C17",
+    "SH_A08": "WSKA_D02",
+    "LF_B01W": "WRFA_SK04",
 }
 
 echos = {
@@ -118,6 +121,9 @@ echos = {
     ("WTDA", "WBLA"),
     ("WTDB", "WRFB"),
     ("WVWA", "WARC"),
+    ("CC", "WSKB"),
+    ("SH", "WSKA"),
+    ("LF", "WRFA"),
 }
 
 best_posi = {
@@ -148,9 +154,14 @@ best_posi = {
     "WTDA": [267.45, 188.89],
     "WTDB": [280.12, 103.92],
     "WVWA": [599.92, 37.693],
+    "CC": [-70.0, 135.0],
+    "SH": [-70.0, 37.0],
+    "LF": [-70.0, 291],
 }
 
-tele_id = {k[:4]: v[:4] for k, v in tele.items()}
+tele_id = {
+    k.split("_", maxsplit=1)[0]: v.split("_", maxsplit=1)[0] for k, v in tele.items()
+}
 
 # 构建有向图
 G = nx.DiGraph()
@@ -169,7 +180,7 @@ G.add_nodes_from(nodes)
 
 
 for k, v in tele.items():
-    k, v = map(lambda x: x[:4], (k, v))
+    k, v = map(lambda x: x.split("_", maxsplit=1)[0], (k, v))
     if v == "WRSA":
         continue
     G.add_edge(k, v)
@@ -373,6 +384,6 @@ ax.legend(handles=handles, loc="upper left")
 
 ax.axis("off")
 plt.suptitle(
-    "观察者传送总览\nWatcher Map Teleportation Overview", fontsize=30, fontweight="bold"
+    "观望者传送总览\nWatcher Map Teleportation Overview", fontsize=30, fontweight="bold"
 )
 plt.show()
