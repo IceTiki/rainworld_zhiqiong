@@ -202,7 +202,7 @@ class Room(Box):
         }:
             wpi.comments = f"到达房间随机"
             wpi.to_room = "WORA_START"
-            wpi.to_coord = [24, 96]  #  手动设置坐标，不精确
+            wpi.to_coord = [23.60335, 93.2665]
         elif wpi.to_room != "NULL":
             pass
         else:
