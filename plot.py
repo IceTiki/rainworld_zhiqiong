@@ -178,11 +178,11 @@ class Room(Box):
         # ====
 
         if wpi.from_room == "WAUA_BATH":
-            wpi.comments = "古人线结局, 一次性传送"
+            wpi.comments = "古人线结局, 一次性传送"  # Final Chapter of the Ancient Thread – One-time Teleportation
             wpi.to_room = "WAUA_TOYS"
             # wpi.to_coord = [22.5, 61.5]
         elif wpi.from_room == "WARA_P09":
-            wpi.comments = f"位于涟漪空间"
+            wpi.comments = f"位于涟漪空间"  # In ripple space
             wpi.to_room = "WAUA_E01"
             wpi.to_coord = [38, 16]  # 手动设置坐标，不精确
         elif wpi.from_room == "WAUA_TOYS":
@@ -191,7 +191,7 @@ class Room(Box):
             wpi.to_coord = [22.5, 61.5]
         elif wpi.from_room == "WORA_STARCATCHER03":
             wpi.to_room = "WRSA_L01"
-            wpi.comments = f"位于涟漪空间"
+            wpi.comments = f"位于涟漪空间"  # In ripple space
             wpi.to_coord = [76, 184.82]
         elif wpi.from_room[:4] in {
             "WSUR",
@@ -200,14 +200,14 @@ class Room(Box):
             "WGWR",
             "WSSR",
         }:
-            wpi.comments = f"到达房间随机"
+            wpi.comments = f"到达房间随机"  # Random target room
             wpi.to_room = "WORA_START"
             wpi.to_coord = [23.60335, 93.2665]
         elif wpi.to_room != "NULL":
             pass
         else:
             wpi.to_room = "WRSA_L01"
-            wpi.comments = f"位于涟漪空间"
+            wpi.comments = f"位于涟漪空间"  # In ripple space
             wpi.to_coord = [76, 184.82]
 
         return wpi
@@ -238,7 +238,7 @@ class Room(Box):
                 )
             elif name == "PrinceBulb":
                 fontsize *= 2
-                name = "王子"
+                name = "王子"  # Prince
             elif name in cons.PLACE_OBJECT_NAME:
                 name = cons.PLACE_OBJECT_NAME[name]
             elif name == "CorruptionTube":

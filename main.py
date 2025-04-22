@@ -61,7 +61,7 @@ def plot_watcher_big_map():
         )
         teleports.append(tp)
 
-        if regname2.upper() == "WRSA":  # 恶魔
+        if regname2.upper() == "WRSA":  # 恶魔 Daemon
             continue
 
         if regname1.upper() in {"SU", "HI", "CC", "SH", "LF"}:

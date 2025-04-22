@@ -1,3 +1,5 @@
+# **CN** | [EN](readme_en.md)
+
 ## 观察者传送总览
 
 ![overview](./readme.assets/overview.svg)
