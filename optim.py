@@ -588,11 +588,11 @@ class NonConnGraphLayout(BaseOpt):
         logger.debug("End NonConnGraphLayout.")
 
 
-_T_Box = TypeVar("_T_Box", Box)
+_T_Box = TypeVar("_T_Box", bound=Box)
 
 
 class BoxPositionCache(BaseOpt, Generic[_T_Box]):
-    _T_BoxKey = TypeVar("_T_BoxKey", Hashable)
+    _T_BoxKey = TypeVar("_T_BoxKey", bound=Hashable)
     _T_Vec2d = list[float]
     _T_Cache = dict[_T_BoxKey, _T_Vec2d]
 

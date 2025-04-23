@@ -33,7 +33,7 @@ def plot_watcher_big_map():
     for regname, posidata in watcher_posi_cache.items():
         reg_map[regname].position = posidata["posi"]
         for room_name, room_posi in posidata["room_posi"].items():
-            reg_map[regname].room_map[room_name].position = np.array(room_posi)
+            reg_map[regname].room_map[room_name].position = np.array(room_posi) * 1.1
 
     teleports: list[Teleport] = []
 
