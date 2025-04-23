@@ -1,11 +1,14 @@
-import numpy as np
+from typing import TypeVar, Generic, Callable, Optional, Any
+from pathlib import Path
+import hashlib
+import json
+
+
+from loguru import logger
 from matplotlib import pyplot as plt
 import matplotlib as mpl
-import hashlib
-from pathlib import Path
-from loguru import logger
-import json
-from typing import TypeVar, Generic, Callable, Optional, Any
+import numpy as np
+
 
 T = TypeVar("T")
 F = TypeVar("F", bound=Callable[..., T])
@@ -251,7 +254,9 @@ def world_file_locator(
     return None
 
 
-def plot_img_centering(ax: plt.Axes, img: np.ndarray, x: float, y: float, target_short_side:int):
+def plot_img_centering(
+    ax: plt.Axes, img: np.ndarray, x: float, y: float, target_short_side: int, zorder=0
+):
     h, w, _ = img.shape
 
     scale_factor = target_short_side / min(h, w)
@@ -265,4 +270,5 @@ def plot_img_centering(ax: plt.Axes, img: np.ndarray, x: float, y: float, target
             y - display_h / 2,
             y + display_h / 2,
         ],
+        zorder=zorder,
     )

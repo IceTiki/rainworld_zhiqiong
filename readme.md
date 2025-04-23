@@ -35,6 +35,8 @@
 
 ## 链接
 
+* [Category:Object icons - Official Rain World Wiki](https://rainworld.miraheze.org/wiki/Category:Object_icons)
+
 ### 地图生成器
 
 * 带有UI的地图编辑器——[Cornifer](https://github.com/Ved-s/Cornifer)

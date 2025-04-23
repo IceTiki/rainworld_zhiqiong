@@ -20,7 +20,7 @@ def plot_watcher_big_map():
     optim.DEBUG = True
 
     regions = [
-        Region(RegionInfo(RegionPath(i, mod_name="Watcher", slugcat_name="Watcher")))
+        Region.from_slugcat_info(i, mod_name="Watcher", slugcat_name="Watcher")
         for i in cons.SLUGCAT_REGIONS["Watcher"]
     ]
 
@@ -247,7 +247,25 @@ def plot_watcher_regions():
         )
         plt.close()
 
-    cons.save_constant_file(posi_cache_name, posi_cache_data)
+    # cons.save_constant_file(posi_cache_name, posi_cache_data)
+
+
+def test_load_watcher():
+    objs = {}
+    regs = [
+        Region(RegionInfo(RegionPath(i, mod_name="Watcher", slugcat_name="Watcher")))
+        for i in cons.SLUGCAT_REGIONS["Watcher"]
+    ]
+    for reg in regs:
+        for r in reg.rooms:
+            rst = r.info.roomsettingtxt
+            if rst is None:
+                continue
+            for obj in rst.placed_objects:
+                name, x, y, prop = obj
+                objs[name] = None
+
+    cons.save_constant_file("place_object_list", objs)
 
 
 if __name__ == "__main__":
@@ -259,3 +277,4 @@ if __name__ == "__main__":
 
     plot_watcher_regions()
     plot_watcher_big_map()
+    # test_load_watcher()
