@@ -1,11 +1,19 @@
 from dataclasses import dataclass, field
+from typing import Self, TypedDict
 
 import numpy as np
 from loguru import logger
 from matplotlib import pyplot as plt
 from matplotlib.patches import Rectangle, FancyArrowPatch
 
-from assets import RegionInfo, RoomInfo, RoomTxt
+from assets import (
+    RegionInfo,
+    RoomInfo,
+    RoomTxt,
+    RainWorldPath,
+    RAIN_WORLD_PATH,
+    RegionPath,
+)
 from colls import Box, EndPoint, Edge
 from utils import CachedProperty
 import utils
@@ -14,6 +22,7 @@ import optim
 
 plt.rcParams["font.sans-serif"] = ["Microsoft YaHei"]
 DEBUG = False
+
 
 class Room(Box):
     COLORS = {
@@ -191,11 +200,9 @@ class Room(Box):
             wpi.comments = f"古人线结局"
             wpi.to_room = "WAUA_TOYS"
             wpi.to_coord = [22.5, 61.5]
-        elif wpi.from_room == "WORA_STARCATCHER03":
-            wpi.to_room = "WRSA_L01"
+        elif wpi.from_room in {"WRSA_D01", "WORA_STARCATCHER03"}:
             wpi.comments = f"位于涟漪空间"  # In ripple space
             wpi.ripple = True
-            wpi.to_coord = [76, 184.82]
         elif wpi.from_room[:4] in {
             "WSUR",
             "WHIR",
@@ -244,25 +251,24 @@ class Room(Box):
 
                 if name == "SpinningTopSpot" and not wp_info.ripple:
                     icon = cons.load_img("ghost")
-                    target_short_side=20
+                    target_short_side = 20
                 elif name == "SpinningTopSpot" and wp_info.ripple:
                     icon = cons.load_img("ghost_ripple")
-                    target_short_side=20
+                    target_short_side = 20
                 elif name == "WarpPoint" and not wp_info.ripple:
                     icon = cons.load_img("warp")
-                    target_short_side=30
+                    target_short_side = 30
                 elif name == "WarpPoint" and wp_info.ripple:
                     icon = cons.load_img("warp_ripple")
-                    target_short_side=30
-                utils.plot_img_centering(ax, icon, x, y, target_short_side=target_short_side)
+                    target_short_side = 30
+                utils.plot_img_centering(
+                    ax, icon, x, y, target_short_side=target_short_side
+                )
             elif name == "PrinceBulb":
                 fontsize *= 2
                 comment_name = "王子"  # Prince
-            elif name in {"KarmaFlower", "DataPearl"}:
-                if name == "KarmaFlower":
-                    icon = cons.load_img("karma_flower")
-                elif name == "DataPearl":
-                    icon = cons.load_img("pearl")
+            elif name in cons.OBJECT_ICONS:
+                icon = cons.OBJECT_ICONS[name]
                 utils.plot_img_centering(ax, icon, x, y, target_short_side=5)
                 continue
             elif name in cons.PLACE_OBJECT_NAME:
@@ -274,7 +280,8 @@ class Room(Box):
                 continue
             else:
                 if DEBUG:
-                    fontsize /= 2
+                    if name in cons.DECORATION_OBJECTS:
+                        continue
                 else:
                     continue
 
@@ -290,6 +297,24 @@ class Room(Box):
                     boxstyle="square,pad=0",
                 ),
             )
+
+        if DEBUG:
+            fontsize = 3
+            for eff in room_setting.effects:
+                name, ukn, x, y = eff
+                x, y = self.coord_to_global((x, y))
+                ax.text(
+                    x,
+                    y,
+                    name,
+                    fontsize=fontsize,
+                    c="white",
+                    bbox=dict(
+                        facecolor="blue",
+                        edgecolor="#00000000",
+                        boxstyle="square,pad=0",
+                    ),
+                )
 
     def plot(self, ax: plt.Axes):
         extent = np.array(
@@ -327,7 +352,8 @@ class Room(Box):
             boxstyle="square,pad=0",
         )
 
-        if self.special_params.special_room_type.upper() in cons.SPECIAL_ROOM_TYPE_2_CN:
+        room_type = self.special_params.special_room_type.upper()
+        if room_type in cons.SPECIAL_ROOM_TYPE_2_CN:
             sp_type = self.special_params.special_room_type.upper()
             sp_name = cons.SPECIAL_ROOM_TYPE_2_CN.get(sp_type, sp_type)
             color = "white"
@@ -338,6 +364,16 @@ class Room(Box):
                 edgecolor="#00000000",
                 boxstyle="square,pad=0",
             )
+
+            icon = None
+            if room_type == "SHELTER":
+                icon = cons.load_img("shelter")
+            elif room_type == "ANCIENTSHELTER":
+                icon = cons.load_img("ancient_shelter")
+
+            if icon is not None:
+                utils.plot_img_centering(ax, icon, *self.right_down, 20, zorder=2)
+
         ax.text(
             *self.position,
             text,
@@ -452,6 +488,24 @@ class Region(Box, CachedProperty.Father):
     @staticmethod
     def combined_big_box(boxes) -> Box:
         return Box.combined_big_box(boxes)
+
+    @classmethod
+    def from_slugcat_info(
+        cls,
+        region_name: str,
+        *,
+        mod_name: str | None,
+        slugcat_name: str | None,
+        rain_world_path: RainWorldPath = RAIN_WORLD_PATH,
+    ) -> Self:
+        region_path = RegionPath(
+            region_name=region_name,
+            mod_name=mod_name,
+            slugcat_name=slugcat_name,
+            rain_world_path=rain_world_path,
+        )
+        region_info = RegionInfo(region_path=region_path)
+        return cls(region_info)
 
     def __init__(self, region_info: RegionInfo):
         self.info: RegionInfo = region_info
