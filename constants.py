@@ -28,6 +28,7 @@ TMP_OUTPUT_PATH = OUTPUT_PATH / "temp"
 CONSTANTS_FILES_PATH = ROOT / "constants_files"
 IMG_FILES_PATH = CONSTANTS_FILES_PATH / "img"
 TMP_OUTPUT_PATH.mkdir(exist_ok=True, parents=True)
+OBJECT_ICONS_PATH = CONSTANTS_FILES_PATH / "object_icons"
 
 
 def load_constant_file(file_stem: str):
@@ -51,13 +52,16 @@ def _copy_deco(func: Callable[..., np.ndarray]):
 
 @_copy_deco
 @functools.cache
-def load_img(
-    name: str, suffix: str = ".png"
-) -> np.ndarray:
-    img = Image.open(IMG_FILES_PATH / (name + suffix)).convert("RGBA")
+def load_img(name: str, suffix: str = ".png", root=IMG_FILES_PATH) -> np.ndarray:
+    img = Image.open(root / (name + suffix)).convert("RGBA")
     img_array = np.array(img, np.uint8)
     return img_array
 
+
+OBJECT_ICONS = {
+    i.stem: load_img(i.stem, root=OBJECT_ICONS_PATH)
+    for i in OBJECT_ICONS_PATH.iterdir()
+}
 
 SLUGCAT_REGIONS: dict[str, list[str]] = load_constant_file("slugcat_regions")
 REGION_DISPLAYNAME: dict[str, str] = load_constant_file("region_displayname")
@@ -103,6 +107,28 @@ def _update_constants():
     _translations()
 
 
+DECORATION_OBJECTS = {
+    "KarmaFlowerPatch",
+    "CosmeticSlimeMold",
+    "CosmeticSlimeMold2",
+    "CosmeticRipple",
+    "CustomDecal",
+    "LightSource",
+    "LightBeam",
+    "UrbanLifePath",
+    "UrbanLife",
+    "GooDrips",
+    "InsectGroup",
+    "VoidSpawnEgg",
+    "DeadTokenStalk",
+    "WallLight",
+    "FloatingDebris",
+    "PassiveCorruption",
+    "LanternOnStick",
+    "LightFixture",
+    "LocustCloud",
+}
+
 PLACE_OBJECT_NAME = {
     "KarmaFlower": "业力花",
     "SpinningTopSpot": "回响",
@@ -118,7 +144,7 @@ SPECIAL_ROOM_TYPE_2_CN = {
     "SCAVTRADER": "拾荒者商人",
     "SHELTER": "庇护所",
     "SCAVOUTPOST": "拾荒者前哨",
-    "ANCIENTSHELTER": "古代庇护所",
+    "ANCIENTSHELTER": "远古庇护所",
     "GATE": "业力门",
 }
 
