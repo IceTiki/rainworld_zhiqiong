@@ -701,6 +701,11 @@ class RoomSettingTxt(_BaseTxt):
     @CachedProperty
     def placed_objects(self) -> list[tuple[str, float, float, list[str]]]:
         """
+        Returns
+        ---
+        list[tuple[str, float, float, list[str]]]
+            (name, x, y, propertys)
+
         Notes
         ---
         x, y经过处理, 还原为相对坐标 (除以20)
@@ -714,17 +719,17 @@ class RoomSettingTxt(_BaseTxt):
         for obj in self.data["PlacedObjects"].split(", "):
             if obj == "":
                 continue
-            name, x, y, other = obj.split("><")
+            name, x, y, propertys = obj.split("><")
             x, y = map(lambda x: float(x) / 20, (x, y))  # ! div by 20
-            other = other.split("~")
-            res.append((name, x, y, other))
+            propertys = propertys.split("~")
+            res.append((name, x, y, propertys))
 
         return res
 
     @CachedProperty
     def effects(self) -> list[tuple[str, str, float, float]]:
         """
-        x, y以及除了20
+        x, y已经除了20
         """
         res: list[tuple[str, str, float, float]] = []
         if "Effects" in self.data:
