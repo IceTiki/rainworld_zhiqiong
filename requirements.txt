@@ -1,0 +1,9 @@
+matplotlib
+numpy
+scipy
+
+pprint
+tqdm
+loguru
+
+networkx
