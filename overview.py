@@ -8,6 +8,7 @@ import numpy as np
 import assets
 from pprint import pprint
 
+FLAG_CN = False
 
 plt.rcParams["font.sans-serif"] = ["MicroSoft YaHei"]
 tele = {
@@ -171,10 +172,13 @@ nodes = list(
     sorted(set([i for i in tele_id.values()]).union(set([i for i in tele_id.keys()])))
 )
 
-id2cn = {
-    i: f"{c.translate(c.REGION_DISPLAYNAME[i])}\n{c.REGION_DISPLAYNAME[i]}\n({i})"
-    for i in nodes
-}
+if FLAG_CN:
+    id2cn = {
+        i: f"{c.translate(c.REGION_DISPLAYNAME[i])}\n{c.REGION_DISPLAYNAME[i]}\n({i})"
+        for i in nodes
+    }
+else:
+    id2cn = {i: f"{c.REGION_DISPLAYNAME[i]}\n({i})" for i in nodes}
 
 G.add_nodes_from(nodes)
 
@@ -219,6 +223,9 @@ for k, v in best_posi.items():
 # 绘制图形
 fig, ax = plt.subplots(figsize=(16, 16))
 ax: plt.Axes
+
+fig.patch.set_alpha(0.0)
+ax.patch.set_alpha(0.0)
 
 # 为每个节点放置图片
 for node in nodes:
@@ -305,7 +312,7 @@ for u, v in G.edges():
     if (r1, r2) in {("WARA", "WAUA"), ("WRSA", "WARA")}:
         ax.text(
             *mid,
-            "需涟漪空间 (Need Ripplespace)",
+            "需涟漪空间 (Need Ripplespace)" if FLAG_CN else "Need Ripplespace",
             ha="center",
             va="center",
             color="purple",
@@ -367,15 +374,15 @@ nx.draw_networkx_labels(
 from matplotlib.lines import Line2D
 
 handles = [
-    Line2D([0], [0], color="#FFB919", lw=2, label="回响 (Echo)"),
-    Line2D([0], [0], color="#B095D4", lw=2, label="裂隙 (Warppoint)"),
+    Line2D([0], [0], color="#FFB919", lw=2, label="回响 (Echo)" if FLAG_CN else "Echo"),
+    Line2D([0], [0], color="#B095D4", lw=2, label="裂隙 (Warppoint)" if FLAG_CN else "Warppoint"),
     Line2D(
         [0],
         [0],
         color="purple",
         linestyle="--",
         lw=2,
-        label="涟漪空间裂隙 (Ripplespace Warppoint)",
+        label="涟漪空间裂隙 (Ripplespace Warppoint)" if FLAG_CN else "Ripplespace Warppoint",
     ),
 ]
 # legend_line =
@@ -384,6 +391,6 @@ ax.legend(handles=handles, loc="upper left")
 
 ax.axis("off")
 plt.suptitle(
-    "观望者传送总览\nWatcher Map Teleportation Overview", fontsize=30, fontweight="bold"
+    "观望者传送总览\nWatcher Map Teleportation Overview" if FLAG_CN else "Watcher Map Teleportation Overview", fontsize=30, fontweight="bold"
 )
 plt.show()
