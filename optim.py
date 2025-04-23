@@ -1,26 +1,23 @@
-import typing
 from pathlib import Path
-import numpy as np
-from matplotlib import pyplot as plt
-import constants as c
-from typing import TypedDict, TypeVar, Literal, Optional, Iterable, Annotated, Generator
-from matplotlib.patches import Rectangle
+from typing import Literal, Generator, Callable, Hashable, TypeVar, Generic
 from dataclasses import dataclass, field
-from loguru import logger
-import random
-from tqdm import tqdm
-from pprint import pprint
-import utils
-import math
-import itertools
 from collections import deque
-from numpy.typing import NDArray
+import math
+import typing
+import itertools
+
+
+from loguru import logger
 from numpy.linalg import norm
-
-DEBUG = False
-
+from pprint import pprint
+from matplotlib import pyplot as plt
+from matplotlib.patches import Rectangle
+from tqdm import tqdm
+import numpy as np
 
 from colls import Box, Edge, EndPoint
+
+DEBUG = False
 
 
 class BaseOpt:
@@ -589,3 +586,34 @@ class NonConnGraphLayout(BaseOpt):
 
         self._test_plot(boxes, edges)
         logger.debug("End NonConnGraphLayout.")
+
+
+_T_Box = TypeVar("_T_Box", Box)
+
+
+class BoxPositionCache(BaseOpt, Generic[_T_Box]):
+    _T_BoxKey = TypeVar("_T_BoxKey", Hashable)
+    _T_Vec2d = list[float]
+    _T_Cache = dict[_T_BoxKey, _T_Vec2d]
+
+    def __init__(
+        self,
+        opts: list[BaseOpt],
+        box_key: Callable[[_T_Box], _T_BoxKey],
+        position_cache: _T_Cache | None = None,
+    ):
+        super().__init__()
+        self.opts: list[BaseOpt] = opts
+        self.position_cache: BoxPositionCache._T_Cache | None = position_cache
+        self.box_key = box_key
+
+    def run(self, boxes: list[_T_Box], edges: list[Edge]):
+        if self.position_cache is None:
+            for opt in self.opts:
+                opt.run(boxes=boxes, edges=edges)
+            self.position_cache = {self.box_key(i): list(i.position) for i in boxes}
+            return
+
+        for box in boxes:
+            key = self.box_key(box)
+            box.position = np.array(self.position_cache[key], np.float64)
