@@ -13,6 +13,7 @@ from assets import (
     RainWorldPath,
     RAIN_WORLD_PATH,
     RegionPath,
+    LocksTxt,
 )
 from colls import Box, EndPoint, Edge
 from utils import CachedProperty
@@ -428,6 +429,25 @@ class Room(Box):
         )
 
         self._plot_object(ax)
+
+        lock = self.special_params.lock
+        if lock is not None:
+            utils.plot_img_centering(
+                ax,
+                cons.load_img(lock.karma_left, root=cons.KARMA_ICON_PATH),
+                # *(self.position + self.size * (1 / 4, 1 / 2)),
+                *self.left_top,
+                target_short_side=20,
+                zorder=2,
+            )
+            utils.plot_img_centering(
+                ax,
+                cons.load_img(lock.karma_right, root=cons.KARMA_ICON_PATH),
+                # *(self.position + self.size * (3 / 4, 1 / 2)),
+                *self.right_top,
+                target_short_side=20,
+                zorder=2,
+            )
 
 
 class Connection(Edge):

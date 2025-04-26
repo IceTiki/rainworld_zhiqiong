@@ -497,6 +497,74 @@ class MapTxt(_BaseTxt):
                 self.rooms.append(self._get_room(head, content))
 
 
+class LocksTxt(_BaseTxt):
+    @dataclass
+    class GateInfo:
+        name: str
+        karma1: str
+        karma2: str
+        swarp_map_symbol: bool = False
+
+        @classmethod
+        def from_line(cls, line: str):
+            spline = line.split(" : ")
+            ins = cls(*map(lambda x: x.upper(), spline[:3]))
+            ins.swarp_map_symbol = False
+
+            if len(spline) == 4 and spline[3] == "SWAPMAPSYMBOL":
+                ins.swarp_map_symbol = True
+            return ins
+
+        @property
+        def region1(self):
+            return self.name.split("_")[1]
+
+        @property
+        def region2(self):
+            return self.name.split("_")[2]
+
+        @property
+        def region_left(self):
+            return self.region1 if not self.swarp_map_symbol else self.region2
+
+        @property
+        def region_right(self):
+            return self.region2 if not self.swarp_map_symbol else self.region1
+
+        @property
+        def karma_left(self):
+            return self.karma1 if not self.swarp_map_symbol else self.karma2
+
+        @property
+        def karma_right(self):
+            return self.karma2 if not self.swarp_map_symbol else self.karma1
+
+    @CachedProperty
+    def data(self) -> dict[str, GateInfo]:
+        res = {}
+        for line in self.lines:
+            if not line:
+                continue
+
+            gi = self.GateInfo.from_line(line)
+            res[gi.name.upper()] = gi
+        return res
+
+    def merge(self, txt: str):
+        for line in txt.splitlines():
+            if not line:
+                continue
+            if not line.startswith("[ADD]"):
+                continue
+
+            gi = self.GateInfo.from_line(line)
+            self.data[gi.name.upper()] = gi
+
+    def merge_from_file(self, path: Path | str):
+        path = Path(path)
+        self.merge(path.read_text())
+
+
 class RoomTxt(_BaseTxt):
     @dataclass
     class MapImColor:
@@ -1007,6 +1075,26 @@ class RegionInfo(CachedProperty.Father):
         self.world_txt = world_txt
 
         return world_txt
+
+    @CachedProperty
+    def locks_txt(self) -> LocksTxt:
+        path = self.region_path.locate_file(
+            [i / "gates" for i in self.region_path.world_folders], f"locks", ".txt"
+        )
+        assert path is not None
+
+        locks_txt = LocksTxt.from_file(path)
+        self.locks_txt = locks_txt
+
+        merge_path = (
+            self.region_path.mod_path / "modify" / "world" / "gates" / "locks.txt"
+        )
+        if merge_path.is_file():
+            self.locks_txt.merge_from_file(merge_path)
+        else:
+            logger.debug(f"{merge_path} not a file.")
+
+        return locks_txt
 
     @CachedProperty
     def roominfo_list(self) -> list[RoomInfo]:
