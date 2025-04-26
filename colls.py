@@ -2,8 +2,7 @@ import numpy as np
 from typing import Iterable
 from numpy.typing import NDArray
 
-
-Vec2d = NDArray[np.float64]
+Vec2d = NDArray[np.float64]  # shape = (2, ), dtype = np.float64
 
 
 class EndPoint:
@@ -136,3 +135,4 @@ class Box:
         x2_, y2_ = other.right_top
 
         return not (x1 > x2_ or x1_ < x2 or y1 > y2_ or y1_ < y2)
+

@@ -13,6 +13,7 @@
   * 酸液（`LethalWater`和`Toxic Brine Water`）
   * 水中的空气区域（`AirPocket`, `WaterCutoff`）
   * 浮动水位（`WaterFluxMinLevel`、`WaterFluxMaxLevel`、`WaterCycleTop`、`WaterCycleBottom`）
+  * 腐化墙壁（`Corruption`）
 * 支持区域
   * 观察者的工业区子区域`水培法`
 * 标注
@@ -35,7 +36,13 @@
 
 ## 链接
 
+* [雨世界RWE+地图编辑器教程：4.使用开发者工具对地图进行深层次加工_游戏热门视频](https://www.bilibili.com/video/BV1JN411e72Q/?spm_id_from=333.337.search-card.all.click&vd_source=e61cebfe8b38127e078285c8b2456518)
+
+### 图标来源
+
 * [Category:Object icons - Official Rain World Wiki](https://rainworld.miraheze.org/wiki/Category:Object_icons)
+* [Category:Karma Gate icons - Official Rain World Wiki](https://rainworld.miraheze.org/wiki/Category:Karma_Gate_icons)
+* [Cornifer/Content at master · enchanted-sword/Cornifer](https://github.com/enchanted-sword/Cornifer/tree/master/Content)
 
 ### 地图生成器
 
@@ -47,6 +54,7 @@
 * [Creating A Region - Rain World Modding](https://rainworldmodding.miraheze.org/wiki/Creating_A_Region)
 * [World File Format - Rain World Modding](https://rainworldmodding.miraheze.org/wiki/World_File_Format)
 * [Level Editor - Rain World Modding](https://rainworldmodding.miraheze.org/wiki/Level_Editor)
+* [Dev Tools - Rain World Modding](https://rainworldmodding.miraheze.org/wiki/Dev_Tools)
 
 ## 参考效果
 
@@ -69,6 +77,10 @@
 ### 浮动水位
 
 ![image-20250420173815503](./readme.assets/image-20250420173815503.png)
+
+### 腐化墙壁
+
+<img src="./readme.assets/image-20250426224411427.png" alt="image-20250426224411427" style="zoom:33%;" />
 
 ### 工业区
 
