@@ -237,7 +237,7 @@ def plot_watcher_regions():
         ax.set_aspect(1)
         ax.axis("off")
 
-        fig.set_size_inches(max(delta_x / 50, 5), max(delta_y / 50, 5), forward=True)
+        fig.set_size_inches(max(delta_x / 50, 7), max(delta_y / 50, 7), forward=True)
         fig.subplots_adjust(left=0, right=1, top=1, bottom=0.2)
         # fig.tight_layout()
         fig.savefig(
