@@ -82,8 +82,8 @@ def alpha_blend(
     fg: np.ndarray,
     bg: np.ndarray,
 ):
-    fg = fg.astype(np.float32) / 255.0
-    bg = bg.astype(np.float32) / 255.0
+    fg = fg.astype(np.float16) / 255.0
+    bg = bg.astype(np.float16) / 255.0
 
     fg_rgb = fg[..., :3]
     fg_alpha = fg[..., 3:]
@@ -201,7 +201,7 @@ def draw_multiline_text_centered(
         boxstyle="square,pad=0",
     ),
 ):
-
+    texts: list[plt.Text] = []
     cx, cy = posi
     # 根据 fontsize 粗略估算每行占据的“相对高度”（用于垂直居中）
     line_heights = [fontsize * rel_fontscale for _, _, fontsize in lines]
@@ -210,20 +210,24 @@ def draw_multiline_text_centered(
 
     for i, (text, color, fontsize) in enumerate(lines):
         y = start_y - sum(line_heights[:i])  # 累积偏移
-        ax.text(
-            cx,
-            y,
-            text,
-            ha="left",
-            va="top",
-            color=color,
-            fontsize=fontsize,
-            # transform=ax.transAxes,
-            fontname=fontname,
-            fontweight="bold",
-            alpha=alpha,
-            bbox=bbox,
+        texts.append(
+            ax.text(
+                cx,
+                y,
+                text,
+                ha="left",
+                va="top",
+                color=color,
+                fontsize=fontsize,
+                # transform=ax.transAxes,
+                fontname=fontname,
+                fontweight="bold",
+                alpha=alpha,
+                bbox=bbox,
+            )
         )
+
+    return texts
 
 
 RAIN_WORLD_STREAMING_ASSETS = Path(
@@ -262,7 +266,7 @@ def plot_img_centering(
     scale_factor = target_short_side / min(h, w)
     display_w, display_h = w * scale_factor, h * scale_factor
 
-    ax.imshow(
+    return ax.imshow(
         img,
         extent=[
             x - display_w / 2,

@@ -270,19 +270,33 @@ class AlignOpt(BaseOpt):
 
     @staticmethod
     def cal_best_edge_vec_pair(end_point_main: EndPoint, end_point_sub: EndPoint):
-        best_pair = None
-        for vec1, vec2 in itertools.product(
-            end_point_main.to_edge_vecs(), end_point_sub.to_edge_vecs()
-        ):
-            cos_theta = (vec1 @ vec2) / (norm(vec1) * norm(vec2))
-            if cos_theta > -1 + 1e-6:
-                continue
-            if best_pair is None:
-                best_pair = (vec1, vec2)
-            elif norm(vec1 - vec2) < norm(best_pair[0] - best_pair[1]):
-                best_pair = (vec1, vec2)
-
-        return best_pair
+        cbkey = [
+            (end_point_main.distance_left + end_point_sub.distance_right, 0),
+            (end_point_main.distance_right + end_point_sub.distance_left, 1),
+            (end_point_main.distance_up + end_point_sub.distance_down, 2),
+            (end_point_main.distance_down + end_point_sub.distance_up, 3),
+        ]
+        cbkey.sort()
+        key = cbkey[0][1]
+        if key == 0:
+            return np.array([end_point_main.distance_left, 0]), np.array(
+                [-end_point_sub.distance_right, 0]
+            )
+        elif key == 1:
+            return (
+                np.array([-end_point_main.distance_right, 0]),
+                np.array([end_point_sub.distance_left, 0]),
+            )
+        elif key == 2:
+            return (
+                np.array([0, end_point_main.distance_up]),
+                np.array([0, -end_point_sub.distance_down]),
+            )
+        elif key == 3:
+            return (
+                np.array([0, -end_point_main.distance_down]),
+                np.array([0, end_point_sub.distance_up]),
+            )
 
     @classmethod
     def align(cls, end_point_main: EndPoint, end_point_sub: EndPoint):
