@@ -505,6 +505,9 @@ class RoomTxt(_BaseTxt):
             default_factory=lambda: utils.rgba_pixel("#B2FF00")
         )
         wall: np.ndarray = field(default_factory=lambda: utils.rgba_pixel("#000000"))
+        corruption: np.ndarray = field(
+            default_factory=lambda: utils.rgba_pixel("#9000FF")
+        )
         background: np.ndarray = field(
             default_factory=lambda: utils.rgba_pixel("#000000", 0.25)
         )
@@ -717,9 +720,11 @@ class RoomSettingTxt(_BaseTxt):
         if "PlacedObjects" not in self.data:
             return res
         for obj in self.data["PlacedObjects"].split(", "):
+            obj = obj.strip()
             if obj == "":
                 continue
             name, x, y, propertys = obj.split("><")
+            propertys = propertys.removesuffix(",") # 有些时候不是`, `结尾而是`,`
             x, y = map(lambda x: float(x) / 20, (x, y))  # ! div by 20
             propertys = propertys.split("~")
             res.append((name, x, y, propertys))
@@ -737,10 +742,10 @@ class RoomSettingTxt(_BaseTxt):
                 eff: str
                 if not eff:
                     continue
-                name, ukn, x, y = eff.split("-")[:4]
+                name, amount, x, y = eff.split("-")[:4]
                 x, y = map(lambda x: float(x) / 20, (x, y))
 
-                res.append((name, ukn, x, y))
+                res.append((name, amount, x, y))
 
         return res
 
@@ -773,7 +778,7 @@ class RoomInfo(CachedProperty.Father):
         if self.roomsettingtxt is not None:
             for eff in self.roomsettingtxt.effects:
                 eff: list[tuple[str, str, float, float]]
-                name, ukn, x, y = eff
+                name, amount, x, y = eff
                 if name == "LethalWater":
                     res.lethal_water = True
                 elif name == "Toxic Brine Water":
@@ -805,7 +810,7 @@ class RoomInfo(CachedProperty.Father):
         )
 
         shape = (self.height, self.width, 1)
-        water = np.ones(shape, dtype=np.float64)
+        water = np.ones(shape, dtype=np.float16)
 
         # alpha
         water[: height - wmax, :, :] = 0
@@ -829,6 +834,26 @@ class RoomInfo(CachedProperty.Father):
                     water[height - y2 : height - y1, x1:x2, :] = 0
 
         return water
+
+    @property
+    def corruption_mask(self) -> np.ndarray:
+        settings = self.roomsettingtxt
+        shape = (self.height, self.width, 1)
+        corruption = np.zeros(shape, np.uint8)
+        if settings is None:
+            return corruption
+
+        for name, x, y, propertys in settings.placed_objects:
+            if name != "Corruption":
+                continue
+            r = np.linalg.norm(np.array(list(map(lambda x: float(x) / 20, propertys))))
+
+            yy, xx = np.ogrid[: self.height, : self.width]
+            distance = np.sqrt((xx - x) ** 2 + (yy - (self.height - y)) ** 2)
+            mask = distance <= r
+            corruption[mask, 0] = 1
+
+        return corruption & self.roomtxt.map_im.wall
 
     @CachedProperty
     def sand_im(self) -> np.ndarray:

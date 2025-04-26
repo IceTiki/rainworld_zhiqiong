@@ -41,6 +41,7 @@ class Room(Box):
     class SpecialParams:
         special_room_type: str = ""
         subregion_name: str = ""
+        lock: None | LocksTxt.GateInfo = None
 
     def __init__(
         self,
@@ -71,7 +72,7 @@ class Room(Box):
         else:
             water = np.full(shape, color.water, dtype=np.uint8)
 
-        water = water.astype(np.float64)
+        water = water.astype(np.float16)
         water[:, :, 3:4] *= self.info.water_mask
         water = water.astype(np.uint8)
 
@@ -84,6 +85,7 @@ class Room(Box):
                 map_im.background,
                 self.info.sand_im,
                 map_im.wall,
+                self.info.corruption_mask,
                 map_im.pipe,
                 map_im.entrance,
                 map_im.bar,
@@ -94,6 +96,7 @@ class Room(Box):
                 color.background,
                 color.sand,
                 color.wall,
+                color.corruption,
                 color.pipe,
                 color.entrance,
                 color.bar,
@@ -229,7 +232,7 @@ class Room(Box):
             return
         for obj in room_setting.placed_objects:
             name, x, y = obj[:3]
-            property_: list[str] = obj[-1]
+            propertys: list[str] = obj[-1]
             comment_name = name
 
             x, y = self.position + (x, y)
@@ -273,14 +276,48 @@ class Room(Box):
                 continue
             elif name in cons.PLACE_OBJECT_NAME:
                 comment_name = cons.PLACE_OBJECT_NAME[name]
-            elif name == "CorruptionTube":
-                x2 = x + float(property_[0]) / 20
-                y2 = y + float(property_[1]) / 20
-                ax.plot([x, x2], [y, y2], color="purple", linestyle=":", linewidth=0.5)
+            elif name in {"CorruptionTube", "Vine"}:
+                if name == "CorruptionTube":
+                    color = "purple"
+                elif name == "Vine":
+                    color = "#7D3300"
+
+                x2 = x + float(propertys[0]) / 20
+                y2 = y + float(propertys[1]) / 20
+                ax.plot([x, x2], [y, y2], color=color, linestyle=":", linewidth=0.5)
+                continue
+            elif name == "WindRect":
+                coords = [float(i) / 20 for i in propertys[:6]]
+                xarr = [x, x + coords[0], x + coords[2], x + coords[4], x]
+                yarr = [y, y + coords[1], y + coords[3], y + coords[5], y]
+                ax.plot(
+                    xarr,
+                    yarr,
+                    color="#00A2E8",
+                    linewidth=0.5,
+                    alpha=abs(float(propertys[6])),
+                )
+
+                # ===
+                strength = float(propertys[6])
+                center = np.array([np.mean(xarr[:4]), np.mean(yarr[:4])])
+
+                small_arrow = FancyArrowPatch(
+                    center - np.array([5 * strength, 0]),
+                    center + np.array([5 * strength, 0]),
+                    mutation_scale=8 * abs(strength),
+                    color="#00A2E8",
+                    arrowstyle="->",
+                    lw=0.5,
+                    alpha=abs(strength),
+                )
+                ax.add_patch(small_arrow)
                 continue
             else:
                 if DEBUG:
-                    if name in cons.DECORATION_OBJECTS:
+                    if cons.OBJECT_TYPE.get(name) == cons.ObjectType.DECORATION:
+                        continue
+                    if name in {"Corruption", "TerrainHandle"}:
                         continue
                 else:
                     continue
@@ -358,18 +395,24 @@ class Room(Box):
             sp_name = cons.SPECIAL_ROOM_TYPE_2_CN.get(sp_type, sp_type)
             color = "white"
             fontsize *= 1
-            text += f"({sp_name})"
-            bbox = dict(
-                facecolor="#ff000088",
-                edgecolor="#00000000",
-                boxstyle="square,pad=0",
-            )
+            # text += f"({sp_name})"
+            # bbox = dict(
+            #     facecolor="#ff000088",
+            #     edgecolor="#00000000",
+            #     boxstyle="square,pad=0",
+            # )
 
             icon = None
             if room_type == "SHELTER":
                 icon = cons.load_img("shelter")
             elif room_type == "ANCIENTSHELTER":
                 icon = cons.load_img("ancient_shelter")
+            elif room_type == "SWARMROOM":
+                icon = cons.load_img("batfly")
+            elif room_type == "SCAVTRADER":
+                icon = cons.load_img("ScavengerTreasury")
+            elif room_type == "SCAVOUTPOST":
+                icon = cons.load_img("ScavengerOutpost")
 
             if icon is not None:
                 utils.plot_img_centering(ax, icon, *self.right_down, 20, zorder=2)
@@ -542,6 +585,7 @@ class Region(Box, CachedProperty.Father):
                 special_params=Room.SpecialParams(
                     special_room_type=special_room_types.get(rnu, ""),
                     subregion_name=subregion_name.get(rnu, ""),
+                    lock=self.info.locks_txt.data.get(rnu, None),
                 ),
             )
             rooms.append(room)
