@@ -3,6 +3,7 @@ import re
 from typing import Literal, Any, Callable
 import json
 import functools
+import enum
 
 import numpy as np
 from PIL import Image
@@ -26,12 +27,18 @@ ROOT = Path(__file__).parent.absolute()
 OUTPUT_PATH = ROOT / "output"
 TMP_OUTPUT_PATH = OUTPUT_PATH / "temp"
 CONSTANTS_FILES_PATH = ROOT / "constants_files"
-IMG_FILES_PATH = CONSTANTS_FILES_PATH / "img"
+SPECIAL_OBJECT_ICON_FOLDER = CONSTANTS_FILES_PATH / "special_object_icons"
+KARMA_ICON_PATH = CONSTANTS_FILES_PATH / "karma"
 TMP_OUTPUT_PATH.mkdir(exist_ok=True, parents=True)
 OBJECT_ICONS_PATH = CONSTANTS_FILES_PATH / "object_icons"
 
 
 def load_constant_file(file_stem: str):
+    """
+    Returns
+    ---
+    default = {}
+    """
     path_ = CONSTANTS_FILES_PATH / (file_stem + ".json")
     if not path_.exists():
         return {}
@@ -52,7 +59,7 @@ def _copy_deco(func: Callable[..., np.ndarray]):
 
 @_copy_deco
 @functools.cache
-def load_img(name: str, suffix: str = ".png", root=IMG_FILES_PATH) -> np.ndarray:
+def load_img(name: str, suffix: str = ".png", root=SPECIAL_OBJECT_ICON_FOLDER) -> np.ndarray:
     img = Image.open(root / (name + suffix)).convert("RGBA")
     img_array = np.array(img, np.uint8)
     return img_array
@@ -66,6 +73,8 @@ OBJECT_ICONS = {
 SLUGCAT_REGIONS: dict[str, list[str]] = load_constant_file("slugcat_regions")
 REGION_DISPLAYNAME: dict[str, str] = load_constant_file("region_displayname")
 TRANSLATIONS: dict[str, dict[str, str]] = load_constant_file("translations")
+
+_PLACE_OBJECT_NAME_CONSTANT_FILE_NAME = "place_object_list"
 
 
 def translate(text: str, language="chi") -> str:
@@ -102,32 +111,42 @@ def _translations():
     JsonFile.write(trans, CONSTANTS_FILES_PATH / "translations.json")
 
 
+class ObjectType(str, enum.Enum):
+    DECORATION = "DECORATION"
+    ITEM = "ITEM"
+    UNDEFINED = ""
+
+
+def _obj_list():
+    from assets import RAIN_WORLD_PATH, RoomSettingTxt
+
+    data = load_constant_file(_PLACE_OBJECT_NAME_CONSTANT_FILE_NAME)
+
+    all_settings_files = list(RAIN_WORLD_PATH.rain_world_path.rglob("*_settings.txt"))
+    for f in all_settings_files:
+        if "modify" in f.parts:
+            continue
+        rst = RoomSettingTxt.from_file(f)
+        for obj in rst.placed_objects:
+            data.setdefault(obj[0], ObjectType.UNDEFINED)
+
+    for i in OBJECT_ICONS_PATH.iterdir():
+        if i.stem not in data:
+            continue
+        data.setdefault(i.stem, ObjectType.ITEM)
+
+    save_constant_file(_PLACE_OBJECT_NAME_CONSTANT_FILE_NAME, data)
+
+
 def _update_constants():
     _region_displayname()
     _translations()
+    _obj_list()
 
 
-DECORATION_OBJECTS = {
-    "KarmaFlowerPatch",
-    "CosmeticSlimeMold",
-    "CosmeticSlimeMold2",
-    "CosmeticRipple",
-    "CustomDecal",
-    "LightSource",
-    "LightBeam",
-    "UrbanLifePath",
-    "UrbanLife",
-    "GooDrips",
-    "InsectGroup",
-    "VoidSpawnEgg",
-    "DeadTokenStalk",
-    "WallLight",
-    "FloatingDebris",
-    "PassiveCorruption",
-    "LanternOnStick",
-    "LightFixture",
-    "LocustCloud",
-}
+OBJECT_TYPE: dict[str, ObjectType] = load_constant_file(
+    _PLACE_OBJECT_NAME_CONSTANT_FILE_NAME
+)
 
 PLACE_OBJECT_NAME = {
     "KarmaFlower": "业力花",
